@@ -75,13 +75,17 @@
                 </div>
                 <div class="space-y-1">
                     <label for="closer1" class="block text-sm font-medium text-gray-700">Closer (1)</label>
-                    <input type="text" id="closer1" name="closer1" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <select id="closer1" name="closer1" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                        <option value="">Select a closer</option>
+                    </select>
                 </div>
 
                 <!-- Row 2 -->
                 <div class="space-y-1">
                     <label for="closer2" class="block text-sm font-medium text-gray-700">Closer (2)</label>
-                    <input type="text" id="closer2" name="closer2" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <select id="closer2" name="closer2" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                        <option value="">Select a closer</option>
+                    </select>
                 </div>
                 <div class="space-y-1">
                     <label for="customers" class="block text-sm font-medium text-gray-700">Customers</label>
@@ -93,7 +97,7 @@
                 </div>
                 <div class="space-y-1">
                     <label for="oldNew" class="block text-sm font-medium text-gray-700">Old/New</label>
-                    <select id="oldNew" name="oldNew" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <select id="oldNew" name="oldNew" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                         <option value="New">New</option>
                         <option value="Old">Old</option>
                     </select>
@@ -102,15 +106,15 @@
                 <!-- Row 3 -->
                 <div class="space-y-1">
                     <label for="appointmentDate" class="block text-sm font-medium text-gray-700">Date (Appointment)</label>
-                    <input type="date" id="appointmentDate" name="appointmentDate" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <input type="date" id="appointmentDate" name="appointmentDate" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                 </div>
                 <div class="space-y-1">
                     <label for="serviceValue" class="block text-sm font-medium text-gray-700">Service Value</label>
-                    <input type="text" id="serviceValue" name="serviceValue" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <input type="text" id="serviceValue" name="serviceValue" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                 </div>
                 <div class="space-y-1">
                     <label for="franchise" class="block text-sm font-medium text-gray-700">Franchise</label>
-                    <input type="text" id="franchise" name="franchise" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <input type="text" id="franchise" name="franchise" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                 </div>
                 <div class="space-y-1">
                     <label for="city" class="block text-sm font-medium text-gray-700">City</label>
@@ -120,7 +124,7 @@
                 <!-- Row 4 -->
                 <div class="space-y-1">
                     <label for="source" class="block text-sm font-medium text-gray-700">Source</label>
-                    <select id="source" name="source" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <select id="source" name="source" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                         <option value="">Select source</option>
                         <option value="Facebook">Facebook</option>
                         <option value="Kommo">Kommo</option>
@@ -154,7 +158,7 @@
                 </div>
                 <div class="space-y-1">
                     <label for="month" class="block text-sm font-medium text-gray-700">Month</label>
-                    <select id="month" name="month" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <select id="month" name="month" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                         <option value="">Select month</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -172,7 +176,7 @@
                 </div>
                 <div class="space-y-1">
                     <label for="year" class="block text-sm font-medium text-gray-700">Year</label>
-                    <select id="year" name="year" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <select id="year" name="year" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                         <option value="">Select year</option>
                         <option value="2024">2024</option>
                         <option value="2025">2025</option>
@@ -283,16 +287,21 @@
             }
         });
 
-        // Script para pré-selecionar o mês e o ano atuais
-        document.addEventListener('DOMContentLoaded', () => {
+        // Script para pré-selecionar o mês e o ano atuais e carregar os Closers
+        document.addEventListener('DOMContentLoaded', async () => {
             const today = new Date();
             const currentMonth = today.getMonth() + 1; // getMonth() retorna de 0-11
             const currentYear = today.getFullYear();
+            const currentDate = today.toISOString().slice(0, 10);
             
             const monthSelect = document.getElementById('month');
             const yearSelect = document.getElementById('year');
+            const dateInput = document.getElementById('data');
             const customersInput = document.getElementById('customers');
             const codePassDisplay = document.getElementById('codePassDisplay');
+            const closer1Select = document.getElementById('closer1');
+            const closer2Select = document.getElementById('closer2');
+            
             const codePassInput = document.createElement('input');
             codePassInput.type = 'hidden';
             codePassInput.id = 'codePass';
@@ -304,6 +313,36 @@
             }
             if (yearSelect) {
                 yearSelect.value = currentYear.toString();
+            }
+            if (dateInput) {
+                dateInput.value = currentDate;
+            }
+
+            // Carregar os Closers via API
+            try {
+                const response = await fetch('/api/get-employees');
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar os dados dos Closers.');
+                }
+                const employees = await response.json();
+                
+                if (employees && Array.isArray(employees)) {
+                    employees.forEach(employee => {
+                        if (employee) {
+                            const option1 = document.createElement('option');
+                            option1.value = employee;
+                            option1.textContent = employee;
+                            closer1Select.appendChild(option1);
+
+                            const option2 = document.createElement('option');
+                            option2.value = employee;
+                            option2.textContent = employee;
+                            closer2Select.appendChild(option2);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Erro ao popular Closers:', error);
             }
 
             customersInput.addEventListener('input', () => {
