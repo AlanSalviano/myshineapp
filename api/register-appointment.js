@@ -24,14 +24,14 @@ export default async function handler(req, res) {
             return res.status(500).json({ success: false, message: 'Planilha "Datatest" não encontrada.' });
         }
 
-        const { type, data, pets, closer1, closer2, customers, phone, oldNew, appointmentDate, serviceValue, franchise, city, source, week, month, year } = req.body;
+        const { type, data, pets, closer1, closer2, customers, phone, oldNew, appointmentDate, serviceValue, franchise, city, source, week, month, year, code } = req.body;
 
         const newRow = {
             'Type': type,
             'Date': data,
             'Pets': pets,
-            'Closer (1)': closer1, // Mapeado para o primeiro Closer
-            'Closer (2)': closer2, // Mapeado para o segundo Closer
+            'Closer (1)': closer1, 
+            'Closer (2)': closer2, 
             'Customers': customers,
             'Phone': phone,
             'Old/New': oldNew,
@@ -42,7 +42,8 @@ export default async function handler(req, res) {
             'Source': source,
             'Week': week,
             'Month': month,
-            'Year': year
+            'Year': year,
+            'Code': code,
         };
 
         await sheet.addRow(newRow);
