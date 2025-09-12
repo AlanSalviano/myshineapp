@@ -17,10 +17,14 @@ export default async function handler(req, res) {
         return res.status(405).json({ message: 'Method not allowed' });
     }
 
-    // Recebendo role, email e password
     const { role, email, password } = req.body;
 
+    // Log para verificar os dados recebidos da requisição
+    console.log('Received data:', { role, email, password });
+
     if (!role || !email || !password) {
+        // Loga e retorna erro se os campos estiverem faltando
+        console.error('Validation Error: Role, email, or password is missing.');
         return res.status(400).json({ success: false, message: 'Role, email and password are required.' });
     }
 
@@ -28,16 +32,27 @@ export default async function handler(req, res) {
         await doc.loadInfo();
         const sheet = doc.sheetsByTitle['Users'];
         if (!sheet) {
+            // Loga e retorna erro se a planilha não for encontrada
+            console.error('Spreadsheet Error: "Users" sheet not found.');
             return res.status(500).json({ success: false, message: 'Spreadsheet "Users" not found.' });
         }
 
         const rows = await sheet.getRows();
 
-        // Lógica de login para checar role, email e password
+        // Log para verificar os dados obtidos da planilha
+        console.log('Fetched rows from sheet:', rows.map(row => ({
+            role: row._rawData[0],
+            email: row._rawData[1],
+            password: row._rawData[2]
+        })));
+
         const user = rows.find(row => {
             const rowRole = row._rawData[0] || '';
             const rowEmail = row._rawData[1] || '';
             const rowPassword = row._rawData[2] || '';
+
+            // Log de cada comparação para debug detalhado
+            console.log(`Comparing: Role "${role}" vs "${rowRole}", Email "${email}" vs "${rowEmail}", Password "${password}" vs "${rowPassword}"`);
 
             return rowRole.trim().toLowerCase() === role.trim().toLowerCase() &&
                    rowEmail.trim().toLowerCase() === email.trim().toLowerCase() &&
@@ -46,9 +61,11 @@ export default async function handler(req, res) {
 
 
         if (user) {
+            console.log('Login successful for user:', email);
             const redirectUrl = "agendamentos.html";
             return res.status(200).json({ success: true, message: 'Login successful!', redirectUrl });
         } else {
+            console.log('Login failed: Invalid credentials.');
             return res.status(401).json({ success: false, message: 'Invalid credentials.' });
         }
     } catch (error) {
