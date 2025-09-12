@@ -1,325 +1,210 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+    <base target="_top">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appointment Registration</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #f3f4f6;
+            background-color: #e5e7eb;
+            color: #1f2937;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 1rem;
+        }
+        .card {
+            background-color: #fcfcfc;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .logo-container {
+            background-color: #fcfcfc;
             display: flex;
-            min-height: 100vh;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            margin-bottom: 1.5rem;
+            box-sizing: border-box;
         }
-        .bg-primary {
-            background-color: #ff5a96;
+        #logo-img {
+            height: 40px;
         }
-        .bg-primary-dark {
-            background-color: #e54b8a;
+        .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 1rem;
         }
-        .bg-secondary {
-            background-color: #fbd572;
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
         }
-        .text-primary {
+        #company-name {
+            font-size: 1.5rem;
+            font-weight: bold;
             color: #ff5a96;
+            margin-left: 1rem;
+        }
+        .form-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        .form-input, .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            transition: border-color 0.2s;
+        }
+        .form-input:focus, .form-select:focus {
+            border-color: #ff5a96;
+            outline: none;
+        }
+        .form-button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #ff5a96;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .form-button:hover {
+            background-color: #ff4a86;
+        }
+        .message {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+        }
+        .message.success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        .message.error {
+            background-color: #fee2e2;
+            color: #991b1b;
         }
     </style>
 </head>
-<body class="bg-gray-100">
+<body>
 
-    <!-- Sidebar -->
-    <aside class="w-72 bg-[#fbfbfb] shadow-lg flex flex-col items-center py-8 border-r border-gray-200">
-        <div class="flex flex-col items-center space-y-4 mb-10">
-            <a href="#">
-                <img class="h-48 w-auto" src="https://i.imgur.com/XamnfOc.png" alt="Logotipo">
-            </a>
-        </div>
-        <nav class="w-full px-4 space-y-2">
-            <a href="#" class="flex items-center px-4 py-3 rounded-md text-sm font-medium bg-primary text-white shadow-sm" aria-current="page">
-                Appointment Registration
-            </a>
-        </nav>
-    </aside>
+<div class="logo-container">
+    <img id="logo-img" src="https://i.imgur.com/XamnfOc.png" alt="Logo">
+    <span id="company-name">myshineapp</span>
+</div>
 
-    <!-- Main content -->
-    <main class="flex-1 p-8 overflow-y-auto">
-        <div class="container mx-auto p-8 bg-white rounded-lg shadow-xl">
-            <h1 class="mt-4 text-3xl font-bold text-center text-primary mb-2">Appointment Registration</h1>
-            <p class="text-center text-gray-500 mb-8">Please fill in the fields below to register a new appointment.</p>
-
-            <form id="scheduleForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Row 1 -->
-                <div class="space-y-1">
-                    <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
-                    <select id="type" name="type" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                        <option value="Central">Central</option>
-                        <option value="Franchise">Franchise</option>
-                    </select>
-                </div>
-                <div class="space-y-1">
-                    <label for="data" class="block text-sm font-medium text-gray-700">Date</label>
-                    <input type="date" id="data" name="data" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                </div>
-                <div class="space-y-1">
-                    <label for="pets" class="block text-sm font-medium text-gray-700">Pets</label>
-                    <select id="pets" name="pets" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                        <option value="">Pets Number</option>
-                        <script>
-                            for (let i = 1; i <= 15; i++) {
-                                document.write(`<option value="${i}">${i}</option>`);
-                            }
-                        </script>
-                    </select>
-                </div>
-                <div class="space-y-1">
-                    <label for="closer1" class="block text-sm font-medium text-gray-700">Closer (1)</label>
-                    <input type="text" id="closer1" name="closer1" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                </div>
-
-                <!-- Row 2 -->
-                <div class="space-y-1">
-                    <label for="closer2" class="block text-sm font-medium text-gray-700">Closer (2)</label>
-                    <input type="text" id="closer2" name="closer2" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                </div>
-                <div class="space-y-1">
-                    <label for="customers" class="block text-sm font-medium text-gray-700">Customers</label>
-                    <input type="text" id="customers" name="customers" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                </div>
-                <div class="space-y-1">
-                    <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
-                    <input type="tel" id="phone" name="phone" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                </div>
-                <div class="space-y-1">
-                    <label for="oldNew" class="block text-sm font-medium text-gray-700">Old/New</label>
-                    <select id="oldNew" name="oldNew" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                        <option value="New">New</option>
-                        <option value="Old">Old</option>
-                    </select>
-                </div>
-                
-                <!-- Row 3 -->
-                <div class="space-y-1">
-                    <label for="appointmentDate" class="block text-sm font-medium text-gray-700">Date (Appointment)</label>
-                    <input type="date" id="appointmentDate" name="appointmentDate" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                </div>
-                <div class="space-y-1">
-                    <label for="serviceValue" class="block text-sm font-medium text-gray-700">Service Value</label>
-                    <input type="text" id="serviceValue" name="serviceValue" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                </div>
-                <div class="space-y-1">
-                    <label for="franchise" class="block text-sm font-medium text-gray-700">Franchise</label>
-                    <input type="text" id="franchise" name="franchise" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                </div>
-                <div class="space-y-1">
-                    <label for="city" class="block text-sm font-medium text-gray-700">City</label>
-                    <input type="text" id="city" name="city" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                </div>
-                
-                <!-- Row 4 -->
-                <div class="space-y-1">
-                    <label for="source" class="block text-sm font-medium text-gray-700">Source</label>
-                    <select id="source" name="source" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                        <option value="">Select source</option>
-                        <option value="Facebook">Facebook</option>
-                        <option value="Kommo">Kommo</option>
-                        <option value="Social Traffic">Social Traffic</option>
-                        <option value="SMS">SMS</option>
-                        <option value="Call">Call</option>
-                        <option value="Friends">Friends</option>
-                        <option value="Family Member">Family Member</option>
-                        <option value="Neighbors">Neighbors</option>
-                        <option value="Reminder">Reminder</option>
-                        <option value="Email">Email</option>
-                        <option value="Google">Google</option>
-                        <option value="Website">Website</option>
-                        <option value="Grooming / Referral P">Grooming / Referral P</option>
-                        <option value="Instagram">Instagram</option>
-                        <option value="Technician">Technician</option>
-                        <option value="WhatsApp">WhatsApp</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div class="space-y-1">
-                    <label for="week" class="block text-sm font-medium text-gray-700">Week</label>
-                    <select id="week" name="week" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                        <option value="">Select week</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </div>
-                <div class="space-y-1">
-                    <label for="month" class="block text-sm font-medium text-gray-700">Month</label>
-                    <select id="month" name="month" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                        <option value="">Select month</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                    </select>
-                </div>
-                <div class="space-y-1">
-                    <label for="year" class="block text-sm font-medium text-gray-700">Year</label>
-                    <select id="year" name="year" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                        <option value="">Select year</option>
-                        <option value="2024">2024</option>
-                        <option value="2025">2025</option>
-                        <option value="2026">2026</option>
-                        <option value="2027">2027</option>
-                        <option value="2028">2028</option>
-                        <option value="2029">2029</option>
-                        <option value="2030">2030</option>
-                        <option value="2031">2031</option>
-                        <option value="2032">2032</option>
-                        <option value="2033">2033</option>
-                        <option value="2034">2034</option>
-                        <option value="2035">2035</option>
-                        <option value="2036">2036</option>
-                        <option value="2037">2037</option>
-                        <option value="2038">2038</option>
-                        <option value="2039">2039</option>
-                        <option value="2040">2040</option>
-                    </select>
-                </div>
-                
-            </form>
-
-            <div class="mt-8 flex items-end justify-end space-x-4">
-                <!-- New Code Box and Subtitle -->
-                <div class="flex flex-col items-center">
-                    <p class="text-xs font-bold text-gray-500 mb-1">Code Pass</p>
-                    <div id="codePassDisplay" class="h-10 w-32 bg-secondary rounded-md shadow-sm flex items-center justify-center font-bold text-lg text-white"></div>
-                </div>
-                
-                <!-- Register Appointment Button -->
-                <button type="submit" form="scheduleForm"
-                        class="w-full md:w-auto flex justify-center py-2 px-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                    Register Appointment
-                </button>
+<div class="container">
+    <div class="card">
+        <h2 class="title">Cadastro de Serviço de Técnico</h2>
+        <p class="subtitle">Preencha os dados para registrar um novo serviço.</p>
+        
+        <form id="cadastroForm">
+            <div class="mb-4">
+                <label for="nome" class="form-label">Nome do Técnico</label>
+                <select id="nome" name="nome" class="form-select" required>
+                    <option value="">Carregando técnicos...</option>
+                </select>
             </div>
+            <div class="mb-4">
+                <label for="email" class="form-label">Email do Técnico</label>
+                <input type="email" id="email" name="email" class="form-input" required>
+            </div>
+            <div class="mb-4">
+                <label for="tipoServico" class="form-label">Tipo de Serviço</label>
+                <select id="tipoServico" name="tipoServico" class="form-select" required>
+                    <option value="">Selecione um tipo de serviço</option>
+                    <option value="Manutenção">Manutenção</option>
+                    <option value="Instalação">Instalação</option>
+                    <option value="Reparo">Reparo</option>
+                </select>
+            </div>
+            <button type="submit" class="form-button">Cadastrar Serviço</button>
+            <div id="mensagem-cadastro" class="message hidden"></div>
+        </form>
+    </div>
+</div>
 
-            <div id="messageArea" class="mt-6 text-center text-sm font-medium"></div>
-        </div>
-    </main>
-    
-    <script>
-        document.getElementById('scheduleForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            
-            const form = event.target;
-            const messageArea = document.getElementById('messageArea');
-            const codePassInput = document.getElementById('codePass');
-
-            // Show processing message
-            messageArea.textContent = 'Processing...';
-            messageArea.className = 'mt-6 text-center text-sm font-medium text-gray-500';
-
-            const formData = new FormData(form);
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
-
-            // Estruturar os dados para envio para a API
-            const formattedData = {
-                type: data.type,
-                data: data.data,
-                pets: data.pets,
-                closer1: data.closer1,
-                closer2: data.closer2,
-                customers: data.customers,
-                phone: data.phone,
-                oldNew: data.oldNew,
-                appointmentDate: data.appointmentDate,
-                serviceValue: data.serviceValue,
-                franchise: data.franchise,
-                city: data.city,
-                source: data.source,
-                week: data.week,
-                month: data.month,
-                year: data.year,
-                // Os campos 'Value' e 'Code' foram removidos do formulário,
-                // mas a API precisa deles. Vamos enviar valores vazios.
-                value: '', 
-                code: codePassInput.value
-            };
-
-            // Enviando para a API no servidor
-            try {
-                const response = await fetch('/api/register-appointment', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formattedData),
-                });
-                
-                const result = await response.json();
-
-                if (result.success) {
-                    messageArea.textContent = result.message;
-                    messageArea.className = 'mt-6 text-center text-sm font-medium text-green-600';
-                    form.reset(); // Limpa o formulário
-                } else {
-                    messageArea.textContent = result.message;
-                    messageArea.className = 'mt-6 text-center text-sm font-medium text-red-600';
-                }
-            } catch (error) {
-                console.error('Erro ao registrar agendamento:', error);
-                messageArea.textContent = 'Ocorreu um erro de rede. Por favor, tente novamente.';
-                messageArea.className = 'mt-6 text-center text-sm font-medium text-red-600';
-            }
+<script>
+    // Função para popular o dropdown de técnicos
+    function popularDropdownTecnicos(tecnicos) {
+        const select = document.getElementById('nome');
+        select.innerHTML = '<option value="">Selecione um técnico</option>';
+        tecnicos.forEach(tecnico => {
+            const option = document.createElement('option');
+            option.value = tecnico;
+            option.textContent = tecnico;
+            select.appendChild(option);
         });
+    }
 
-        // Script para pré-selecionar o mês e o ano atuais
-        document.addEventListener('DOMContentLoaded', () => {
-            const today = new Date();
-            const currentMonth = today.getMonth() + 1; // getMonth() retorna de 0-11
-            const currentYear = today.getFullYear();
-            
-            const monthSelect = document.getElementById('month');
-            const yearSelect = document.getElementById('year');
-            const customersInput = document.getElementById('customers');
-            const codePassDisplay = document.getElementById('codePassDisplay');
-            const codePassInput = document.createElement('input');
-            codePassInput.type = 'hidden';
-            codePassInput.id = 'codePass';
-            codePassInput.name = 'codePass';
-            document.getElementById('scheduleForm').appendChild(codePassInput);
-
-            if (monthSelect) {
-                monthSelect.value = currentMonth.toString();
-            }
-            if (yearSelect) {
-                yearSelect.value = currentYear.toString();
-            }
-
-            customersInput.addEventListener('input', () => {
-                const value = customersInput.value.trim();
-                if (value.length > 0) {
-                    const randomNumber = Math.floor(Math.random() * 10000);
-                    const paddedNumber = randomNumber.toString().padStart(4, '0');
-                    codePassDisplay.textContent = paddedNumber;
-                    codePassInput.value = paddedNumber;
+    // Carrega a lista de técnicos ao carregar a página
+    window.onload = function() {
+        google.script.run
+            .withSuccessHandler(function(resposta) {
+                if (resposta.success) {
+                    popularDropdownTecnicos(resposta.tecnicos);
                 } else {
-                    codePassDisplay.textContent = '';
-                    codePassInput.value = '';
+                    alert(resposta.message);
                 }
-            });
-        });
-    </script>
+            })
+            .getTecnicos();
+    };
 
+    document.getElementById('cadastroForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const dadosServico = {
+            nome: form.nome.value,
+            email: form.email.value,
+            tipoServico: form.tipoServico.value
+        };
+
+        const mensagemDiv = document.getElementById('mensagem-cadastro');
+        mensagemDiv.classList.add('hidden');
+        mensagemDiv.textContent = '';
+
+        google.script.run
+            .withSuccessHandler(function(resposta) {
+                if (resposta.success) {
+                    mensagemDiv.textContent = resposta.message;
+                    mensagemDiv.classList.remove('hidden');
+                    mensagemDiv.classList.remove('error');
+                    mensagemDiv.classList.add('success');
+                    form.reset();
+                } else {
+                    mensagemDiv.textContent = resposta.message;
+                    mensagemDiv.classList.remove('hidden');
+                    mensagemDiv.classList.remove('success');
+                    mensagemDiv.classList.add('error');
+                }
+            })
+            .withFailureHandler(function(erro) {
+                mensagemDiv.textContent = `Erro no servidor: ${erro}`;
+                mensagemDiv.classList.remove('hidden');
+                mensagemDiv.classList.remove('success');
+                mensagemDiv.classList.add('error');
+            })
+            .cadastrarServico(dadosServico);
+    });
+</script>
 </body>
 </html>
