@@ -39,11 +39,16 @@
 
         <form id="loginForm" class="space-y-6">
             <div>
-                <label for="loginEmail" class="block text-sm font-medium text-gray-700">E-mail</label>
-                <input type="email" id="loginEmail" name="email" required
+                <label for="loginRole" class="block text-sm font-medium text-gray-700">Role</label>
+                <select id="loginRole" name="role" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light sm:text-sm transition duration-300 ease-in-out">
+                    <option value="">Selecione a Role</option>
+                </select>
+            </div>
+            <div>
+                <label for="loginUserOrEmail" class="block text-sm font-medium text-gray-700">User ou E-mail</label>
+                <input type="text" id="loginUserOrEmail" name="userOrEmail" required
                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light sm:text-sm transition duration-300 ease-in-out">
             </div>
-
             <div>
                 <label for="loginPassword" class="block text-sm font-medium text-gray-700">Senha</label>
                 <input type="password" id="loginPassword" name="password" required
@@ -58,8 +63,19 @@
 
         <form id="registerForm" class="space-y-6 hidden">
             <div>
+                <label for="registerRole" class="block text-sm font-medium text-gray-700">Role</label>
+                <select id="registerRole" name="role" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light sm:text-sm transition duration-300 ease-in-out">
+                    <option value="">Selecione a Role</option>
+                </select>
+            </div>
+            <div>
+                <label for="registerUser" class="block text-sm font-medium text-gray-700">User</label>
+                <input type="text" id="registerUser" name="user" required
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light sm:text-sm transition duration-300 ease-in-out">
+            </div>
+            <div>
                 <label for="registerEmail" class="block text-sm font-medium text-gray-700">E-mail</label>
-                <input type="email" id="registerEmail" name="identificador" required
+                <input type="email" id="registerEmail" name="email" required
                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light sm:text-sm transition duration-300 ease-in-out">
             </div>
 
@@ -83,11 +99,13 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
             const messageArea = document.getElementById('messageArea');
             const toggleLink = document.getElementById('toggleLink');
+            const loginRoleSelect = document.getElementById('loginRole');
+            const registerRoleSelect = document.getElementById('registerRole');
             
             let isLoginFormVisible = true;
 
@@ -99,6 +117,40 @@
                 messageArea.style.transition = 'opacity 0.5s ease-in-out';
                 setTimeout(() => messageArea.style.opacity = '1', 10);
             }
+
+            // Função para popular os dropdowns de Role
+            async function populateRolesDropdowns() {
+                try {
+                    const response = await fetch('/api/get-roles');
+                    if (!response.ok) {
+                        throw new Error('Erro ao carregar as Roles.');
+                    }
+                    const roles = await response.json();
+                    
+                    if (roles && Array.isArray(roles)) {
+                        roles.forEach(role => {
+                            if (role) {
+                                const option1 = document.createElement('option');
+                                option1.value = role;
+                                option1.textContent = role;
+                                loginRoleSelect.appendChild(option1);
+
+                                const option2 = document.createElement('option');
+                                option2.value = role;
+                                option2.textContent = role;
+                                registerRoleSelect.appendChild(option2);
+                            }
+                        });
+                    }
+                } catch (error) {
+                    console.error('Erro ao popular Roles:', error);
+                    showMessage('Erro ao carregar roles. Tente novamente.', false);
+                }
+            }
+            
+            // Popula os dropdowns quando a página carrega
+            await populateRolesDropdowns();
+
 
             // Alterna entre formulários
             toggleLink.addEventListener('click', (event) => {
