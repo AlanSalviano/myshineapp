@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilos personalizados para o corpo da página */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #ffffff; /* Fundo branco */
+        }
+        /* Cor primária para elementos interativos */
+        .bg-primary {
+            background-color: #ff5a96;
+        }
+        .hover\:bg-primary-dark:hover {
+            background-color: #e54b8a;
+        }
+        .focus\:ring-primary-light:focus {
+            --tw-ring-color: #ff5a96;
+        }
+        .text-primary {
+            color: #ff5a96;
+        }
+    </style>
+</head>
+<body class="bg-white">
+
+    <!-- Barra de Navegação Superior -->
+    <nav class="bg-[#fbfbfb] shadow-sm py-4 px-8 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex-shrink-0 flex items-center space-x-2">
+                <a href="#">
+                    <img class="h-10 w-auto" src="https://i.imgur.com/XamnfOc.png" alt="Logotipo">
+                </a>
+                <span class="text-xl font-semibold text-primary">MYSHINEAPP</span>
+            </div>
+            <div class="hidden md:block">
+                <div class="ml-10 flex items-baseline space-x-4">
+                    <a href="#" class="bg-primary text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page">
+                        Appointment Registration
+                    </a>
+                    <!-- Adicione mais itens do menu aqui se precisar -->
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="max-w-4xl mx-auto p-8">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Appointment Registration</h1>
+        <p class="text-center text-gray-500 mb-8">Please fill in the fields below to register a new appointment.</p>
+
+        <form id="scheduleForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Linha 1 -->
+            <div>
+                <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
+                <select id="type" name="type" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <option value="Central">Central</option>
+                    <option value="Franchise">Franchise</option>
+                </select>
+            </div>
+            <div>
+                <label for="data" class="block text-sm font-medium text-gray-700">Data</label>
+                <input type="date" id="data" name="data" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+            </div>
+            <div>
+                <label for="pets" class="block text-sm font-medium text-gray-700">Pets</label>
+                <input type="text" id="pets" name="pets" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+            </div>
+
+            <!-- Linha 2 -->
+            <div>
+                <label for="closer1" class="block text-sm font-medium text-gray-700">Closer (1)</label>
+                <input type="text" id="closer1" name="closer1" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+            </div>
+            <div>
+                <label for="closer2" class="block text-sm font-medium text-gray-700">Closer (2)</label>
+                <input type="text" id="closer2" name="closer2" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+            </div>
+            <div>
+                <label for="customers" class="block text-sm font-medium text-gray-700">Customers</label>
+                <input type="text" id="customers" name="customers" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+            </div>
+
+            <!-- Linha 3 -->
+            <div>
+                <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
+                <input type="tel" id="phone" name="phone" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+            </div>
+            <div>
+                <label for="oldNew" class="block text-sm font-medium text-gray-700">Old/New</label>
+                <select id="oldNew" name="oldNew" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <option value="New">New</option>
+                    <option value="Old">Old</option>
+                </select>
+            </div>
+            <div>
+                <label for="appointmentDate" class="block text-sm font-medium text-gray-700">Date (Appointment)</label>
+                <input type="date" id="appointmentDate" name="appointmentDate" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+            </div>
+
+            <!-- Linha 4 -->
+            <div>
+                <label for="serviceValue" class="block text-sm font-medium text-gray-700">Service Value</label>
+                <input type="text" id="serviceValue" name="serviceValue" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+            </div>
+            <div>
+                <label for="franchise" class="block text-sm font-medium text-gray-700">Franchise</label>
+                <input type="text" id="franchise" name="franchise" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+            </div>
+            <div>
+                <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+                <input type="text" id="city" name="city" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+            </div>
+
+            <!-- Linha 5 -->
+            <div>
+                <label for="source" class="block text-sm font-medium text-gray-700">Source</label>
+                <input type="text" id="source" name="source" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+            </div>
+            <div>
+                <label for="week" class="block text-sm font-medium text-gray-700">Week</label>
+                <input type="text" id="week" name="week" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+            </div>
+            <div>
+                <label for="month" class="block text-sm font-medium text-gray-700">Month</label>
+                <input type="text" id="month" name="month" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+            </div>
+
+            <!-- Linha 6 -->
+            <div>
+                <label for="year" class="block text-sm font-medium text-gray-700">Year</label>
+                <input type="text" id="year" name="year" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+            </div>
+            <div>
+                <label for="code" class="block text-sm font-medium text-gray-700">Code</label>
+                <input type="text" id="code" name="code" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+            </div>
+        </form>
+
+        <div class="mt-8 flex justify-end">
+            <button type="submit" form="scheduleForm"
+                    class="w-full md:w-auto flex justify-center py-2 px-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                Register Appointment
+            </button>
+        </div>
+
+        <div id="messageArea" class="mt-6 text-center text-sm font-medium"></div>
+    </div>
+    
+    <script>
+        document.getElementById('scheduleForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const messageArea = document.getElementById('messageArea');
+
+            // Exibe mensagem de processamento
+            messageArea.textContent = 'Processing...';
+            messageArea.className = 'mt-6 text-center text-sm font-medium text-gray-500';
+
+            const formData = new FormData(form);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            // Estrutura os dados para o envio (assumindo que a API aceita este formato)
+            const formattedData = {
+                type: data.type,
+                data: data.data,
+                pets: data.pets,
+                closer1: data.closer1,
+                closer2: data.closer2,
+                customers: data.customers,
+                phone: data.phone,
+                oldNew: data.oldNew,
+                appointmentDate: data.appointmentDate,
+                serviceValue: data.serviceValue,
+                franchise: data.franchise,
+                city: data.city,
+                source: data.source,
+                week: data.week,
+                month: data.month,
+                year: data.year,
+                code: data.code
+            };
+
+            // Simulação de envio para uma API (aqui você colocaria o endpoint real)
+            try {
+                // await fetch('/api/endpoint-de-agendamento', {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //     },
+                //     body: JSON.stringify(formattedData),
+                // });
+
+                // Se o envio for bem-sucedido
+                messageArea.textContent = 'Appointment successfully registered!';
+                messageArea.className = 'mt-6 text-center text-sm font-medium text-green-600';
+                form.reset(); // Limpa o formulário
+            } catch (error) {
+                // Em caso de erro
+                console.error('Error registering appointment:', error);
+                messageArea.textContent = 'Error registering appointment. Please try again.';
+                messageArea.className = 'mt-6 text-center text-sm font-medium text-red-600';
+            }
+        });
+    </script>
+
+</body>
+</html>
