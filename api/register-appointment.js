@@ -24,31 +24,27 @@ export default async function handler(req, res) {
             return res.status(500).json({ success: false, message: 'Planilha "Datatest" não encontrada.' });
         }
 
-        const { type, data, pets, closer1, closer2, customers, phone, oldNew, appointmentDate, serviceValue, franchise, city, source, week, month, year, value, code } = req.body;
+        const { type, data, pets, closer1, closer2, customers, phone, oldNew, appointmentDate, serviceValue, franchise, city, source, week, month, year } = req.body;
 
         const newRow = {
             'Type': type,
-            'Data': data,
+            'Date': data,
             'Pets': pets,
-            'Closer': closer1, // Mapeado para o primeiro Closer
-            'Closer': closer2, // Mapeado para o segundo Closer (o último nome de chave prevalece, mas o addRow permite a inserção)
+            'Closer (1)': closer1, // Mapeado para o primeiro Closer
+            'Closer (2)': closer2, // Mapeado para o segundo Closer
             'Customers': customers,
             'Phone': phone,
             'Old/New': oldNew,
-            'Appointment': appointmentDate,
-            'Date': appointmentDate, // Mapeado do campo 'appointmentDate'
-            'Service': serviceValue,
-            'Value': value, // Valor vazio, pois o campo foi removido
+            'Date (Appointment)': appointmentDate,
+            'Service Value': serviceValue,
             'Franchise': franchise,
             'City': city,
             'Source': source,
-            'W': week,
-            'M': month,
-            'Y': year,
-            'Code': code, // Valor vazio, pois o campo foi removido
+            'Week': week,
+            'Month': month,
+            'Year': year
         };
-        
-        // Usamos addRow para adicionar uma nova linha com os dados mapeados
+
         await sheet.addRow(newRow);
 
         return res.status(201).json({ success: true, message: 'Agendamento registrado com sucesso!' });
