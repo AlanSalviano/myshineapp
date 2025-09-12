@@ -59,12 +59,19 @@
                     </select>
                 </div>
                 <div class="space-y-1">
-                    <label for="data" class="block text-sm font-medium text-gray-700">Data</label>
+                    <label for="data" class="block text-sm font-medium text-gray-700">Date</label>
                     <input type="date" id="data" name="data" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                 </div>
                 <div class="space-y-1">
                     <label for="pets" class="block text-sm font-medium text-gray-700">Pets</label>
-                    <input type="text" id="pets" name="pets" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <select id="pets" name="pets" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                        <option value="">Pets Number</option>
+                        <script>
+                            for (let i = 1; i <= 15; i++) {
+                                document.write(`<option value="${i}">${i}</option>`);
+                            }
+                        </script>
+                    </select>
                 </div>
                 <div class="space-y-1">
                     <label for="closer1" class="block text-sm font-medium text-gray-700">Closer (1)</label>
@@ -113,19 +120,78 @@
                 <!-- Row 4 -->
                 <div class="space-y-1">
                     <label for="source" class="block text-sm font-medium text-gray-700">Source</label>
-                    <input type="text" id="source" name="source" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <select id="source" name="source" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                        <option value="">Select source</option>
+                        <option value="Facebook">Facebook</option>
+                        <option value="Kommo">Kommo</option>
+                        <option value="Social Traffic">Social Traffic</option>
+                        <option value="SMS">SMS</option>
+                        <option value="Call">Call</option>
+                        <option value="Friends">Friends</option>
+                        <option value="Family Member">Family Member</option>
+                        <option value="Neighbors">Neighbors</option>
+                        <option value="Reminder">Reminder</option>
+                        <option value="Email">Email</option>
+                        <option value="Google">Google</option>
+                        <option value="Website">Website</option>
+                        <option value="Grooming / Referral P">Grooming / Referral P</option>
+                        <option value="Instagram">Instagram</option>
+                        <option value="Technician">Technician</option>
+                        <option value="WhatsApp">WhatsApp</option>
+                        <option value="Other">Other</option>
+                    </select>
                 </div>
                 <div class="space-y-1">
                     <label for="week" class="block text-sm font-medium text-gray-700">Week</label>
-                    <input type="text" id="week" name="week" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <select id="week" name="week" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                        <option value="">Select week</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
                 </div>
                 <div class="space-y-1">
                     <label for="month" class="block text-sm font-medium text-gray-700">Month</label>
-                    <input type="text" id="month" name="month" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <select id="month" name="month" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                        <option value="">Select month</option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
                 </div>
                 <div class="space-y-1">
                     <label for="year" class="block text-sm font-medium text-gray-700">Year</label>
-                    <input type="text" id="year" name="year" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <select id="year" name="year" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                        <option value="">Select year</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                        <option value="2029">2029</option>
+                        <option value="2030">2030</option>
+                        <option value="2031">2031</option>
+                        <option value="2032">2032</option>
+                        <option value="2033">2033</option>
+                        <option value="2034">2034</option>
+                        <option value="2035">2035</option>
+                        <option value="2036">2036</option>
+                        <option value="2037">2037</option>
+                        <option value="2038">2038</option>
+                        <option value="2039">2039</option>
+                        <option value="2040">2040</option>
+                    </select>
                 </div>
                 
             </form>
@@ -134,7 +200,7 @@
                 <!-- New Code Box and Subtitle -->
                 <div class="flex flex-col items-center">
                     <p class="text-xs font-bold text-gray-500 mb-1">Code Pass</p>
-                    <div class="h-10 w-24 bg-secondary rounded-md shadow-sm"></div>
+                    <div class="h-10 w-32 bg-secondary rounded-md shadow-sm"></div>
                 </div>
                 
                 <!-- Register Appointment Button -->
