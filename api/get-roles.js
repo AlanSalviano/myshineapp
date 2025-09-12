@@ -10,7 +10,7 @@ const serviceAccountAuth = new JWT({
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
 });
 
-const doc = new GoogleSpreadsheet('1kEIg8Le1nq9etQrTu162RIMSJYaCoioLLpFVg6yKBgg', serviceAccountAuth);
+const doc = new GoogleSpreadsheet(process.env.SHEET_ID, serviceAccountAuth);
 
 export default async function handler(req, res) {
     try {
@@ -20,17 +20,16 @@ export default async function handler(req, res) {
             return res.status(500).json({ success: false, message: 'Planilha "Roles" não encontrada.' });
         }
         
-        // Obter os dados da coluna A, ignorando o cabeçalho
         await sheet.loadCells('A1:A' + sheet.rowCount);
-        const roles = [];
+        const rows = [];
         for (let i = 1; i < sheet.rowCount; i++) {
-            const cell = sheet.getCell(i, 0); // Coluna A (índice 0)
+            const cell = sheet.getCell(i, 0);
             if (cell.value) {
-                roles.push(cell.value);
+                rows.push(cell.value);
             }
         }
         
-        return res.status(200).json(roles);
+        return res.status(200).json(rows);
 
     } catch (error) {
         console.error('Erro ao buscar dados das Roles:', error);
