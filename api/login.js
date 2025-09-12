@@ -31,7 +31,18 @@ export default async function handler(req, res) {
         }
 
         const rows = await sheet.getRows();
-        const user = rows.find(row => row.email === email && row.password === password);
+
+        // ALTERAÇÃO FEITA AQUI: Comparação mais robusta
+        const user = rows.find(row => {
+            const rowEmail = row.email || ''; // Pega o email da linha ou uma string vazia se for nulo
+            const rowPassword = row.password || ''; // Pega a senha da linha
+
+            // Compara o email em minúsculas e sem espaços
+            // Compara a senha removendo espaços
+            return rowEmail.trim().toLowerCase() === email.trim().toLowerCase() && 
+                   rowPassword.trim() === password.trim();
+        });
+
 
         if (user) {
             const redirectUrl = "https://docs.google.com/spreadsheets/d/1nwC53lk48RfU0hOk9605G7ZCfe67tw4o-RBNS9XNfWA/edit?gid=1452592090#gid=1452592090";
