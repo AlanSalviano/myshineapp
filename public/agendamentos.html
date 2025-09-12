@@ -231,7 +231,7 @@
                 data[key] = value;
             });
 
-            // Structure data for sending (assuming API accepts this format)
+            // Estruturar os dados para envio para a API
             const formattedData = {
                 type: data.type,
                 data: data.data,
@@ -249,26 +249,35 @@
                 week: data.week,
                 month: data.month,
                 year: data.year,
+                // Os campos 'Value' e 'Code' foram removidos do formulário,
+                // mas a API precisa deles. Vamos enviar valores vazios.
+                value: '', 
+                code: ''
             };
 
-            // Simulating sending to an API (here you would put the real endpoint)
+            // Enviando para a API no servidor
             try {
-                // await fetch('/api/appointment-endpoint', {
-                //     method: 'POST',
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //     },
-                //     body: JSON.stringify(formattedData),
-                // });
+                const response = await fetch('/api/register-appointment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formattedData),
+                });
+                
+                const result = await response.json();
 
-                // If sending is successful
-                messageArea.textContent = 'Appointment successfully registered!';
-                messageArea.className = 'mt-6 text-center text-sm font-medium text-green-600';
-                form.reset(); // Clear the form
+                if (result.success) {
+                    messageArea.textContent = result.message;
+                    messageArea.className = 'mt-6 text-center text-sm font-medium text-green-600';
+                    form.reset(); // Limpa o formulário
+                } else {
+                    messageArea.textContent = result.message;
+                    messageArea.className = 'mt-6 text-center text-sm font-medium text-red-600';
+                }
             } catch (error) {
-                // In case of error
-                console.error('Error registering appointment:', error);
-                messageArea.textContent = 'Error registering appointment. Please try again.';
+                console.error('Erro ao registrar agendamento:', error);
+                messageArea.textContent = 'Ocorreu um erro de rede. Por favor, tente novamente.';
                 messageArea.className = 'mt-6 text-center text-sm font-medium text-red-600';
             }
         });
