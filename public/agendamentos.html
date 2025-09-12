@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #ffffff;
+            background-color: #f3f4f6;
             display: flex;
             min-height: 100vh;
         }
@@ -27,9 +27,9 @@
         }
     </style>
 </head>
-<body class="bg-white">
+<body class="bg-gray-100">
 
-    <!-- Barra Lateral (Sidebar) -->
+    <!-- Sidebar -->
     <aside class="w-72 bg-[#fbfbfb] shadow-lg flex flex-col items-center py-8">
         <div class="flex flex-col items-center space-y-4 mb-10">
             <a href="#">
@@ -40,52 +40,51 @@
             <a href="#" class="flex items-center px-4 py-3 rounded-md text-sm font-medium bg-primary text-white" aria-current="page">
                 Appointment Registration
             </a>
-            <!-- Adicione mais itens do menu aqui se precisar -->
         </nav>
     </aside>
 
-    <!-- Conteúdo Principal -->
+    <!-- Main content -->
     <main class="flex-1 p-8 overflow-y-auto">
-        <div class="container mx-auto">
-            <h1 class="mt-8 text-3xl font-bold text-center text-gray-800 mb-6">Appointment Registration</h1>
+        <div class="container mx-auto p-6 bg-white rounded-lg shadow-xl">
+            <h1 class="mt-4 text-3xl font-bold text-center text-gray-800 mb-2">Appointment Registration</h1>
             <p class="text-center text-gray-500 mb-8">Please fill in the fields below to register a new appointment.</p>
 
             <form id="scheduleForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Linha 1 -->
-                <div>
+                <!-- Row 1 -->
+                <div class="space-y-1">
                     <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
                     <select id="type" name="type" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                         <option value="Central">Central</option>
                         <option value="Franchise">Franchise</option>
                     </select>
                 </div>
-                <div>
+                <div class="space-y-1">
                     <label for="data" class="block text-sm font-medium text-gray-700">Data</label>
                     <input type="date" id="data" name="data" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                 </div>
-                <div>
+                <div class="space-y-1">
                     <label for="pets" class="block text-sm font-medium text-gray-700">Pets</label>
                     <input type="text" id="pets" name="pets" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                 </div>
-                <div>
+                <div class="space-y-1">
                     <label for="closer1" class="block text-sm font-medium text-gray-700">Closer (1)</label>
                     <input type="text" id="closer1" name="closer1" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                 </div>
 
-                <!-- Linha 2 -->
-                <div>
+                <!-- Row 2 -->
+                <div class="space-y-1">
                     <label for="closer2" class="block text-sm font-medium text-gray-700">Closer (2)</label>
                     <input type="text" id="closer2" name="closer2" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                 </div>
-                <div>
+                <div class="space-y-1">
                     <label for="customers" class="block text-sm font-medium text-gray-700">Customers</label>
                     <input type="text" id="customers" name="customers" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                 </div>
-                <div>
+                <div class="space-y-1">
                     <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
                     <input type="tel" id="phone" name="phone" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                 </div>
-                <div>
+                <div class="space-y-1">
                     <label for="oldNew" class="block text-sm font-medium text-gray-700">Old/New</label>
                     <select id="oldNew" name="oldNew" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                         <option value="New">New</option>
@@ -93,44 +92,44 @@
                     </select>
                 </div>
                 
-                <!-- Linha 3 -->
-                <div>
+                <!-- Row 3 -->
+                <div class="space-y-1">
                     <label for="appointmentDate" class="block text-sm font-medium text-gray-700">Date (Appointment)</label>
                     <input type="date" id="appointmentDate" name="appointmentDate" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                 </div>
-                <div>
+                <div class="space-y-1">
                     <label for="serviceValue" class="block text-sm font-medium text-gray-700">Service Value</label>
                     <input type="text" id="serviceValue" name="serviceValue" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                 </div>
-                <div>
+                <div class="space-y-1">
                     <label for="franchise" class="block text-sm font-medium text-gray-700">Franchise</label>
                     <input type="text" id="franchise" name="franchise" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                 </div>
-                <div>
+                <div class="space-y-1">
                     <label for="city" class="block text-sm font-medium text-gray-700">City</label>
                     <input type="text" id="city" name="city" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                 </div>
                 
-                <!-- Linha 4 -->
-                <div>
+                <!-- Row 4 -->
+                <div class="space-y-1">
                     <label for="source" class="block text-sm font-medium text-gray-700">Source</label>
                     <input type="text" id="source" name="source" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                 </div>
-                <div>
+                <div class="space-y-1">
                     <label for="week" class="block text-sm font-medium text-gray-700">Week</label>
                     <input type="text" id="week" name="week" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                 </div>
-                <div>
+                <div class="space-y-1">
                     <label for="month" class="block text-sm font-medium text-gray-700">Month</label>
                     <input type="text" id="month" name="month" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                 </div>
-                <div>
+                <div class="space-y-1">
                     <label for="year" class="block text-sm font-medium text-gray-700">Year</label>
                     <input type="text" id="year" name="year" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                 </div>
                 
-                <!-- Linha 5 (apenas o último campo) -->
-                <div>
+                <!-- Row 5 (only the last field) -->
+                <div class="space-y-1">
                     <label for="code" class="block text-sm font-medium text-gray-700">Code</label>
                     <input type="text" id="code" name="code" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                 </div>
@@ -154,7 +153,7 @@
             const form = event.target;
             const messageArea = document.getElementById('messageArea');
 
-            // Exibe mensagem de processamento
+            // Show processing message
             messageArea.textContent = 'Processing...';
             messageArea.className = 'mt-6 text-center text-sm font-medium text-gray-500';
 
@@ -164,7 +163,7 @@
                 data[key] = value;
             });
 
-            // Estrutura os dados para o envio (assumindo que a API aceita este formato)
+            // Structure data for sending (assuming API accepts this format)
             const formattedData = {
                 type: data.type,
                 data: data.data,
@@ -185,9 +184,9 @@
                 code: data.code
             };
 
-            // Simulação de envio para uma API (aqui você colocaria o endpoint real)
+            // Simulating sending to an API (here you would put the real endpoint)
             try {
-                // await fetch('/api/endpoint-de-agendamento', {
+                // await fetch('/api/appointment-endpoint', {
                 //     method: 'POST',
                 //     headers: {
                 //         'Content-Type': 'application/json',
@@ -195,12 +194,12 @@
                 //     body: JSON.stringify(formattedData),
                 // });
 
-                // Se o envio for bem-sucedido
+                // If sending is successful
                 messageArea.textContent = 'Appointment successfully registered!';
                 messageArea.className = 'mt-6 text-center text-sm font-medium text-green-600';
-                form.reset(); // Limpa o formulário
+                form.reset(); // Clear the form
             } catch (error) {
-                // Em caso de erro
+                // In case of error
                 console.error('Error registering appointment:', error);
                 messageArea.textContent = 'Error registering appointment. Please try again.';
                 messageArea.className = 'mt-6 text-center text-sm font-medium text-red-600';
