@@ -99,7 +99,6 @@
             const messageArea = document.getElementById('messageArea');
             const toggleLink = document.getElementById('toggleLink');
             const loginRoleSelect = document.getElementById('loginRole');
-            const registerRoleSelect = document.getElementById('registerRole');
             
             let isLoginFormVisible = true;
 
@@ -124,10 +123,10 @@
                     if (roles && Array.isArray(roles)) {
                         roles.forEach(role => {
                             if (role) {
-                                const option1 = document.createElement('option');
-                                option1.value = role;
-                                option1.textContent = role;
-                                loginRoleSelect.appendChild(option1);
+                                const option = document.createElement('option');
+                                option.value = role;
+                                option.textContent = role;
+                                loginRoleSelect.appendChild(option);
                             }
                         });
                     }
@@ -139,7 +138,6 @@
             
             // Populate dropdowns when the page loads
             await populateRolesDropdowns();
-
 
             // Toggle between forms
             toggleLink.addEventListener('click', (event) => {
