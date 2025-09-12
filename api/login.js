@@ -36,8 +36,8 @@ export default async function handler(req, res) {
         // Lógica de login para checar role, email e password
         const user = rows.find(row => {
             const rowRole = row._rawData[0] || '';
-            const rowEmail = row._rawData[2] || '';
-            const rowPassword = row._rawData[3] || '';
+            const rowEmail = row._rawData[1] || '';
+            const rowPassword = row._rawData[2] || '';
 
             return rowRole.trim().toLowerCase() === role.trim().toLowerCase() &&
                    rowEmail.trim().toLowerCase() === email.trim().toLowerCase() &&
