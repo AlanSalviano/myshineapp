@@ -69,6 +69,8 @@
             const loginForm = document.getElementById('loginForm');
             const messageArea = document.getElementById('messageArea');
             const loginRoleSelect = document.getElementById('loginRole');
+            const loginEmailInput = document.getElementById('loginEmail');
+            const loginPasswordInput = document.getElementById('loginPassword');
             
             // Function to display messages on the screen
             function showMessage(message, isSuccess) {
@@ -79,8 +81,8 @@
                 setTimeout(() => messageArea.style.opacity = '1', 10);
             }
 
-            // Function to populate Role dropdown
-            async function populateRolesDropdown() {
+            // Function to populate Role dropdowns
+            async function populateRolesDropdowns() {
                 try {
                     const response = await fetch('/api/get-roles');
                     if (!response.ok) {
@@ -104,8 +106,8 @@
                 }
             }
             
-            // Populate dropdown when the page loads
-            await populateRolesDropdown();
+            // Populate dropdowns when the page loads
+            await populateRolesDropdowns();
 
             // Function for the API request
             async function apiCall(endpoint, data) {
@@ -129,17 +131,16 @@
                 event.preventDefault();
                 showMessage("Processing...", false);
 
-                const formData = new FormData(loginForm);
-                const data = Object.fromEntries(formData.entries());
-                
-                // Mapeia o campo 'email' do formulário para o 'userOrEmail' esperado pela API de login
-                const loginData = {
-                    role: data.role,
-                    userOrEmail: data.email,
-                    password: data.password
+                const data = {
+                    role: loginRoleSelect.value,
+                    email: loginEmailInput.value,
+                    password: loginPasswordInput.value
                 };
 
-                const response = await apiCall('/api/login', loginData);
+                // Loga os dados que estão sendo enviados para a API para debug
+                console.log('Sending data to API:', data);
+
+                const response = await apiCall('/api/login', data);
 
                 if (response.success) {
                     showMessage(response.message, true);
