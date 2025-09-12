@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appointment Registration</title>
+    <title>Registro de Agendamentos</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #f3f4f6;
+            background: linear-gradient(135deg, #fef4f6 0%, #ffeaf1 100%);
             display: flex;
             min-height: 100vh;
         }
@@ -25,6 +25,38 @@
         .text-primary {
             color: #ff5a96;
         }
+        .form-card {
+            background-color: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+        }
+        .input-field {
+            border-radius: 1rem;
+            border: 1px solid #e0e0e0;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #ff5a96;
+            box-shadow: 0 0 0 3px rgba(255, 90, 150, 0.4), inset 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #ff5a96, #e54b8a);
+            color: #fff;
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 6px 20px rgba(255, 90, 150, 0.4);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 90, 150, 0.5);
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -37,35 +69,35 @@
             </a>
         </div>
         <nav class="w-full px-4 space-y-2">
-            <a href="#" class="flex items-center px-4 py-3 rounded-md text-sm font-medium bg-primary text-white shadow-sm" aria-current="page">
-                Appointment Registration
+            <a href="#" class="flex items-center px-4 py-3 rounded-xl text-sm font-medium bg-primary text-white shadow-sm" aria-current="page">
+                Registro de Agendamento
             </a>
         </nav>
     </aside>
 
     <!-- Main content -->
     <main class="flex-1 p-8 overflow-y-auto">
-        <div class="container mx-auto p-8 bg-white rounded-lg shadow-xl">
-            <h1 class="mt-4 text-3xl font-bold text-center text-primary mb-2">Appointment Registration</h1>
-            <p class="text-center text-gray-500 mb-8">Please fill in the fields below to register a new appointment.</p>
+        <div class="container mx-auto form-card">
+            <h1 class="mt-4 text-3xl font-bold text-center text-primary mb-2">Registro de Agendamentos</h1>
+            <p class="text-center text-gray-500 mb-8">Por favor, preencha os campos abaixo para registrar um novo agendamento.</p>
 
             <form id="scheduleForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Row 1 -->
+                <!-- Linha 1 -->
                 <div class="space-y-1">
-                    <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
-                    <select id="type" name="type" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <label for="type" class="block text-sm font-medium text-gray-700">Tipo</label>
+                    <select id="type" name="type" required class="mt-1 block w-full input-field">
                         <option value="Central">Central</option>
-                        <option value="Franchise">Franchise</option>
+                        <option value="Franchise">Franquia</option>
                     </select>
                 </div>
                 <div class="space-y-1">
-                    <label for="data" class="block text-sm font-medium text-gray-700">Date</label>
-                    <input type="date" id="data" name="data" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <label for="data" class="block text-sm font-medium text-gray-700">Data</label>
+                    <input type="date" id="data" name="data" required class="mt-1 block w-full input-field">
                 </div>
                 <div class="space-y-1">
                     <label for="pets" class="block text-sm font-medium text-gray-700">Pets</label>
-                    <select id="pets" name="pets" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                        <option value="">Pets Number</option>
+                    <select id="pets" name="pets" class="mt-1 block w-full input-field">
+                        <option value="">Nº de Pets</option>
                         <script>
                             for (let i = 1; i <= 15; i++) {
                                 document.write(`<option value="${i}">${i}</option>`);
@@ -74,81 +106,81 @@
                     </select>
                 </div>
                 <div class="space-y-1">
-                    <label for="closer1" class="block text-sm font-medium text-gray-700">Closer (1)</label>
-                    <select id="closer1" name="closer1" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                        <option value="">Select a closer</option>
+                    <label for="closer1" class="block text-sm font-medium text-gray-700">Vendedor (1)</label>
+                    <select id="closer1" name="closer1" required class="mt-1 block w-full input-field">
+                        <option value="">Selecione um vendedor</option>
                     </select>
                 </div>
 
-                <!-- Row 2 -->
+                <!-- Linha 2 -->
                 <div class="space-y-1">
-                    <label for="closer2" class="block text-sm font-medium text-gray-700">Closer (2)</label>
-                    <select id="closer2" name="closer2" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                        <option value="">Select a closer</option>
+                    <label for="closer2" class="block text-sm font-medium text-gray-700">Vendedor (2)</label>
+                    <select id="closer2" name="closer2" class="mt-1 block w-full input-field">
+                        <option value="">Selecione um vendedor</option>
                     </select>
                 </div>
                 <div class="space-y-1">
-                    <label for="customers" class="block text-sm font-medium text-gray-700">Customers</label>
-                    <input type="text" id="customers" name="customers" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <label for="customers" class="block text-sm font-medium text-gray-700">Clientes</label>
+                    <input type="text" id="customers" name="customers" required class="mt-1 block w-full input-field">
                 </div>
                 <div class="space-y-1">
-                    <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
-                    <input type="tel" id="phone" name="phone" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <label for="phone" class="block text-sm font-medium text-gray-700">Telefone</label>
+                    <input type="tel" id="phone" name="phone" required class="mt-1 block w-full input-field">
                 </div>
                 <div class="space-y-1">
-                    <label for="oldNew" class="block text-sm font-medium text-gray-700">Old/New</label>
-                    <select id="oldNew" name="oldNew" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                        <option value="New">New</option>
-                        <option value="Old">Old</option>
+                    <label for="oldNew" class="block text-sm font-medium text-gray-700">Novo/Antigo</label>
+                    <select id="oldNew" name="oldNew" required class="mt-1 block w-full input-field">
+                        <option value="New">Novo</option>
+                        <option value="Old">Antigo</option>
                     </select>
                 </div>
                 
-                <!-- Row 3 -->
+                <!-- Linha 3 -->
                 <div class="space-y-1">
-                    <label for="appointmentDate" class="block text-sm font-medium text-gray-700">Date (Appointment)</label>
-                    <input type="date" id="appointmentDate" name="appointmentDate" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <label for="appointmentDate" class="block text-sm font-medium text-gray-700">Data (Agendamento)</label>
+                    <input type="date" id="appointmentDate" name="appointmentDate" required class="mt-1 block w-full input-field">
                 </div>
                 <div class="space-y-1">
-                    <label for="serviceValue" class="block text-sm font-medium text-gray-700">Service Value</label>
-                    <input type="text" id="serviceValue" name="serviceValue" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <label for="serviceValue" class="block text-sm font-medium text-gray-700">Valor do Serviço</label>
+                    <input type="text" id="serviceValue" name="serviceValue" required class="mt-1 block w-full input-field">
                 </div>
                 <div class="space-y-1">
-                    <label for="franchise" class="block text-sm font-medium text-gray-700">Franchise</label>
-                    <input type="text" id="franchise" name="franchise" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <label for="franchise" class="block text-sm font-medium text-gray-700">Franquia</label>
+                    <input type="text" id="franchise" name="franchise" required class="mt-1 block w-full input-field">
                 </div>
                 <div class="space-y-1">
-                    <label for="city" class="block text-sm font-medium text-gray-700">City</label>
-                    <input type="text" id="city" name="city" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    <label for="city" class="block text-sm font-medium text-gray-700">Cidade</label>
+                    <input type="text" id="city" name="city" required class="mt-1 block w-full input-field">
                 </div>
                 
-                <!-- Row 4 -->
+                <!-- Linha 4 -->
                 <div class="space-y-1">
-                    <label for="source" class="block text-sm font-medium text-gray-700">Source</label>
-                    <select id="source" name="source" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                        <option value="">Select source</option>
+                    <label for="source" class="block text-sm font-medium text-gray-700">Origem</label>
+                    <select id="source" name="source" required class="mt-1 block w-full input-field">
+                        <option value="">Selecione a origem</option>
                         <option value="Facebook">Facebook</option>
                         <option value="Kommo">Kommo</option>
-                        <option value="Social Traffic">Social Traffic</option>
+                        <option value="Social Traffic">Tráfego Social</option>
                         <option value="SMS">SMS</option>
-                        <option value="Call">Call</option>
-                        <option value="Friends">Friends</option>
-                        <option value="Family Member">Family Member</option>
-                        <option value="Neighbors">Neighbors</option>
-                        <option value="Reminder">Reminder</option>
+                        <option value="Call">Chamada</option>
+                        <option value="Friends">Amigos</option>
+                        <option value="Family Member">Membro da Família</option>
+                        <option value="Neighbors">Vizinhos</option>
+                        <option value="Reminder">Lembrete</option>
                         <option value="Email">Email</option>
                         <option value="Google">Google</option>
-                        <option value="Website">Website</option>
-                        <option value="Grooming / Referral P">Grooming / Referral P</option>
+                        <option value="Website">Site</option>
+                        <option value="Grooming / Referral P">Grooming / Indicação P</option>
                         <option value="Instagram">Instagram</option>
-                        <option value="Technician">Technician</option>
+                        <option value="Technician">Técnico</option>
                         <option value="WhatsApp">WhatsApp</option>
-                        <option value="Other">Other</option>
+                        <option value="Other">Outro</option>
                     </select>
                 </div>
                 <div class="space-y-1">
-                    <label for="week" class="block text-sm font-medium text-gray-700">Week</label>
-                    <select id="week" name="week" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                        <option value="">Select week</option>
+                    <label for="week" class="block text-sm font-medium text-gray-700">Semana</label>
+                    <select id="week" name="week" class="mt-1 block w-full input-field">
+                        <option value="">Selecione a semana</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -157,9 +189,9 @@
                     </select>
                 </div>
                 <div class="space-y-1">
-                    <label for="month" class="block text-sm font-medium text-gray-700">Month</label>
-                    <select id="month" name="month" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                        <option value="">Select month</option>
+                    <label for="month" class="block text-sm font-medium text-gray-700">Mês</label>
+                    <select id="month" name="month" required class="mt-1 block w-full input-field">
+                        <option value="">Selecione o mês</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -175,9 +207,9 @@
                     </select>
                 </div>
                 <div class="space-y-1">
-                    <label for="year" class="block text-sm font-medium text-gray-700">Year</label>
-                    <select id="year" name="year" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                        <option value="">Select year</option>
+                    <label for="year" class="block text-sm font-medium text-gray-700">Ano</label>
+                    <select id="year" name="year" required class="mt-1 block w-full input-field">
+                        <option value="">Selecione o ano</option>
                         <option value="2024">2024</option>
                         <option value="2025">2025</option>
                         <option value="2026">2026</option>
@@ -203,14 +235,14 @@
             <div class="mt-8 flex items-end justify-end space-x-4">
                 <!-- New Code Box and Subtitle -->
                 <div class="flex flex-col items-center">
-                    <p class="text-xs font-bold text-gray-500 mb-1">Code Pass</p>
-                    <div id="codePassDisplay" class="h-10 w-32 bg-secondary rounded-md shadow-sm flex items-center justify-center font-bold text-lg text-white"></div>
+                    <p class="text-xs font-bold text-gray-500 mb-1">Código de Confirmação</p>
+                    <div id="codePassDisplay" class="h-10 w-32 bg-secondary rounded-xl shadow-sm flex items-center justify-center font-bold text-lg text-white"></div>
                 </div>
                 
                 <!-- Register Appointment Button -->
                 <button type="submit" form="scheduleForm"
-                        class="w-full md:w-auto flex justify-center py-2 px-6 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                    Register Appointment
+                        class="w-full md:w-auto flex justify-center py-2 px-6 border border-transparent btn-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                    Registrar Agendamento
                 </button>
             </div>
 
@@ -227,7 +259,7 @@
             const codePassInput = document.getElementById('codePass');
 
             // Show processing message
-            messageArea.textContent = 'Processing...';
+            messageArea.textContent = 'Processando...';
             messageArea.className = 'mt-6 text-center text-sm font-medium text-gray-500';
 
             const formData = new FormData(form);
@@ -322,7 +354,7 @@
             try {
                 const response = await fetch('/api/get-employees');
                 if (!response.ok) {
-                    throw new Error('Erro ao carregar os dados dos Closers.');
+                    throw new Error('Erro ao carregar os dados dos Vendedores.');
                 }
                 const employees = await response.json();
                 
@@ -342,7 +374,7 @@
                     });
                 }
             } catch (error) {
-                console.error('Erro ao popular Closers:', error);
+                console.error('Erro ao popular Vendedores:', error);
             }
 
             customersInput.addEventListener('input', () => {
