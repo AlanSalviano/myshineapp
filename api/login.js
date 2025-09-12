@@ -14,7 +14,7 @@ const doc = new GoogleSpreadsheet(process.env.SHEET_ID, serviceAccountAuth);
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
-        return res.status(405).json({ message: 'Método não permitido' });
+        return res.status(405).json({ message: 'Method not allowed' });
     }
 
     // Recebendo role, email e password
