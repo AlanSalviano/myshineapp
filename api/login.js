@@ -23,14 +23,6 @@ export default async function handler(req, res) {
         return res.status(400).json({ success: false, message: 'Email e senha são obrigatórios.' });
     }
 
-    // --- LOGS DE DIAGNÓSTICO ---
-    console.log('--- INICIANDO TENTATIVA DE LOGIN ---');
-    console.log('Recebido do formulário:');
-    console.log(`Email: "${email}"`);
-    console.log(`Senha: "${password}"`);
-    console.log('------------------------------------');
-    // --- FIM DOS LOGS ---
-
     try {
         await doc.loadInfo();
         const sheet = doc.sheetsByTitle['Usuários'];
@@ -39,40 +31,29 @@ export default async function handler(req, res) {
         }
 
         const rows = await sheet.getRows();
-        console.log(`Encontradas ${rows.length} linhas na planilha.`);
 
-        const user = rows.find((row, index) => {
-            const rowEmail = row.email || '';
-            const rowPassword = row.password || '';
+        // ALTERAÇÃO CRÍTICA: Lendo dados pela posição da coluna, não pelo nome do cabeçalho.
+        const user = rows.find(row => {
+            // row._rawData[0] é a Coluna A (email)
+            // row._rawData[1] é a Coluna B (password)
+            const rowEmail = row._rawData[0] || '';
+            const rowPassword = row._rawData[1] || '';
 
-            // --- LOGS DE DIAGNÓSTICO POR LINHA ---
-            console.log(`\n--- Verificando Linha ${index + 1} da Planilha ---`);
-            console.log(`Planilha Email: "${rowEmail}"`);
-            console.log(`Planilha Senha: "${rowPassword}"`);
-
-            const isEmailMatch = rowEmail.trim().toLowerCase() === email.trim().toLowerCase();
-            const isPasswordMatch = rowPassword.trim() === password.trim();
-
-            console.log(`Comparando valores tratados:`);
-            console.log(`'${rowEmail.trim().toLowerCase()}' === '${email.trim().toLowerCase()}'? -> ${isEmailMatch}`);
-            console.log(`'${rowPassword.trim()}' === '${password.trim()}'? -> ${isPasswordMatch}`);
-            console.log('---------------------------------');
-            // --- FIM DOS LOGS ---
-
-            return isEmailMatch && isPasswordMatch;
+            // Compara o email em minúsculas e sem espaços
+            // Compara a senha removendo espaços
+            return rowEmail.trim().toLowerCase() === email.trim().toLowerCase() && 
+                   rowPassword.trim() === password.trim();
         });
 
 
         if (user) {
-            console.log('SUCESSO: Usuário encontrado!');
             const redirectUrl = "https://docs.google.com/spreadsheets/d/1nwC53lk48RfU0hOk9605G7ZCfe67tw4o-RBNS9XNfWA/edit?gid=1452592090#gid=1452592090";
             return res.status(200).json({ success: true, message: 'Login bem-sucedido!', redirectUrl });
         } else {
-            console.log('FALHA: Nenhuma correspondência de usuário encontrada.');
             return res.status(401).json({ success: false, message: 'Usuário ou senha inválidos.' });
         }
     } catch (error) {
-        console.error('ERRO CRÍTICO NO BLOCO DE LOGIN:', error);
+        console.error('Erro ao processar login:', error);
         return res.status(500).json({ success: false, message: 'Ocorreu um erro no servidor. Por favor, tente novamente.' });
     }
 }
