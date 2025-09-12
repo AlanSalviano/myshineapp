@@ -156,18 +156,18 @@
                     <label for="month" class="block text-sm font-medium text-gray-700">Month</label>
                     <select id="month" name="month" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                         <option value="">Select month</option>
-                        <option value="1">January</option>
-                        <option value="2">February</option>
-                        <option value="3">March</option>
-                        <option value="4">April</option>
-                        <option value="5">May</option>
-                        <option value="6">June</option>
-                        <option value="7">July</option>
-                        <option value="8">August</option>
-                        <option value="9">September</option>
-                        <option value="10">October</option>
-                        <option value="11">November</option>
-                        <option value="12">December</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
                     </select>
                 </div>
                 <div class="space-y-1">
@@ -200,7 +200,7 @@
                 <!-- New Code Box and Subtitle -->
                 <div class="flex flex-col items-center">
                     <p class="text-xs font-bold text-gray-500 mb-1">Code Pass</p>
-                    <div class="h-10 w-32 bg-secondary rounded-md shadow-sm"></div>
+                    <div id="codePassDisplay" class="h-10 w-32 bg-secondary rounded-md shadow-sm flex items-center justify-center font-bold text-lg text-white"></div>
                 </div>
                 
                 <!-- Register Appointment Button -->
@@ -220,6 +220,7 @@
             
             const form = event.target;
             const messageArea = document.getElementById('messageArea');
+            const codePassInput = document.getElementById('codePass');
 
             // Show processing message
             messageArea.textContent = 'Processing...';
@@ -252,7 +253,7 @@
                 // Os campos 'Value' e 'Code' foram removidos do formulário,
                 // mas a API precisa deles. Vamos enviar valores vazios.
                 value: '', 
-                code: ''
+                code: codePassInput.value
             };
 
             // Enviando para a API no servidor
@@ -280,6 +281,43 @@
                 messageArea.textContent = 'Ocorreu um erro de rede. Por favor, tente novamente.';
                 messageArea.className = 'mt-6 text-center text-sm font-medium text-red-600';
             }
+        });
+
+        // Script para pré-selecionar o mês e o ano atuais
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date();
+            const currentMonth = today.getMonth() + 1; // getMonth() retorna de 0-11
+            const currentYear = today.getFullYear();
+            
+            const monthSelect = document.getElementById('month');
+            const yearSelect = document.getElementById('year');
+            const customersInput = document.getElementById('customers');
+            const codePassDisplay = document.getElementById('codePassDisplay');
+            const codePassInput = document.createElement('input');
+            codePassInput.type = 'hidden';
+            codePassInput.id = 'codePass';
+            codePassInput.name = 'codePass';
+            document.getElementById('scheduleForm').appendChild(codePassInput);
+
+            if (monthSelect) {
+                monthSelect.value = currentMonth.toString();
+            }
+            if (yearSelect) {
+                yearSelect.value = currentYear.toString();
+            }
+
+            customersInput.addEventListener('input', () => {
+                const value = customersInput.value.trim();
+                if (value.length > 0) {
+                    const randomNumber = Math.floor(Math.random() * 10000);
+                    const paddedNumber = randomNumber.toString().padStart(4, '0');
+                    codePassDisplay.textContent = paddedNumber;
+                    codePassInput.value = paddedNumber;
+                } else {
+                    codePassDisplay.textContent = '';
+                    codePassInput.value = '';
+                }
+            });
         });
     </script>
 
