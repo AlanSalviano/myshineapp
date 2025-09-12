@@ -17,9 +17,10 @@ export default async function handler(req, res) {
         return res.status(405).json({ message: 'Método não permitido' });
     }
 
-    const { email, password } = req.body;
+    // ALTERAÇÃO FEITA AQUI: recebendo 'identificador'
+    const { identificador, password } = req.body;
 
-    if (!email || !password) {
+    if (!identificador || !password) {
         return res.status(400).json({ success: false, message: 'E-mail e senha são obrigatórios.' });
     }
 
@@ -31,13 +32,15 @@ export default async function handler(req, res) {
         }
 
         const rows = await sheet.getRows();
-        const emailExists = rows.some(row => row.email === email);
+        // ALTERAÇÃO FEITA AQUI: verificando com 'identificador'
+        const emailExists = rows.some(row => row.email === identificador);
 
         if (emailExists) {
             return res.status(409).json({ success: false, message: 'Este e-mail já está registrado.' });
         }
 
-        await sheet.addRow({ email, password });
+        // ALTERAÇÃO FEITA AQUI: salvando 'identificador' na coluna 'email'
+        await sheet.addRow({ email: identificador, password });
 
         return res.status(201).json({ success: true, message: 'Conta criada com sucesso! Agora você pode fazer login.' });
     } catch (error) {
