@@ -4,12 +4,14 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// Configuração da autenticação com as chaves do ambiente
 const serviceAccountAuth = new JWT({
     email: process.env.CLIENT_EMAIL,
     key: process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
 });
 
+// Acessa a planilha usando o ID da variável de ambiente
 const doc = new GoogleSpreadsheet(process.env.SHEET_ID, serviceAccountAuth);
 
 export default async function handler(req, res) {
@@ -17,9 +19,11 @@ export default async function handler(req, res) {
         await doc.loadInfo();
         const sheet = doc.sheetsByTitle['Roles'];
         if (!sheet) {
+            // Retorna um erro se a aba 'Roles' não for encontrada
             return res.status(500).json({ success: false, message: 'Planilha "Roles" não encontrada.' });
         }
         
+        // Carrega as células da coluna A, ignorando o cabeçalho
         await sheet.loadCells('A1:A' + sheet.rowCount);
         const rows = [];
         for (let i = 1; i < sheet.rowCount; i++) {
@@ -29,6 +33,7 @@ export default async function handler(req, res) {
             }
         }
         
+        // Retorna a lista de roles
         return res.status(200).json(rows);
 
     } catch (error) {
