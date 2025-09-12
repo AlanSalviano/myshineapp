@@ -17,10 +17,11 @@ export default async function handler(req, res) {
         return res.status(405).json({ message: 'Método não permitido' });
     }
 
-    const { email, password } = req.body;
+    // ALTERAÇÃO: recebendo 'role', 'userOrEmail' e 'password'
+    const { role, userOrEmail, password } = req.body;
 
-    if (!email || !password) {
-        return res.status(400).json({ success: false, message: 'Email e senha são obrigatórios.' });
+    if (!role || !userOrEmail || !password) {
+        return res.status(400).json({ success: false, message: 'Role, user/email e senha são obrigatórios.' });
     }
 
     try {
@@ -32,17 +33,17 @@ export default async function handler(req, res) {
 
         const rows = await sheet.getRows();
 
-        // ALTERAÇÃO CRÍTICA: Lendo dados pela posição da coluna, não pelo nome do cabeçalho.
+        // ALTERAÇÃO CRÍTICA: Lógica de login para checar role + user ou role + email
         const user = rows.find(row => {
-            // row._rawData[0] é a Coluna A (email)
-            // row._rawData[1] é a Coluna B (password)
-            const rowEmail = row._rawData[0] || '';
-            const rowPassword = row._rawData[1] || '';
+            const rowRole = row._rawData[0] || '';
+            const rowUser = row._rawData[1] || '';
+            const rowEmail = row._rawData[2] || '';
+            const rowPassword = row._rawData[3] || '';
 
-            // Compara o email em minúsculas e sem espaços
-            // Compara a senha removendo espaços
-            return rowEmail.trim().toLowerCase() === email.trim().toLowerCase() && 
-                   rowPassword.trim() === password.trim();
+            return rowRole.trim().toLowerCase() === role.trim().toLowerCase() &&
+                   rowPassword.trim() === password.trim() &&
+                   (rowUser.trim().toLowerCase() === userOrEmail.trim().toLowerCase() ||
+                    rowEmail.trim().toLowerCase() === userOrEmail.trim().toLowerCase());
         });
 
 
@@ -50,7 +51,7 @@ export default async function handler(req, res) {
             const redirectUrl = "https://docs.google.com/spreadsheets/d/1nwC53lk48RfU0hOk9605G7ZCfe67tw4o-RBNS9XNfWA/edit?gid=1452592090#gid=1452592090";
             return res.status(200).json({ success: true, message: 'Login bem-sucedido!', redirectUrl });
         } else {
-            return res.status(401).json({ success: false, message: 'Usuário ou senha inválidos.' });
+            return res.status(401).json({ success: false, message: 'Credenciais inválidas.' });
         }
     } catch (error) {
         console.error('Erro ao processar login:', error);
