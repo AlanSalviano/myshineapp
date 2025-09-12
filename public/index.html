@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilos personalizados para o corpo da página */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f3f4f6; /* Fundo cinza */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        /* Cor primária para elementos interativos */
+        .bg-primary {
+            background-color: #ff5a96;
+        }
+        .hover\:bg-primary-dark:hover {
+            background-color: #e54b8a;
+        }
+        .focus\:ring-primary-light:focus {
+            --tw-ring-color: #ff5a96;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-[#fcfcfc] p-8 rounded-lg shadow-2xl w-full max-w-md">
+        <div class="flex justify-center mb-6">
+            <img src="https://i.imgur.com/XamnfOc.png" alt="Logotipo" class="w-48 h-auto">
+        </div>
+
+        <p class="text-center text-gray-500 mb-8">Por favor, insira suas credenciais para continuar.</p>
+
+        <form id="loginForm" class="space-y-6">
+            <div>
+                <label for="loginEmail" class="block text-sm font-medium text-gray-700">E-mail</label>
+                <input type="email" id="loginEmail" name="email" required
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light sm:text-sm transition duration-300 ease-in-out">
+            </div>
+
+            <div>
+                <label for="loginPassword" class="block text-sm font-medium text-gray-700">Senha</label>
+                <input type="password" id="loginPassword" name="password" required
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light sm:text-sm transition duration-300 ease-in-out">
+            </div>
+
+            <button type="submit"
+                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                Entrar
+            </button>
+        </form>
+
+        <form id="registerForm" class="space-y-6 hidden">
+            <div>
+                <label for="registerEmail" class="block text-sm font-medium text-gray-700">E-mail</label>
+                <input type="email" id="registerEmail" name="identificador" required
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light sm:text-sm transition duration-300 ease-in-out">
+            </div>
+
+            <div>
+                <label for="registerPassword" class="block text-sm font-medium text-gray-700">Senha</label>
+                <input type="password" id="registerPassword" name="password" required
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-primary-light sm:text-sm transition duration-300 ease-in-out">
+            </div>
+
+            <button type="submit"
+                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                Criar Conta
+            </button>
+        </form>
+
+        <div id="messageArea" class="mt-6 text-center"></div>
+
+        <div class="text-center mt-4">
+            <a href="#" id="toggleLink" class="text-sm font-medium text-primary hover:underline">Criar conta</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const messageArea = document.getElementById('messageArea');
+            const toggleLink = document.getElementById('toggleLink');
+            
+            let isLoginFormVisible = true;
+
+            // Função para exibir mensagens na tela
+            function showMessage(message, isSuccess) {
+                messageArea.textContent = message;
+                messageArea.className = `mt-6 text-center text-sm font-medium ${isSuccess ? 'text-green-600' : 'text-red-600'}`;
+                messageArea.style.opacity = '0';
+                messageArea.style.transition = 'opacity 0.5s ease-in-out';
+                setTimeout(() => messageArea.style.opacity = '1', 10);
+            }
+
+            // Alterna entre formulários
+            toggleLink.addEventListener('click', (event) => {
+                event.preventDefault();
+                isLoginFormVisible = !isLoginFormVisible;
+                if (isLoginFormVisible) {
+                    loginForm.classList.remove('hidden');
+                    registerForm.classList.add('hidden');
+                    toggleLink.textContent = 'Criar conta';
+                } else {
+                    loginForm.classList.add('hidden');
+                    registerForm.classList.remove('hidden');
+                    toggleLink.textContent = 'Fazer login';
+                }
+                showMessage('', false); // Limpa a mensagem
+            });
+
+            // Função para fazer a requisição API
+            async function apiCall(endpoint, data) {
+                try {
+                    const response = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data),
+                    });
+                    return await response.json();
+                } catch (error) {
+                    console.error("Erro na requisição API:", error);
+                    return { success: false, message: "Ocorreu um erro de rede. Tente novamente." };
+                }
+            }
+
+            // Função chamada quando o formulário de login é submetido
+            loginForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                showMessage("Processando...", false);
+
+                const formData = new FormData(loginForm);
+                const data = Object.fromEntries(formData.entries());
+
+                const response = await apiCall('/api/login', data);
+
+                if (response.success) {
+                    showMessage(response.message, true);
+                    window.location.href = 'agendamentos.html';
+                } else {
+                    showMessage(response.message, false);
+                }
+            });
+
+            // Função chamada quando o formulário de registro é submetido
+            registerForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                showMessage("Registrando...", false);
+
+                const formData = new FormData(registerForm);
+                const data = Object.fromEntries(formData.entries());
+
+                const response = await apiCall('/api/register', data);
+
+                if (response.success) {
+                    showMessage(response.message, true);
+                    isLoginFormVisible = true;
+                    loginForm.classList.remove('hidden');
+                    registerForm.classList.add('hidden');
+                    toggleLink.textContent = 'Criar conta';
+                } else {
+                    showMessage(response.message, false);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
