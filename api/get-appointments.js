@@ -5,7 +5,7 @@ const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT } = require('google-auth-library');
 
 const SPREADSHEET_ID = '1nwC53lk48RfU0hOk9605G7ZCfe67tw4o-RBNS9XNfWA';
-const SHEET_NAME = 'datatest';
+const SHEET_NAME = 'Datatest';
 
 module.exports = async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
         const serviceAccountAuth = new JWT({
             email: process.env.CLIENT_EMAIL,
             key: process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
-            scopes: ['https://www.googleapis.com/auth/spreadsheets'], // Mudado para o escopo completo para garantir compatibilidade
+            scopes: ['https://www.googleapis.com/auth/spreadsheets'],
         });
 
         const doc = new GoogleSpreadsheet(SPREADSHEET_ID, serviceAccountAuth);
@@ -35,6 +35,11 @@ module.exports = async (req, res) => {
 
         const rows = await sheet.getRows();
         
+        // Verifica se há linhas antes de mapear
+        if (!rows || rows.length === 0) {
+            return res.status(200).send(JSON.stringify([]));
+        }
+
         // Mapeia as linhas para um formato de array de objetos
         const appointments = rows.map(row => {
             const obj = {};
