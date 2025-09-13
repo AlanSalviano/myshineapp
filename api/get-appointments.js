@@ -1,7 +1,7 @@
 // api/get-appointments.js
-// Utiliza as mesmas credenciais da conta de serviço do register-appointment.js
+// Usa as mesmas credenciais e biblioteca que get-employees.js para garantir a compatibilidade.
 
-const { google } = require('googleapis');
+const { GoogleSpreadsheet } = require('google-spreadsheet');
 const { JWT } = require('google-auth-library');
 
 const SPREADSHEET_ID = '1nwC53lk48RfU0hOk9605G7ZCfe67tw4o-RBNS9XNfWA';
@@ -15,34 +15,35 @@ module.exports = async (req, res) => {
         const serviceAccountAuth = new JWT({
             email: process.env.CLIENT_EMAIL,
             key: process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
-            scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
-        });
-        
-        const sheets = google.sheets({ version: 'v4', auth: serviceAccountAuth });
-
-        const response = await sheets.spreadsheets.values.get({
-            spreadsheetId: SPREADSHEET_ID,
-            range: `${SHEET_NAME}!A:Z`, // Lê todas as colunas da aba
+            scopes: ['https://www.googleapis.com/auth/spreadsheets'],
         });
 
-        const rows = response.data.values;
+        const doc = new GoogleSpreadsheet(SPREADSHEET_ID, serviceAccountAuth);
+
+        await doc.loadInfo(); // Carrega as informações da planilha
+        const sheet = doc.sheetsByTitle[SHEET_NAME];
+
+        if (!sheet) {
+            console.error(`Aba '${SHEET_NAME}' não encontrada.`);
+            return res.status(404).json({ error: 'Aba não encontrada.' });
+        }
+
+        const rows = await sheet.getRows();
         
-        if (!rows || rows.length <= 1) {
+        // Verifica se há linhas antes de mapear
+        if (!rows || rows.length === 0) {
             return res.status(200).json([]);
         }
 
-        const headers = rows[0].map(header => header.toLowerCase());
-        const dataRows = rows.slice(1);
-
-        const appointments = dataRows.map(row => {
-            const appointment = {};
-            row.forEach((value, index) => {
-                const header = headers[index];
-                if (header) {
-                    appointment[header] = value;
-                }
-            });
-            return appointment;
+        // Mapeia as linhas para um formato de array de objetos
+        const appointments = rows.map(row => {
+            const obj = {};
+            const rawData = row._rawData;
+            // Assumimos que a primeira linha da planilha é o cabeçalho
+            // e os dados relevantes estão na coluna B (índice 1)
+            // Se o 'data' estiver em outra coluna, você precisará ajustar o índice
+            obj['data'] = rawData[1];
+            return obj;
         });
 
         res.status(200).json(appointments);
@@ -52,4 +53,3 @@ module.exports = async (req, res) => {
         res.status(500).json({ error: 'Falha ao buscar dados da planilha.' });
     }
 };
-
