@@ -5,13 +5,26 @@ import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { excelDateToJSDate } from 'exceljs'; // Importa a função de conversão
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const SPREADSHEET_ID = '1nwC53lk48RfU0hOk9605G7ZCfe67tw4o-RBNS9XNfWA';
 const SHEET_NAME = 'Datatest';
+
+// Função para converter o número de série da data do Excel para o formato YYYY/MM/DD
+function excelDateToYYYYMMDD(serial) {
+    // Dias entre 1900-01-01 e 1970-01-01 (com ajuste para ano bissexto de 1900)
+    const excelEpoch = new Date(Date.UTC(1899, 11, 30)); 
+    const days = serial - 1; // Ajusta para o índice 0-base
+    const date = new Date(excelEpoch.getTime() + days * 86400000); // 86400000 ms em um dia
+    
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    
+    return `${year}/${month}/${day}`;
+}
 
 export default async function handler(req, res) {
     res.setHeader('Content-Type', 'application/json');
@@ -40,11 +53,8 @@ export default async function handler(req, res) {
         for (let i = 1; i < sheet.rowCount; i++) {
             const cell = sheet.getCell(i, 1); // Coluna B tem índice 1
             if (cell.value) {
-                // Converte o número de série para uma data JS, depois para string YYYY/MM/DD
-                const jsDate = excelDateToJSDate(cell.value);
-                const formattedDate = jsDate.getFullYear() + '/' + 
-                                     String(jsDate.getMonth() + 1).padStart(2, '0') + '/' + 
-                                     String(jsDate.getDate()).padStart(2, '0');
+                // Converte o número de série para o formato YYYY/MM/DD
+                const formattedDate = excelDateToYYYYMMDD(cell.value);
                 appointments.push({ date: formattedDate });
             }
         }
