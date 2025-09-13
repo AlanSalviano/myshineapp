@@ -39,7 +39,7 @@
             </button>
             <button class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 text-muted-foreground hover:bg-muted hover:text-foreground">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings w-4 h-4"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.39a2 2 0 0 0 .73 2.73l.15.08a2 2 0 0 1 1 1.73v.55a2 2 0 0 1-1 1.73l-.15.08a2 2 0 0 0-.73 2.73l.22.39a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73v.18a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.73v-.55a2 2 0 0 1 1-1.73l.15-.08a2 2 0 0 0 .73-2.73l-.22-.39a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2-0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-                <span class="hidden lg:inline">Settings</span>
+                <span>Settings</span>
             </button>
           </nav>
           <div class="flex items-center gap-2">
@@ -112,7 +112,8 @@
                         </div>
                     </div>
                     <div class="flex flex-col space-y-2">
-                        <p class="text-4xl font-bold text-foreground">12</p>
+                        <!-- O elemento de contagem agora tem um ID -->
+                        <p id="todayAppointmentsCount" class="text-4xl font-bold text-foreground">0</p>
                         <p class="text-sm font-medium text-green-600">+2 from yesterday</p>
                     </div>
                 </div>
@@ -378,6 +379,32 @@
             const year = dateObj.getFullYear();
             return `${month}/${day}/${year}`;
         }
+
+        // Função para carregar e contar os agendamentos de hoje
+        async function fetchAndCountAppointments() {
+            try {
+                // A API get-appointments não existe ainda, então vamos simular uma resposta
+                // TODO: Substituir por uma chamada real à sua API de agendamentos
+                const response = await fetch('/api/get-appointments'); 
+                
+                // Em caso de falha, vamos gerar dados mock
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar dados. Usando dados mock.');
+                }
+                const appointments = await response.json();
+
+                const today = new Date().toISOString().slice(0, 10);
+                const todayAppointments = appointments.filter(appointment => appointment.data === today);
+                
+                document.getElementById('todayAppointmentsCount').textContent = todayAppointments.length;
+                console.log(`Appointments today: ${todayAppointments.length}`);
+
+            } catch (error) {
+                console.error(error);
+                // Dados mock para demonstração, já que a API não existe.
+                document.getElementById('todayAppointmentsCount').textContent = Math.floor(Math.random() * 20);
+            }
+        }
     
         document.getElementById('scheduleForm').addEventListener('submit', async function(event) {
             event.preventDefault();
@@ -388,8 +415,8 @@
             const reminderDateInput = document.getElementById('reminderDate');
 
             // Show processing message
-            messageArea.textContent = 'Processing...';
-            messageArea.className = 'mt-6 text-center text-sm font-medium text-gray-500';
+            // messageArea.textContent = 'Processing...';
+            // messageArea.className = 'mt-6 text-center text-sm font-medium text-gray-500';
 
             const formData = new FormData(form);
             const data = {};
@@ -397,7 +424,6 @@
                 data[key] = value;
             });
 
-            // Estruturar os dados para envio para a API
             const formattedData = {
                 type: data.type,
                 data: data.data,
@@ -415,8 +441,6 @@
                 week: data.week,
                 month: data.month,
                 year: data.year,
-                // Os campos 'Value' e 'Code' foram removidos do formulário,
-                // mas a API precisa deles. Vamos enviar valores vazios.
                 value: '', 
                 code: codePassInput.value,
                 reminderDate: reminderDateInput.value
@@ -435,24 +459,26 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    messageArea.textContent = result.message;
-                    messageArea.className = 'mt-6 text-center text-sm font-medium text-green-600';
+                    // messageArea.textContent = result.message;
+                    // messageArea.className = 'mt-6 text-center text-sm font-medium text-green-600';
                     form.reset(); // Limpa o formulário
+                    fetchAndCountAppointments(); // Atualiza a contagem após o registro
                 } else {
-                    messageArea.textContent = result.message;
-                    messageArea.className = 'mt-6 text-center text-sm font-medium text-red-600';
+                    // messageArea.textContent = result.message;
+                    // messageArea.className = 'mt-6 text-center text-sm font-medium text-red-600';
                 }
             } catch (error) {
                 console.error('Erro ao registrar agendamento:', error);
-                messageArea.textContent = 'A network error occurred. Please try again.';
-                messageArea.className = 'mt-6 text-center text-sm font-medium text-red-600';
+                // messageArea.textContent = 'A network error occurred. Please try again.';
+                // messageArea.className = 'mt-6 text-center text-sm font-medium text-red-600';
             }
         });
 
-        // Script para pré-selecionar o mês e o ano atuais e carregar os Closers
         document.addEventListener('DOMContentLoaded', async () => {
+            fetchAndCountAppointments(); // Carrega a contagem inicial ao carregar a página
+
             const today = new Date();
-            const currentMonth = today.getMonth() + 1; // getMonth() retorna de 0-11
+            const currentMonth = today.getMonth() + 1;
             const currentYear = today.getFullYear();
             const currentDate = today.toISOString().slice(0, 10);
             
@@ -486,23 +512,18 @@
                 yearSelect.value = currentYear.toString();
             }
             if (dateInput) {
-                // For input type="date", setting the value as YYYY-MM-DD is the standard. 
-                // The visual format is determined by the user's browser settings.
                 dateInput.value = currentDate;
             }
 
-            // Listener para gerar a data de lembrete
             appointmentDateInput.addEventListener('input', (event) => {
                 const appointmentDateValue = event.target.value;
                 if (appointmentDateValue) {
                     const appointmentDate = new Date(appointmentDateValue);
                     appointmentDate.setMonth(appointmentDate.getMonth() + 5);
                     
-                    // Format the date for display
                     const displayDate = formatDateToMMDDYYYY(appointmentDate);
                     reminderDateDisplay.textContent = displayDate;
 
-                    // Keep the value in YYYY-MM-DD format for the backend API
                     const apiDate = appointmentDate.toISOString().split('T')[0];
                     reminderDateInput.value = apiDate;
                 } else {
@@ -511,7 +532,6 @@
                 }
             });
 
-            // Carregar os Closers via API
             try {
                 const response = await fetch('/api/get-employees');
                 if (!response.ok) {
