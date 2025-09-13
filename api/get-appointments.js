@@ -30,23 +30,21 @@ module.exports = async (req, res) => {
 
         const rows = await sheet.getRows();
         
-        // Verifica se há linhas antes de mapear
-        if (!rows || rows.length === 0) {
-            return res.status(200).json([]);
-        }
-
         // Mapeia as linhas para um formato de array de objetos
         const appointments = rows.map(row => {
             const obj = {};
-            const rawData = row._rawData;
-            // Assumimos que a primeira linha da planilha é o cabeçalho
-            // e os dados relevantes estão na coluna B (índice 1)
-            // Se o 'data' estiver em outra coluna, você precisará ajustar o índice
-            obj['data'] = rawData[1];
+            // Usa sheet.headerValues para garantir que as colunas sejam mapeadas corretamente
+            // e sejam tolerantes à ordem das colunas.
+            for (const header of sheet.headerValues) {
+                obj[header.toLowerCase()] = row[header]; 
+            }
             return obj;
         });
+        
+        // Filtra os dados para remover linhas vazias
+        const filteredAppointments = appointments.filter(appointment => appointment.data);
 
-        res.status(200).json(appointments);
+        res.status(200).json(filteredAppointments);
 
     } catch (error) {
         console.error('Erro ao buscar dados da planilha:', error);
