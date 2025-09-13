@@ -8,6 +8,16 @@ function formatDateToYYYYMMDD(dateObj) {
     return `${year}/${month}/${day}`;
 }
 
+// Helper function to format yesterday's date to YYYY/MM/DD string
+function formatYesterdayDateToYYYYMMDD(dateObj) {
+    const yesterday = new Date(dateObj);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const year = yesterday.getFullYear();
+    const month = (yesterday.getMonth() + 1).toString().padStart(2, '0');
+    const day = yesterday.getDate().toString().padStart(2, '0');
+    return `${year}/${month}/${day}`;
+}
+
 // Function to fetch and count today's appointments
 async function fetchAndCountAppointments() {
     try {
@@ -19,24 +29,23 @@ async function fetchAndCountAppointments() {
         }
         const appointments = await response.json();
 
-        // Convert today's date to the YYYY/MM/DD format for comparison
+        // Get today's and yesterday's dates
         const today = formatDateToYYYYMMDD(new Date());
-        
-        // --- LOG DE DEPURAÇÃO ---
-        console.log("-----------------------------------------");
-        console.log("Dados recebidos da API:", appointments);
-        console.log("Data de hoje para comparação:", today);
-        if (appointments.length > 0) {
-            console.log("Data do primeiro agendamento na planilha:", appointments[0].date);
-        }
-        console.log("-----------------------------------------");
-        // --- FIM DO LOG DE DEPURAÇÃO ---
+        const yesterday = formatYesterdayDateToYYYYMMDD(new Date());
 
-        // Filter appointments for today
+        // Filter appointments for today and yesterday
         const todayAppointments = appointments.filter(appointment => appointment.date === today);
-        
+        const yesterdayAppointments = appointments.filter(appointment => appointment.date === yesterday);
+
         // Update the count on the dashboard
         document.getElementById('todayAppointmentsCount').textContent = todayAppointments.length;
+
+        // Calculate and display the difference from yesterday
+        const diff = todayAppointments.length - yesterdayAppointments.length;
+        const diffElement = document.getElementById('todayAppointmentsDiff');
+        diffElement.textContent = `${diff >= 0 ? '+' : ''}${diff} from yesterday`;
+        diffElement.className = `text-sm font-medium ${diff >= 0 ? 'text-green-600' : 'text-red-600'}`;
+        
         console.log(`Appointments today: ${todayAppointments.length}`);
 
     } catch (error) {
