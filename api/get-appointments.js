@@ -5,7 +5,7 @@ const { google } = require('googleapis');
 const { JWT } = require('google-auth-library');
 
 const SPREADSHEET_ID = '1nwC53lk48RfU0hOk9605G7ZCfe67tw4o-RBNS9XNfWA';
-const SHEET_NAME = 'datatest';
+const SHEET_NAME = 'Datatest';
 
 module.exports = async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
@@ -52,3 +52,4 @@ module.exports = async (req, res) => {
         res.status(500).json({ error: 'Falha ao buscar dados da planilha.' });
     }
 };
+
