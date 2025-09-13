@@ -1,56 +1,70 @@
-import { GoogleSpreadsheet } from 'google-spreadsheet';
-import { JWT } from 'google-auth-library';
-import dotenv from 'dotenv';
+const { GoogleSpreadsheet } = require('google-spreadsheet');
 
-dotenv.config();
+exports.handler = async (event, context) => {
+    // Configurações e credenciais da planilha
+    const SPREADSHEET_ID = process.env.REACT_APP_SPREADSHEET_ID;
+    const CLIENT_EMAIL = process.env.REACT_APP_GOOGLE_CLIENT_EMAIL;
+    const PRIVATE_KEY = process.env.REACT_APP_GOOGLE_SERVICE_PRIVATE_KEY.replace(/\\n/g, '\n');
 
-const serviceAccountAuth = new JWT({
-    email: process.env.CLIENT_EMAIL,
-    key: process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
-    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-});
-
-const doc = new GoogleSpreadsheet('1nwC53lk48RfU0hOk9605G7ZCfe67tw4o-RBNS9XNfWA', serviceAccountAuth);
-
-export default async function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ message: 'Método não permitido.' });
-    }
+    const doc = new GoogleSpreadsheet(SPREADSHEET_ID);
 
     try {
+        // Autentica com as credenciais da conta de serviço
+        await doc.useServiceAccountAuth({
+            client_email: CLIENT_EMAIL,
+            private_key: PRIVATE_KEY,
+        });
+
+        // Carrega as informações da planilha
         await doc.loadInfo();
-        const sheet = doc.sheetsByTitle['Datatest'];
-        if (!sheet) {
-            return res.status(500).json({ success: false, message: 'Planilha "Datatest" não encontrada.' });
-        }
+        const sheet = doc.sheetsByIndex[0]; // Assume que a primeira aba é a correta
 
-        const { type, data, pets, closer1, closer2, customers, phone, oldNew, appointmentDate, serviceValue, franchise, city, source, week, month, year, code } = req.body;
-
+        // Analisa os dados do corpo da requisição POST
+        const body = JSON.parse(event.body);
+        
+        // Mapeia os dados do corpo da requisição para as colunas da planilha.
+        // A ordem aqui é crucial e deve corresponder à ordem das colunas na sua planilha.
+        // O valor de 'reminderDate' será inserido na 18ª posição, correspondente à coluna R.
         const newRow = {
-            'Type': type,
-            'Date': data,
-            'Pets': pets,
-            'Closer (1)': closer1, 
-            'Closer (2)': closer2, 
-            'Customers': customers,
-            'Phone': phone,
-            'Old/New': oldNew,
-            'Date (Appointment)': appointmentDate,
-            'Service Value': serviceValue,
-            'Franchise': franchise,
-            'City': city,
-            'Source': source,
-            'Week': week,
-            'Month': month,
-            'Year': year,
-            'Code': code,
+            'type': body.type,
+            'data': body.data,
+            'pets': body.pets,
+            'closer1': body.closer1,
+            'closer2': body.closer2,
+            'customers': body.customers,
+            'phone': body.phone,
+            'oldNew': body.oldNew,
+            'appointmentDate': body.appointmentDate,
+            'serviceValue': body.serviceValue,
+            'franchise': body.franchise,
+            'city': body.city,
+            'source': body.source,
+            'week': body.week,
+            'month': body.month,
+            'year': body.year,
+            'code': body.code,
+            'reminderDate': body.reminderDate
         };
 
+        // Adiciona a nova linha na planilha
         await sheet.addRow(newRow);
 
-        return res.status(201).json({ success: true, message: 'Agendamento registrado com sucesso!' });
-    } catch (error) {
-        console.error('Erro ao registrar agendamento:', error);
-        return res.status(500).json({ success: false, message: 'Ocorreu um erro no servidor. Por favor, tente novamente.' });
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ success: true, message: 'Agendamento registrado com sucesso!' }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+
+    } catch (e) {
+        console.error('Erro ao processar a requisição:', e);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ success: false, message: 'Erro ao registrar agendamento. Por favor, tente novamente.' }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
     }
-}
+};
