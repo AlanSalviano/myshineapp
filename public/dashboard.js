@@ -1,10 +1,4 @@
-// Helper function to format a date object to YYYY/MM/DD string
-function formatDateToYYYYMMDD(dateObj) {
-    const year = dateObj.getFullYear();
-    const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
-    const day = dateObj.getDate().toString().padStart(2, '0');
-    return `${year}/${month}/${day}`;
-}
+// public/dashboard.js
 
 // Function to fetch and count today's appointments
 async function fetchAndCountAppointments() {
@@ -17,8 +11,8 @@ async function fetchAndCountAppointments() {
         }
         const appointments = await response.json();
 
-        // Convert today's date to the YYYY/MM/DD format for comparison
-        const today = formatDateToYYYYMMDD(new Date());
+        // Convert today's date to the YYYY-MM-DD string format for comparison
+        const today = new Date().toISOString().slice(0, 10);
         
         // --- LOG DE DEPURAÇÃO ---
         console.log("-----------------------------------------");
