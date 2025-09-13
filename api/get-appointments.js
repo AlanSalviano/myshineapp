@@ -13,11 +13,11 @@ const SPREADSHEET_ID = '1nwC53lk48RfU0hOk9605G7ZCfe67tw4o-RBNS9XNfWA';
 const SHEET_NAME = 'Datatest';
 
 // Função para converter o número de série da data do Excel para o formato YYYY/MM/DD
-function excelDateToYYYYMMDD(serial) {
-    // Dias entre 1900-01-01 e 1970-01-01 (com ajuste para ano bissexto de 1900)
-    const excelEpoch = new Date(Date.UTC(1899, 11, 30)); 
-    const days = serial - 1; // Ajusta para o índice 0-base
-    const date = new Date(excelEpoch.getTime() + days * 86400000); // 86400000 ms em um dia
+function excelDateToYYYYMMDD(excelSerialDate) {
+    // A data de época do Excel (1 de janeiro de 1900) é usada como ponto de partida.
+    // O ajuste -2 lida com o bug de ano bissexto do Excel e o fato de que a contagem começa do dia 1.
+    const date = new Date(0);
+    date.setFullYear(0, 0, excelSerialDate - 2); 
     
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -47,6 +47,7 @@ export default async function handler(req, res) {
             return res.status(404).json({ error: 'Aba não encontrada.' });
         }
         
+        // Acessa os dados da coluna "Date" (coluna B)
         await sheet.loadCells('B1:B' + sheet.rowCount);
         const appointments = [];
         
