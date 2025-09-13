@@ -54,6 +54,9 @@
         .bg-secondary {
             background-color: #fbd572; /* Cor secundária do agendbackup */
         }
+        .text-secondary {
+            color: #fbd572; /* Cor secundária para texto */
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -88,19 +91,19 @@
             <div class="grid grid-cols-1 gap-8">
                 <!-- Main Form Card -->
                 <div class="card">
-                    <h2 class="text-xl font-bold text-gray-700 mb-6">Register a New Appointment</h2>
+                    <h2 class="text-xl font-bold text-primary mb-6">Register a New Appointment</h2>
                     
-                    <form id="scheduleForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+                    <form id="scheduleForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-2">
 
                         <!-- From Logistic -->
                         <div class="col-span-full">
-                            <h3 class="text-lg font-semibold text-gray-600 mb-4">From Logistic</h3>
+                            <h3 class="text-lg font-semibold text-secondary mb-4">From Logistic</h3>
                         </div>
                         <div class="space-y-1">
                             <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
                             <select id="type" name="type" required class="mt-1 block w-full input-field">
                                 <option value="Central">Central</option>
-                                <option value="Franchise">Franchise</option>
+                                <option value="Franchise">Franchion</option>
                             </select>
                         </div>
                         <div class="space-y-1">
@@ -122,7 +125,7 @@
                         
                         <!-- From Schedule -->
                         <div class="col-span-full mt-6">
-                            <h3 class="text-lg font-semibold text-gray-600 mb-4">From Schedule</h3>
+                            <h3 class="text-lg font-semibold text-secondary mb-4">From Schedule</h3>
                         </div>
                         <div class="space-y-1">
                             <label for="customers" class="block text-sm font-medium text-gray-700">Customers</label>
@@ -157,7 +160,7 @@
 
                         <!-- From Closers -->
                         <div class="col-span-full mt-6">
-                            <h3 class="text-lg font-semibold text-gray-600 mb-4">From Closers</h3>
+                            <h3 class="text-lg font-semibold text-secondary mb-4">From Closers</h3>
                         </div>
                         <div class="space-y-1">
                             <label for="closer1" class="block text-sm font-medium text-gray-700">Salesperson (1)</label>
@@ -226,7 +229,7 @@
                         
                         <!-- From Lead -->
                         <div class="col-span-full mt-6">
-                            <h3 class="text-lg font-semibold text-gray-600 mb-4">From Lead</h3>
+                            <h3 class="text-lg font-semibold text-secondary mb-4">From Lead</h3>
                         </div>
                         <div class="space-y-1">
                             <label for="source" class="block text-sm font-medium text-gray-700">Source</label>
@@ -260,11 +263,11 @@
                            <!-- Container for Confirmation Code and Reminder Date -->
                             <div class="flex flex-col md:flex-row gap-6 mt-8">
                                 <div class="card flex-1 flex flex-col items-center">
-                                    <h3 class="text-lg font-semibold text-gray-600 mb-4">Confirmation Code</h3>
+                                    <h3 class="text-lg font-semibold text-secondary mb-4">Confirmation Code</h3>
                                     <div id="codePassDisplay" class="h-20 w-full bg-secondary rounded-xl flex items-center justify-center font-bold text-3xl text-white shadow-md"></div>
                                 </div>
                                 <div class="card flex-1 flex flex-col items-center">
-                                    <h3 class="text-lg font-semibold text-gray-600 mb-4">Reminder Date</h3>
+                                    <h3 class="text-lg font-semibold text-secondary mb-4">Reminder Date</h3>
                                     <div id="reminderDateDisplay" class="h-20 w-full bg-secondary rounded-xl flex items-center justify-center font-bold text-3xl text-white shadow-md"></div>
                                 </div>
                             </div>
