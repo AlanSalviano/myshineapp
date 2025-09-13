@@ -21,7 +21,8 @@ async function fetchAndCountAppointments() {
         const today = new Date().toISOString().slice(0, 10);
         
         // Filter appointments for today
-        const todayAppointments = appointments.filter(appointment => appointment.data === today);
+        // A propriedade 'date' agora é usada para o filtro
+        const todayAppointments = appointments.filter(appointment => appointment.date === today);
         
         // Update the count on the dashboard
         document.getElementById('todayAppointmentsCount').textContent = todayAppointments.length;
