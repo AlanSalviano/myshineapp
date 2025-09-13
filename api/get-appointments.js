@@ -23,6 +23,7 @@ function excelDateToYYYYMMDD(excelSerialDate) {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     
+    // A única alteração aqui é o uso de traços (-) no lugar de barras (/)
     return `${year}-${month}-${day}`;
 }
 
@@ -54,7 +55,7 @@ export default async function handler(req, res) {
         for (let i = 1; i < sheet.rowCount; i++) {
             const cell = sheet.getCell(i, 1); // Coluna B tem índice 1
             if (cell.value) {
-                // Converte o número de série para o formato YYYY/MM/DD
+                // Converte o número de série para o formato YYYY-MM-DD
                 const formattedDate = excelDateToYYYYMMDD(cell.value);
                 appointments.push({ date: formattedDate });
             }
