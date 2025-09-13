@@ -32,14 +32,14 @@ export default async function handler(req, res) {
             return res.status(404).json({ error: 'Aba não encontrada.' });
         }
         
-        // Acessa os dados da coluna "Date (Appointment)" (coluna J)
-        await sheet.loadCells('J1:J' + sheet.rowCount);
+        // Acessa os dados da coluna "Date" (coluna B)
+        await sheet.loadCells('B1:B' + sheet.rowCount);
         const appointments = [];
         
         for (let i = 1; i < sheet.rowCount; i++) {
-            const cell = sheet.getCell(i, 9); // Coluna J tem índice 9
+            const cell = sheet.getCell(i, 1); // Coluna B tem índice 1
             if (cell.value) {
-                // Adiciona o valor diretamente ao array, sem conversão
+                // Adiciona o valor da data, que já é uma string, ao array
                 appointments.push({ date: cell.value });
             }
         }
