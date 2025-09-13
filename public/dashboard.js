@@ -17,11 +17,10 @@ async function fetchAndCountAppointments() {
         }
         const appointments = await response.json();
 
-        // Convert today's date to the same format as the spreadsheet
-        const today = new Date().toISOString().slice(0, 10);
+        // Convert today's date to the MM/DD/YYYY format for comparison
+        const today = formatDateToMMDDYYYY(new Date());
         
         // Filter appointments for today
-        // A propriedade 'date' agora é usada para o filtro
         const todayAppointments = appointments.filter(appointment => appointment.date === today);
         
         // Update the count on the dashboard
