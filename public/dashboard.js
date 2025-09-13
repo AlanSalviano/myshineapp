@@ -9,13 +9,11 @@ function formatDateToMMDDYYYY(dateObj) {
 // Function to fetch and count today's appointments
 async function fetchAndCountAppointments() {
     try {
-        // Placeholder for the real API call to your spreadsheet
-        // Replace this with your actual API endpoint for fetching appointments
-        // The column name in the spreadsheet must match the 'data' property in the JSON
         const response = await fetch('/api/get-appointments'); 
         
         if (!response.ok) {
-            throw new Error('Erro ao carregar dados. Usando dados mock.');
+            document.getElementById('todayAppointmentsCount').textContent = 'error';
+            throw new Error('Erro ao carregar dados da API.');
         }
         const appointments = await response.json();
 
@@ -31,8 +29,7 @@ async function fetchAndCountAppointments() {
 
     } catch (error) {
         console.error(error);
-        // Use mock data for demonstration if the API call fails
-        document.getElementById('todayAppointmentsCount').textContent = Math.floor(Math.random() * 20);
+        document.getElementById('todayAppointmentsCount').textContent = 'error';
     }
 }
 
