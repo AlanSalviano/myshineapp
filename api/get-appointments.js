@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
         const serviceAccountAuth = new JWT({
             email: process.env.CLIENT_EMAIL,
             key: process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
-            scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'], // Usar 'readonly' para segurança
+            scopes: ['https://www.googleapis.com/auth/spreadsheets'], // Mudado para o escopo completo para garantir compatibilidade
         });
 
         const doc = new GoogleSpreadsheet(SPREADSHEET_ID, serviceAccountAuth);
