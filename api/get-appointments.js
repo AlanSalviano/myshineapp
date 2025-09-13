@@ -1,5 +1,4 @@
 // api/get-appointments.js
-// Usa a mesma abordagem que o get-employees.js para garantir a compatibilidade e a leitura correta dos dados.
 
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
@@ -11,21 +10,6 @@ const __dirname = dirname(__filename);
 
 const SPREADSHEET_ID = '1nwC53lk48RfU0hOk9605G7ZCfe67tw4o-RBNS9XNfWA';
 const SHEET_NAME = 'Datatest';
-
-// Função para converter o número de série da data do Excel para o formato YYYY-MM-DD
-function excelDateToYYYYMMDD(excelSerialDate) {
-    // A data de época do Excel (1º de janeiro de 1900) é usada como ponto de partida.
-    // O ajuste -2 lida com o bug de ano bissexto do Excel e o fato de que a contagem começa do dia 1.
-    const date = new Date(Date.UTC(1900, 0, 1));
-    date.setDate(date.getDate() + excelSerialDate - 2); 
-    
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    
-    // A única alteração aqui é o uso de traços (-) no lugar de barras (/)
-    return `${year}-${month}-${day}`;
-}
 
 export default async function handler(req, res) {
     res.setHeader('Content-Type', 'application/json');
@@ -48,16 +32,15 @@ export default async function handler(req, res) {
             return res.status(404).json({ error: 'Aba não encontrada.' });
         }
         
-        // Acessa os dados da coluna "Date" (coluna B)
-        await sheet.loadCells('B1:B' + sheet.rowCount);
+        // Acessa os dados da coluna "Date (Appointment)" (coluna J)
+        await sheet.loadCells('J1:J' + sheet.rowCount);
         const appointments = [];
         
         for (let i = 1; i < sheet.rowCount; i++) {
-            const cell = sheet.getCell(i, 1); // Coluna B tem índice 1
+            const cell = sheet.getCell(i, 9); // Coluna J tem índice 9
             if (cell.value) {
-                // Converte o número de série para o formato YYYY-MM-DD
-                const formattedDate = excelDateToYYYYMMDD(cell.value);
-                appointments.push({ date: formattedDate });
+                // Adiciona o valor diretamente ao array, sem conversão
+                appointments.push({ date: cell.value });
             }
         }
         
