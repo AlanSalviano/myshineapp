@@ -24,7 +24,7 @@ export default async function handler(req, res) {
             return res.status(500).json({ success: false, message: 'Planilha "Datatest" não encontrada.' });
         }
 
-        const { type, data, pets, closer1, closer2, customers, phone, oldNew, appointmentDate, serviceValue, franchise, city, source, week, month, year, code } = req.body;
+        const { type, data, pets, closer1, closer2, customers, phone, oldNew, appointmentDate, serviceValue, franchise, city, source, week, month, year, code, reminderDate } = req.body;
 
         const newRow = {
             'Type': type,
@@ -44,6 +44,7 @@ export default async function handler(req, res) {
             'Month': month,
             'Year': year,
             'Code': code,
+            'Reminder Date': reminderDate,
         };
 
         await sheet.addRow(newRow);
