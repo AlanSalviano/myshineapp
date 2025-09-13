@@ -1,56 +1,51 @@
 // api/get-appointments.js
 // Utiliza as mesmas credenciais da conta de serviço do register-appointment.js
 
-const { GoogleSpreadsheet } = require('google-spreadsheet');
+const { google } = require('googleapis');
 const { JWT } = require('google-auth-library');
 
 const SPREADSHEET_ID = '1nwC53lk48RfU0hOk9605G7ZCfe67tw4o-RBNS9XNfWA';
-const SHEET_NAME = 'Datatest';
+const SHEET_NAME = 'datatest';
 
 module.exports = async (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.setHeader('Access-Control-Allow-Origin', '*');
 
     try {
-        // Log para depuração: verifica a formatação da chave privada.
-        // A sua chave privada DEVE começar com "-----BEGIN PRIVATE KEY-----" e terminar com "-----END PRIVATE KEY-----\n"
-        // Verifique se a chave impressa aqui está correta e com quebras de linha.
-        console.log("Formatted Private Key:", process.env.PRIVATE_KEY.replace(/\\n/g, '\n'));
-
         const serviceAccountAuth = new JWT({
             email: process.env.CLIENT_EMAIL,
             key: process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
-            scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+            scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
         });
-
-        const doc = new GoogleSpreadsheet(SPREADSHEET_ID, serviceAccountAuth);
-
-        await doc.loadInfo(); // Carrega as informações da planilha
-        const sheet = doc.sheetsByTitle[SHEET_NAME];
-
-        if (!sheet) {
-            console.error(`Aba '${SHEET_NAME}' não encontrada.`);
-            return res.status(404).json({ error: 'Aba não encontrada.' });
-        }
-
-        const rows = await sheet.getRows();
         
-        // Verifica se há linhas antes de mapear
-        if (!rows || rows.length === 0) {
-            return res.status(200).send(JSON.stringify([]));
-        }
+        const sheets = google.sheets({ version: 'v4', auth: serviceAccountAuth });
 
-        // Mapeia as linhas para um formato de array de objetos
-        const appointments = rows.map(row => {
-            const obj = {};
-            for (const header of sheet.headerValues) {
-                // Acessa o valor da célula pelo nome da coluna (case-insensitive)
-                obj[header.toLowerCase()] = row[header]; 
-            }
-            return obj;
+        const response = await sheets.spreadsheets.values.get({
+            spreadsheetId: SPREADSHEET_ID,
+            range: `${SHEET_NAME}!A:Z`, // Lê todas as colunas da aba
         });
 
-        res.status(200).send(JSON.stringify(appointments));
+        const rows = response.data.values;
+        
+        if (!rows || rows.length <= 1) {
+            return res.status(200).json([]);
+        }
+
+        const headers = rows[0].map(header => header.toLowerCase());
+        const dataRows = rows.slice(1);
+
+        const appointments = dataRows.map(row => {
+            const appointment = {};
+            row.forEach((value, index) => {
+                const header = headers[index];
+                if (header) {
+                    appointment[header] = value;
+                }
+            });
+            return appointment;
+        });
+
+        res.status(200).json(appointments);
 
     } catch (error) {
         console.error('Erro ao buscar dados da planilha:', error);
