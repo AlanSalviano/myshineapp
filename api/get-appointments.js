@@ -1,13 +1,13 @@
 // api/get-appointments.js
 // Usa as mesmas credenciais e biblioteca que get-employees.js para garantir a compatibilidade.
 
-const { GoogleSpreadsheet } = require('google-spreadsheet');
-const { JWT } = require('google-auth-library');
+import { GoogleSpreadsheet } from 'google-spreadsheet';
+import { JWT } from 'google-auth-library';
 
 const SPREADSHEET_ID = '1nwC53lk48RfU0hOk9605G7ZCfe67tw4o-RBNS9XNfWA';
 const SHEET_NAME = 'Datatest';
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
     res.setHeader('Content-Type', 'application/json');
     res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -36,11 +36,8 @@ module.exports = async (req, res) => {
         const rows = await sheet.getRows();
         console.log(`getRows() executado com sucesso. Número de linhas lidas: ${rows.length}`);
         
-        // Mapeia as linhas para um formato de array de objetos
         const appointments = rows.map(row => {
             const obj = {};
-            // Usa sheet.headerValues para garantir que as colunas sejam mapeadas corretamente
-            // e sejam tolerantes à ordem das colunas.
             for (const header of sheet.headerValues) {
                 obj[header.toLowerCase()] = row[header]; 
             }
@@ -49,7 +46,6 @@ module.exports = async (req, res) => {
         
         console.log("Dados mapeados. Exemplo do primeiro agendamento:", appointments[0]);
 
-        // Filtra os dados para remover linhas vazias
         const filteredAppointments = appointments.filter(appointment => appointment.data);
 
         console.log(`Dados filtrados com sucesso. Total de agendamentos válidos: ${filteredAppointments.length}`);
@@ -61,4 +57,4 @@ module.exports = async (req, res) => {
         console.error('Erro fatal. Detalhes do erro:', error.message);
         res.status(500).json({ error: 'Falha ao buscar dados da planilha.' });
     }
-};
+}
