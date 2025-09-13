@@ -12,6 +12,11 @@ module.exports = async (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
 
     try {
+        // Log para depuração: verifica a formatação da chave privada.
+        // A sua chave privada DEVE começar com "-----BEGIN PRIVATE KEY-----" e terminar com "-----END PRIVATE KEY-----\n"
+        // Verifique se a chave impressa aqui está correta e com quebras de linha.
+        console.log("Formatted Private Key:", process.env.PRIVATE_KEY.replace(/\\n/g, '\n'));
+
         const serviceAccountAuth = new JWT({
             email: process.env.CLIENT_EMAIL,
             key: process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
