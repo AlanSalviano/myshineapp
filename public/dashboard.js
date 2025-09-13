@@ -1,9 +1,9 @@
-// Helper function to format a date object to MM/DD/YYYY string
-function formatDateToMMDDYYYY(dateObj) {
+// Helper function to format a date object to YYYY/MM/DD string
+function formatDateToYYYYMMDD(dateObj) {
+    const year = dateObj.getFullYear();
     const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
     const day = dateObj.getDate().toString().padStart(2, '0');
-    const year = dateObj.getFullYear();
-    return `${month}/${day}/${year}`;
+    return `${year}/${month}/${day}`;
 }
 
 // Function to fetch and count today's appointments
@@ -17,8 +17,8 @@ async function fetchAndCountAppointments() {
         }
         const appointments = await response.json();
 
-        // Convert today's date to the MM/DD/YYYY format for comparison
-        const today = formatDateToMMDDYYYY(new Date());
+        // Convert today's date to the YYYY/MM/DD format for comparison
+        const today = formatDateToYYYYMMDD(new Date());
         
         // Filter appointments for today
         const todayAppointments = appointments.filter(appointment => appointment.date === today);
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (appointmentDateValue) {
             const appointmentDate = new Date(appointmentDateValue);
             appointmentDate.setMonth(appointmentDate.getMonth() + 5);
-            const displayDate = formatDateToMMDDYYYY(appointmentDate);
+            const displayDate = formatDateToYYYYMMDD(appointmentDate);
             reminderDateDisplay.textContent = displayDate;
             const apiDate = appointmentDate.toISOString().split('T')[0];
             reminderDateInput.value = apiDate;
