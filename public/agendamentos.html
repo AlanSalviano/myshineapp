@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Roboto', sans-serif';
             background-color: #f3f4f6; /* Cor de fundo do agendbackup */
             display: flex;
             min-height: 100vh;
@@ -85,13 +85,17 @@
                 </div>
             </header>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 gap-8">
                 <!-- Main Form Card -->
-                <div class="lg:col-span-2 card">
+                <div class="card">
                     <h2 class="text-xl font-bold text-gray-700 mb-6">Register a New Appointment</h2>
                     
                     <form id="scheduleForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <!-- Row 1 -->
+
+                        <!-- From Logistic -->
+                        <div class="col-span-full">
+                            <h3 class="text-lg font-semibold text-gray-600 mb-4">From Logistic</h3>
+                        </div>
                         <div class="space-y-1">
                             <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
                             <select id="type" name="type" required class="mt-1 block w-full input-field">
@@ -102,6 +106,27 @@
                         <div class="space-y-1">
                             <label for="data" class="block text-sm font-medium text-gray-700">Date</label>
                             <input type="date" id="data" name="data" required class="mt-1 block w-full input-field">
+                        </div>
+                        <div class="space-y-1">
+                            <label for="appointmentDate" class="block text-sm font-medium text-gray-700">Appointment Date</label>
+                            <input type="date" id="appointmentDate" name="appointmentDate" required class="mt-1 block w-full input-field">
+                        </div>
+                        <div class="space-y-1">
+                            <label for="franchise" class="block text-sm font-medium text-gray-700">Franchise</label>
+                            <input type="text" id="franchise" name="franchise" required class="mt-1 block w-full input-field">
+                        </div>
+                        <div class="space-y-1">
+                            <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+                            <input type="text" id="city" name="city" required class="mt-1 block w-full input-field">
+                        </div>
+                        
+                        <!-- From Schedule -->
+                        <div class="col-span-full mt-6">
+                            <h3 class="text-lg font-semibold text-gray-600 mb-4">From Schedule</h3>
+                        </div>
+                        <div class="space-y-1">
+                            <label for="customers" class="block text-sm font-medium text-gray-700">Customers</label>
+                            <input type="text" id="customers" name="customers" required class="mt-1 block w-full input-field">
                         </div>
                         <div class="space-y-1">
                             <label for="pets" class="block text-sm font-medium text-gray-700">Pets</label>
@@ -115,24 +140,6 @@
                             </select>
                         </div>
                         <div class="space-y-1">
-                            <label for="closer1" class="block text-sm font-medium text-gray-700">Salesperson (1)</label>
-                            <select id="closer1" name="closer1" required class="mt-1 block w-full input-field">
-                                <option value="">Select a salesperson</option>
-                            </select>
-                        </div>
-
-                        <!-- Row 2 -->
-                        <div class="space-y-1">
-                            <label for="closer2" class="block text-sm font-medium text-gray-700">Salesperson (2)</label>
-                            <select id="closer2" name="closer2" class="mt-1 block w-full input-field">
-                                <option value="">Select a salesperson</option>
-                            </select>
-                        </div>
-                        <div class="space-y-1">
-                            <label for="customers" class="block text-sm font-medium text-gray-700">Customers</label>
-                            <input type="text" id="customers" name="customers" required class="mt-1 block w-full input-field">
-                        </div>
-                        <div class="space-y-1">
                             <label for="phone" class="block text-sm font-medium text-gray-700">Phone</label>
                             <input type="tel" id="phone" name="phone" required class="mt-1 block w-full input-field">
                         </div>
@@ -143,47 +150,25 @@
                                 <option value="Old">Old</option>
                             </select>
                         </div>
-                        
-                        <!-- Row 3 -->
-                        <div class="space-y-1">
-                            <label for="appointmentDate" class="block text-sm font-medium text-gray-700">Appointment Date</label>
-                            <input type="date" id="appointmentDate" name="appointmentDate" required class="mt-1 block w-full input-field">
-                        </div>
                         <div class="space-y-1">
                             <label for="serviceValue" class="block text-sm font-medium text-gray-700">Service Value</label>
                             <input type="text" id="serviceValue" name="serviceValue" required class="mt-1 block w-full input-field">
                         </div>
-                        <div class="space-y-1">
-                            <label for="franchise" class="block text-sm font-medium text-gray-700">Franchise</label>
-                            <input type="text" id="franchise" name="franchise" required class="mt-1 block w-full input-field">
+
+                        <!-- From Closers -->
+                        <div class="col-span-full mt-6">
+                            <h3 class="text-lg font-semibold text-gray-600 mb-4">From Closers</h3>
                         </div>
                         <div class="space-y-1">
-                            <label for="city" class="block text-sm font-medium text-gray-700">City</label>
-                            <input type="text" id="city" name="city" required class="mt-1 block w-full input-field">
+                            <label for="closer1" class="block text-sm font-medium text-gray-700">Salesperson (1)</label>
+                            <select id="closer1" name="closer1" required class="mt-1 block w-full input-field">
+                                <option value="">Select a salesperson</option>
+                            </select>
                         </div>
-                        
-                        <!-- Row 4 -->
                         <div class="space-y-1">
-                            <label for="source" class="block text-sm font-medium text-gray-700">Source</label>
-                            <select id="source" name="source" required class="mt-1 block w-full input-field">
-                                <option value="">Select source</option>
-                                <option value="Facebook">Facebook</option>
-                                <option value="Kommo">Kommo</option>
-                                <option value="Social Traffic">Social Traffic</option>
-                                <option value="SMS">SMS</option>
-                                <option value="Call">Call</option>
-                                <option value="Friends">Friends</option>
-                                <option value="Family Member">Family Member</option>
-                                <option value="Neighbors">Neighbors</option>
-                                <option value="Reminder">Reminder</option>
-                                <option value="Email">Email</option>
-                                <option value="Google">Google</option>
-                                <option value="Website">Website</option>
-                                <option value="Grooming / Referral P">Grooming / Referral P</option>
-                                <option value="Instagram">Instagram</option>
-                                <option value="Technician">Technician</option>
-                                <option value="WhatsApp">WhatsApp</option>
-                                <option value="Other">Other</option>
+                            <label for="closer2" class="block text-sm font-medium text-gray-700">Salesperson (2)</label>
+                            <select id="closer2" name="closer2" class="mt-1 block w-full input-field">
+                                <option value="">Select a salesperson</option>
                             </select>
                         </div>
                         <div class="space-y-1">
@@ -239,28 +224,61 @@
                             </select>
                         </div>
                         
+                        <!-- From Lead -->
+                        <div class="col-span-full mt-6">
+                            <h3 class="text-lg font-semibold text-gray-600 mb-4">From Lead</h3>
+                        </div>
+                        <div class="space-y-1">
+                            <label for="source" class="block text-sm font-medium text-gray-700">Source</label>
+                            <select id="source" name="source" required class="mt-1 block w-full input-field">
+                                <option value="">Select source</option>
+                                <option value="Facebook">Facebook</option>
+                                <option value="Kommo">Kommo</option>
+                                <option value="Social Traffic">Social Traffic</option>
+                                <option value="SMS">SMS</option>
+                                <option value="Call">Call</option>
+                                <option value="Friends">Friends</option>
+                                <option value="Family Member">Family Member</option>
+                                <option value="Neighbors">Neighbors</option>
+                                <option value="Reminder">Reminder</option>
+                                <option value="Email">Email</option>
+                                <option value="Google">Google</option>
+                                <option value="Website">Website</option>
+                                <option value="Grooming / Referral P">Grooming / Referral P</option>
+                                <option value="Instagram">Instagram</option>
+                                <option value="Technician">Technician</option>
+                                <option value="WhatsApp">WhatsApp</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-span-full">
+                            <div id="messageArea" class="mt-6 text-center text-sm font-medium"></div>
+                        </div>
+
+                        <div class="col-span-full">
+                           <!-- Container for Confirmation Code and Reminder Date -->
+                            <div class="flex flex-col md:flex-row gap-6 mt-8">
+                                <div class="card flex-1 flex flex-col items-center">
+                                    <h3 class="text-lg font-semibold text-gray-600 mb-4">Confirmation Code</h3>
+                                    <div id="codePassDisplay" class="h-20 w-full bg-secondary rounded-xl flex items-center justify-center font-bold text-3xl text-white shadow-md"></div>
+                                </div>
+                                <div class="card flex-1 flex flex-col items-center">
+                                    <h3 class="text-lg font-semibold text-gray-600 mb-4">Reminder Date</h3>
+                                    <div id="reminderDateDisplay" class="h-20 w-full bg-secondary rounded-xl flex items-center justify-center font-bold text-3xl text-white shadow-md"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- New Submit Button -->
+                        <div class="col-span-full flex justify-center mt-6">
+                            <button type="submit"
+                                    class="w-full flex justify-center py-4 px-6 border border-transparent btn-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
+                                Register Appointment
+                            </button>
+                        </div>
+                        
                     </form>
-
-                    <div id="messageArea" class="mt-6 text-center text-sm font-medium"></div>
-                </div>
-
-                <!-- Side Card for Confirmation Code and Button -->
-                <div class="lg:col-span-1 card flex flex-col items-center justify-between">
-                    <div class="flex flex-col items-center w-full mb-8">
-                        <p class="text-xs font-bold text-gray-500 mb-2">Confirmation Code</p>
-                        <div id="codePassDisplay" class="h-20 w-full bg-secondary rounded-xl flex items-center justify-center font-bold text-3xl text-white shadow-md"></div>
-                    </div>
-                    
-                    <!-- New field for Reminder Date -->
-                    <div class="flex flex-col items-center w-full mb-8">
-                        <p class="text-xs font-bold text-gray-500 mb-2">Reminder Date</p>
-                        <div id="reminderDateDisplay" class="h-20 w-full bg-secondary rounded-xl flex items-center justify-center font-bold text-3xl text-white shadow-md"></div>
-                    </div>
-
-                    <button type="submit" form="scheduleForm"
-                            class="w-full flex justify-center py-4 px-6 border border-transparent btn-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
-                        Register Appointment
-                    </button>
                 </div>
             </div>
         </div>
