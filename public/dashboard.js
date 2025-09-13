@@ -20,6 +20,16 @@ async function fetchAndCountAppointments() {
         // Convert today's date to the YYYY/MM/DD format for comparison
         const today = formatDateToYYYYMMDD(new Date());
         
+        // --- LOG DE DEPURAÇÃO ---
+        console.log("-----------------------------------------");
+        console.log("Dados recebidos da API:", appointments);
+        console.log("Data de hoje para comparação:", today);
+        if (appointments.length > 0) {
+            console.log("Data do primeiro agendamento na planilha:", appointments[0].date);
+        }
+        console.log("-----------------------------------------");
+        // --- FIM DO LOG DE DEPURAÇÃO ---
+
         // Filter appointments for today
         const todayAppointments = appointments.filter(appointment => appointment.date === today);
         
