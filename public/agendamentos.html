@@ -251,6 +251,12 @@
                         <div id="codePassDisplay" class="h-20 w-full bg-secondary rounded-xl flex items-center justify-center font-bold text-3xl text-white shadow-md"></div>
                     </div>
                     
+                    <!-- New field for Reminder Date -->
+                    <div class="flex flex-col items-center w-full mb-8">
+                        <p class="text-xs font-bold text-gray-500 mb-2">Reminder Date</p>
+                        <div id="reminderDateDisplay" class="h-20 w-full bg-secondary rounded-xl flex items-center justify-center font-bold text-lg text-white"></div>
+                    </div>
+
                     <button type="submit" form="scheduleForm"
                             class="w-full flex justify-center py-4 px-6 border border-transparent btn-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-light transition duration-300 ease-in-out">
                         Register Appointment
@@ -261,12 +267,21 @@
     </main>
     
     <script>
+        // Helper function to format a date object to MM/DD/YYYY string
+        function formatDateToMMDDYYYY(dateObj) {
+            const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+            const day = dateObj.getDate().toString().padStart(2, '0');
+            const year = dateObj.getFullYear();
+            return `${month}/${day}/${year}`;
+        }
+    
         document.getElementById('scheduleForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             
             const form = event.target;
             const messageArea = document.getElementById('messageArea');
             const codePassInput = document.getElementById('codePass');
+            const reminderDateInput = document.getElementById('reminderDate');
 
             // Show processing message
             messageArea.textContent = 'Processing...';
@@ -299,7 +314,8 @@
                 // Os campos 'Value' e 'Code' foram removidos do formulário,
                 // mas a API precisa deles. Vamos enviar valores vazios.
                 value: '', 
-                code: codePassInput.value
+                code: codePassInput.value,
+                reminderDate: reminderDateInput.value
             };
 
             // Enviando para a API no servidor
@@ -343,12 +359,21 @@
             const codePassDisplay = document.getElementById('codePassDisplay');
             const closer1Select = document.getElementById('closer1');
             const closer2Select = document.getElementById('closer2');
+            const appointmentDateInput = document.getElementById('appointmentDate');
+            const reminderDateDisplay = document.getElementById('reminderDateDisplay');
             
             const codePassInput = document.createElement('input');
             codePassInput.type = 'hidden';
             codePassInput.id = 'codePass';
             codePassInput.name = 'codePass';
             document.getElementById('scheduleForm').appendChild(codePassInput);
+
+            const reminderDateInput = document.createElement('input');
+            reminderDateInput.type = 'hidden';
+            reminderDateInput.id = 'reminderDate';
+            reminderDateInput.name = 'reminderDate';
+            document.getElementById('scheduleForm').appendChild(reminderDateInput);
+
 
             if (monthSelect) {
                 monthSelect.value = currentMonth.toString();
@@ -357,8 +382,30 @@
                 yearSelect.value = currentYear.toString();
             }
             if (dateInput) {
+                // For input type="date", setting the value as YYYY-MM-DD is the standard. 
+                // The visual format is determined by the user's browser settings.
                 dateInput.value = currentDate;
             }
+
+            // Listener para gerar a data de lembrete
+            appointmentDateInput.addEventListener('input', (event) => {
+                const appointmentDateValue = event.target.value;
+                if (appointmentDateValue) {
+                    const appointmentDate = new Date(appointmentDateValue);
+                    appointmentDate.setMonth(appointmentDate.getMonth() + 5);
+                    
+                    // Format the date for display
+                    const displayDate = formatDateToMMDDYYYY(appointmentDate);
+                    reminderDateDisplay.textContent = displayDate;
+
+                    // Keep the value in YYYY-MM-DD format for the backend API
+                    const apiDate = appointmentDate.toISOString().split('T')[0];
+                    reminderDateInput.value = apiDate;
+                } else {
+                    reminderDateDisplay.textContent = '';
+                    reminderDateInput.value = '';
+                }
+            });
 
             // Carregar os Closers via API
             try {
