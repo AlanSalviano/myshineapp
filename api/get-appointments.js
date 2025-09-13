@@ -12,18 +12,18 @@ const __dirname = dirname(__filename);
 const SPREADSHEET_ID = '1nwC53lk48RfU0hOk9605G7ZCfe67tw4o-RBNS9XNfWA';
 const SHEET_NAME = 'Datatest';
 
-// Função para converter o número de série da data do Excel para o formato YYYY/MM/DD
+// Função para converter o número de série da data do Excel para o formato YYYY-MM-DD
 function excelDateToYYYYMMDD(excelSerialDate) {
-    // A data de época do Excel (1 de janeiro de 1900) é usada como ponto de partida.
+    // A data de época do Excel (1º de janeiro de 1900) é usada como ponto de partida.
     // O ajuste -2 lida com o bug de ano bissexto do Excel e o fato de que a contagem começa do dia 1.
-    const date = new Date(0);
-    date.setFullYear(0, 0, excelSerialDate - 2); 
+    const date = new Date(Date.UTC(1900, 0, 1));
+    date.setDate(date.getDate() + excelSerialDate - 2); 
     
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     
-    return `${year}/${month}/${day}`;
+    return `${year}-${month}-${day}`;
 }
 
 export default async function handler(req, res) {
