@@ -5,6 +5,7 @@ import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { excelDateToJSDate } from 'exceljs'; // Importa a função de conversão
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -33,16 +34,18 @@ export default async function handler(req, res) {
             return res.status(404).json({ error: 'Aba não encontrada.' });
         }
         
-        // Acessa os dados da coluna "Date" (coluna B)
         await sheet.loadCells('B1:B' + sheet.rowCount);
         const appointments = [];
         
-        // Começa do índice 1 para pular o cabeçalho
         for (let i = 1; i < sheet.rowCount; i++) {
             const cell = sheet.getCell(i, 1); // Coluna B tem índice 1
             if (cell.value) {
-                // Cria um objeto para cada agendamento
-                appointments.push({ date: cell.value });
+                // Converte o número de série para uma data JS, depois para string YYYY/MM/DD
+                const jsDate = excelDateToJSDate(cell.value);
+                const formattedDate = jsDate.getFullYear() + '/' + 
+                                     String(jsDate.getMonth() + 1).padStart(2, '0') + '/' + 
+                                     String(jsDate.getDate()).padStart(2, '0');
+                appointments.push({ date: formattedDate });
             }
         }
         
