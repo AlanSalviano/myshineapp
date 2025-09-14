@@ -13,6 +13,8 @@ function setTextAndColor(elementId, text, value) {
     const element = document.getElementById(elementId);
     if (element) {
         element.textContent = text;
+        // Remove existing color classes to avoid conflicts
+        element.classList.remove('text-green-600', 'text-red-600', 'text-gray-500');
         element.className = 'text-sm font-medium';
         if (value > 0) {
             element.classList.add('text-green-600');
