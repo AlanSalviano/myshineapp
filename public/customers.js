@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Helper function to format a date string
     function formatDate(dateStr) {
         if (!dateStr) return '';
+        // Assuming dateStr is in YYYY/MM/DD format
         const parts = dateStr.split('/');
         return `${parts[1]}/${parts[2]}/${parts[0]}`;
     }
@@ -19,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function renderTable(data) {
         tableBody.innerHTML = ''; // Clear the table
         if (data.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="9" class="p-4 text-center text-muted-foreground">Nenhum cliente encontrado.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="13" class="p-4 text-center text-muted-foreground">Nenhum cliente encontrado.</td></tr>';
             return;
         }
         
@@ -27,15 +28,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             const row = document.createElement('tr');
             row.classList.add('border-b', 'border-border', 'hover:bg-muted/50', 'transition-colors');
             row.innerHTML = `
-                <td class="p-4">${customer.code}</td>
+                <td class="p-4">${customer.date}</td>
                 <td class="p-4">${customer.customers}</td>
-                <td class="p-4">${customer.phone}</td>
-                <td class="p-4">${customer.city}</td>
-                <td class="p-4">${customer.franchise}</td>
+                <td class="p-4">${customer.pets}</td>
                 <td class="p-4">${customer.closer1}</td>
                 <td class="p-4">${customer.closer2}</td>
-                <td class="p-4">${formatDate(customer.appointmentDate)}</td>
-                <td class="p-4">${formatDate(customer.reminderDate)}</td>
+                <td class="p-4">${customer.phone}</td>
+                <td class="p-4">${customer.appointmentDate}</td>
+                <td class="p-4">${customer.serviceValue}</td>
+                <td class="p-4">${customer.franchise}</td>
+                <td class="p-4">${customer.month}</td>
+                <td class="p-4">${customer.year}</td>
+                <td class="p-4">${customer.code}</td>
+                <td class="p-4">${customer.reminderDate}</td>
             `;
             tableBody.appendChild(row);
         });
@@ -106,7 +111,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         } catch (error) {
             console.error('Error fetching customer data:', error);
-            tableBody.innerHTML = '<tr><td colspan="9" class="p-4 text-center text-red-600">Erro ao carregar dados. Tente novamente.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="13" class="p-4 text-center text-red-600">Erro ao carregar dados. Tente novamente.</td></tr>';
         }
     }
 
