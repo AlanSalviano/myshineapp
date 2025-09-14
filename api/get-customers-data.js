@@ -76,7 +76,7 @@ export default async function handler(req, res) {
             // console.log('Objeto mapeado para a linha:', customerData);
             return customerData;
         });
-        
+    
         console.log('Mapeamento de clientes concluído.');
         const responseData = {
             customers
