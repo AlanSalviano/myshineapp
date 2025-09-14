@@ -8,7 +8,7 @@ function formatDateToYYYYMMDD(dateObj) {
     return `${year}/${month}/${day}`;
 }
 
-// Function to fetch and count today's appointments
+// Function to fetch and count today's and yesterday's appointments
 async function fetchAndCountAppointments() {
     try {
         const response = await fetch('/api/get-appointments'); 
@@ -19,29 +19,49 @@ async function fetchAndCountAppointments() {
         }
         const appointments = await response.json();
 
-        // Convert today's date to the YYYY/MM/DD format for comparison
+        // Get today's and yesterday's dates
         const today = formatDateToYYYYMMDD(new Date());
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayFormatted = formatDateToYYYYMMDD(yesterday);
         
         // --- LOG DE DEPURAÇÃO ---
         console.log("-----------------------------------------");
         console.log("Dados recebidos da API:", appointments);
         console.log("Data de hoje para comparação:", today);
+        console.log("Data de ontem para comparação:", yesterdayFormatted);
         if (appointments.length > 0) {
             console.log("Data do primeiro agendamento na planilha:", appointments[0].date);
         }
         console.log("-----------------------------------------");
         // --- FIM DO LOG DE DEPURAÇÃO ---
 
-        // Filter appointments for today
+        // Filter appointments for today and yesterday
         const todayAppointments = appointments.filter(appointment => appointment.date === today);
+        const yesterdayAppointments = appointments.filter(appointment => appointment.date === yesterdayFormatted);
         
-        // Update the count on the dashboard
+        // Calculate the difference
+        const difference = todayAppointments.length - yesterdayAppointments.length;
+        
+        // Determine the text to display
+        let differenceText;
+        if (difference > 0) {
+            differenceText = `+${difference} from yesterday`;
+        } else if (difference < 0) {
+            differenceText = `${difference} from yesterday`;
+        } else {
+            differenceText = `No change from yesterday`;
+        }
+        
+        // Update the counts and difference on the dashboard
         document.getElementById('todayAppointmentsCount').textContent = todayAppointments.length;
-        console.log(`Appointments today: ${todayAppointments.length}`);
+        document.getElementById('appointmentDifference').textContent = differenceText;
+        console.log(`Appointments today: ${todayAppointments.length}, yesterday: ${yesterdayAppointments.length}. Difference: ${difference}`);
 
     } catch (error) {
         console.error(error);
         document.getElementById('todayAppointmentsCount').textContent = 'error';
+        document.getElementById('appointmentDifference').textContent = 'error';
     }
 }
 
