@@ -14,6 +14,7 @@ const SPREADSHEET_ID_APPOINTMENTS = '1nwC53lk48RfU0hOk9605G7ZCfe67tw4o-RBNS9XNfW
 
 function excelDateToYYYYMMDD(excelSerialDate) {
     if (typeof excelSerialDate !== 'number') {
+        // Se já for uma string de data, retorna sem alterar
         return excelSerialDate;
     }
     const date = new Date(Date.UTC(1900, 0, 1));
@@ -53,27 +54,25 @@ export default async function handler(req, res) {
 
         const customers = rows.map(row => {
             const customerData = {
-                type: row._rawData[0],
+                type: row._rawData[0] || '',
                 date: excelDateToYYYYMMDD(row._rawData[1]),
-                pets: row._rawData[2],
-                closer1: row._rawData[3],
-                closer2: row._rawData[4],
-                customers: row._rawData[5],
-                phone: row._rawData[6],
-                oldNew: row._rawData[7],
+                pets: row._rawData[2] || '',
+                closer1: row._rawData[3] || '',
+                closer2: row._rawData[4] || '',
+                customers: row._rawData[5] || '',
+                phone: row._rawData[6] || '',
+                oldNew: row._rawData[7] || '',
                 appointmentDate: excelDateToYYYYMMDD(row._rawData[8]),
-                serviceValue: row._rawData[9],
-                franchise: row._rawData[10],
-                city: row._rawData[11],
-                source: row._rawData[12],
-                week: row._rawData[13],
-                month: row._rawData[14],
-                year: row._rawData[15],
-                code: row._rawData[16],
+                serviceValue: row._rawData[9] || '',
+                franchise: row._rawData[10] || '',
+                city: row._rawData[11] || '',
+                source: row._rawData[12] || '',
+                week: row._rawData[13] || '',
+                month: row._rawData[14] || '',
+                year: row._rawData[15] || '',
+                code: row._rawData[16] || '',
                 reminderDate: excelDateToYYYYMMDD(row._rawData[17]),
             };
-            // Log para inspecionar o objeto mapeado de cada linha
-            // console.log('Objeto mapeado para a linha:', customerData);
             return customerData;
         });
         
