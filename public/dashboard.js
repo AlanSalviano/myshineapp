@@ -72,6 +72,7 @@ async function fetchAndCountCustomersThisMonth() {
         
         if (!response.ok) {
             document.getElementById('customersThisMonthCount').textContent = 'error';
+            document.getElementById('customersThisMonthPercentage').textContent = '';
             throw new Error('Erro ao carregar dados da API.');
         }
         const appointments = await response.json();
@@ -80,22 +81,52 @@ async function fetchAndCountCustomersThisMonth() {
         const today = new Date();
         const currentMonth = today.getMonth() + 1;
         const currentYear = today.getFullYear();
+
+        // Get previous month and year
+        const previousDate = new Date();
+        previousDate.setMonth(previousDate.getMonth() - 1);
+        const previousMonth = previousDate.getMonth() + 1;
+        const previousYear = previousDate.getFullYear();
         
-        // Filter appointments for the current month
+        // Filter appointments for the current month and previous month
         const thisMonthAppointments = appointments.filter(appointment => {
             const parts = appointment.date.split('/');
             const appointmentYear = parseInt(parts[0], 10);
             const appointmentMonth = parseInt(parts[1], 10);
             return appointmentMonth === currentMonth && appointmentYear === currentYear;
         });
+
+        const lastMonthAppointments = appointments.filter(appointment => {
+            const parts = appointment.date.split('/');
+            const appointmentYear = parseInt(parts[0], 10);
+            const appointmentMonth = parseInt(parts[1], 10);
+            return appointmentMonth === previousMonth && appointmentYear === previousYear;
+        });
         
-        // Update the count on the dashboard
+        // Calculate the percentage difference
+        let percentageText;
+        if (lastMonthAppointments.length === 0) {
+            if (thisMonthAppointments.length > 0) {
+                percentageText = "New this month";
+            } else {
+                percentageText = "No change this month";
+            }
+        } else {
+            const percentageChange = ((thisMonthAppointments.length - lastMonthAppointments.length) / lastMonthAppointments.length) * 100;
+            const sign = percentageChange >= 0 ? '+' : '';
+            percentageText = `${sign}${Math.round(percentageChange)}% this month`;
+        }
+
+        // Update the counts on the dashboard
         document.getElementById('customersThisMonthCount').textContent = thisMonthAppointments.length;
-        console.log(`Customers this month: ${thisMonthAppointments.length}`);
+        document.getElementById('customersThisMonthPercentage').textContent = percentageText;
+
+        console.log(`Customers this month: ${thisMonthAppointments.length}, last month: ${lastMonthAppointments.length}. Percentage Change: ${percentageText}`);
 
     } catch (error) {
-        console.error(error);
+        console.error('Error in fetchAndCountCustomersThisMonth:', error);
         document.getElementById('customersThisMonthCount').textContent = 'error';
+        document.getElementById('customersThisMonthPercentage').textContent = 'error';
     }
 }
 
@@ -146,6 +177,7 @@ async function handleFormSubmission(event) {
         if (result.success) {
             form.reset();
             fetchAndCountAppointments(); // Update count after a successful registration
+            fetchAndCountCustomersThisMonth(); // Update count after a successful registration
         }
     } catch (error) {
         console.error('Erro ao registrar agendamento:', error);
@@ -188,7 +220,7 @@ async function loadEmployees() {
 document.addEventListener('DOMContentLoaded', async () => {
     // Call the counting function to populate the initial value
     fetchAndCountAppointments();
-    fetchAndCountCustomersThisMonth(); // Added new function call
+    fetchAndCountCustomersThisMonth();
     
     // Populate dropdowns and set default values
     const today = new Date();
