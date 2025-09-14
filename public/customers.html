@@ -1,90 +1,159 @@
-import { GoogleSpreadsheet } from 'google-spreadsheet';
-import { JWT } from 'google-auth-library';
-import dotenv from 'dotenv';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard</title>
+    <link href="output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/lucide-static@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="min-h-screen bg-background flex flex-col">
 
-dotenv.config();
+    <header class="bg-card shadow-large border-b border-border">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-gradient-subtle rounded-lg flex items-center justify-center shadow-soft">
+              <img 
+                src="https://i.imgur.com/XamnfOc.png" 
+                alt="Company Logo" 
+                class="max-w-full max-h-full object-contain rounded"
+              />
+            </div>
+            <h1 class="text-xl font-bold text-foreground hidden sm:block">
+              Customer Dashboard
+            </h1>
+          </div>
+          <nav class="hidden md:flex items-center space-x-1">
+            <a href="appointments.html" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 text-muted-foreground hover:bg-muted hover:text-foreground">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar w-4 h-4"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+                <span class="hidden lg:inline">Appointments</span>
+            </a>
+            <a href="customers.html" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 bg-gradient-primary text-white shadow-brand">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users w-4 h-4"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span class="hidden lg:inline">Customers</span>
+            </a>
+            <button class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 text-muted-foreground hover:bg-muted hover:text-foreground">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bar-chart-3 w-4 h-4"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+                <span class="hidden lg:inline">Analytics</span>
+            </button>
+            <button class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 text-muted-foreground hover:bg-muted hover:text-foreground">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings w-4 h-4"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.39a2 2 0 0 0 .73 2.73l.15.08a2 2 0 0 1 1 1.73v.55a2 2 0 0 1-1 1.73l-.15.08a2 2 0 0 0-.73 2.73l.22.39a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73v.18a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.73v-.55a2 2 0 0 1 1-1.73l.15-.08a2 2 0 0 0 .73-2.73l-.22-.39a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2-0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Settings</span>
+            </button>
+          </nav>
+          <div class="flex items-center gap-2">
+            <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-11 px-6 py-3 border border-input bg-background hover:bg-accent hover:text-accent-foreground shadow-soft hover:shadow-medium">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search w-4 h-4"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <span class="hidden lg:inline">Search</span>
+            </button>
+            <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-11 w-11 relative hover:bg-accent hover:text-accent-foreground">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell w-4 h-4"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+              <span class="absolute -top-1 -right-1 w-2 h-2 bg-brand-primary rounded-full"></span>
+            </button>
+            <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-11 px-6 py-3 border-2 border-brand-primary text-brand-primary bg-transparent hover:bg-brand-primary hover:text-white hover:shadow-brand">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus w-4 h-4"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+              <span class="hidden sm:inline">Quick Add</span>
+            </button>
+            <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-11 w-11 relative hover:bg-accent hover:text-accent-foreground md:hidden">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu w-4 h-4"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="md:hidden border-t border-border">
+          <nav class="flex items-center justify-around py-2">
+            <a href="appointments.html" class="flex flex-col items-center gap-1 p-2 rounded-lg text-xs font-medium transition-all duration-300 text-muted-foreground hover:text-foreground">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar w-4 h-4"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+                <span>Appointments</span>
+            </a>
+            <a href="customers.html" class="flex flex-col items-center gap-1 p-2 rounded-lg text-xs font-medium transition-all duration-300 text-brand-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users w-4 h-4"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span>Customers</span>
+            </a>
+            <button class="flex flex-col items-center gap-1 p-2 rounded-lg text-xs font-medium transition-all duration-300 text-muted-foreground hover:text-foreground">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bar-chart-3 w-4 h-4"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+                <span>Analytics</span>
+            </button>
+            <button class="flex flex-col items-center gap-1 p-2 rounded-lg text-xs font-medium transition-all duration-300 text-muted-foreground hover:text-foreground">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings w-4 h-4"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.39a2 2 0 0 0 .73 2.73l.15.08a2 2 0 0 1 1 1.73v.55a2 2 0 0 1-1 1.73l-.15.08a2 2 0 0 0-.73 2.73l.22.39a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73v.18a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.73v-.55a2 2 0 0 1 1-1.73l.15-.08a2 2 0 0 0 .73-2.73l-.22-.39a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2-0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Settings</span>
+            </button>
+          </nav>
+        </div>
+      </div>
+      <div class="bg-muted border-t border-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between py-2">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center text-white font-semibold text-xs">
+                A
+              </div>
+              <div>
+                <p class="text-sm font-medium text-foreground">Admin User</p>
+                <p class="text-xs text-muted-foreground">System Administrator</p>
+              </div>
+            </div>
+            <p class="text-xs text-muted-foreground hidden sm:block">
+              Gerenciar seus clientes de forma eficiente
+            </p>
+          </div>
+        </div>
+      </div>
+    </header>
 
-const serviceAccountAuth = new JWT({
-    email: process.env.CLIENT_EMAIL,
-    key: process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
-    scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
-});
-
-const SPREADSHEET_ID_APPOINTMENTS = '1nwC53lk48RfU0hOk9605G7ZCfe67tw4o-RBNS9XNfWA';
-
-function excelDateToYYYYMMDD(excelSerialDate) {
-    if (typeof excelSerialDate !== 'number') {
-        // Se já for uma string de data, retorna sem alterar
-        return excelSerialDate;
-    }
-    const date = new Date(Date.UTC(1900, 0, 1));
-    date.setDate(date.getDate() + excelSerialDate - 2); 
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}/${month}/${day}`;
-}
-
-export default async function handler(req, res) {
-    res.setHeader('Content-Type', 'application/json');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-
-    try {
-        const docAppointments = new GoogleSpreadsheet(SPREADSHEET_ID_APPOINTMENTS, serviceAccountAuth);
-        console.log('Tentando carregar informações da planilha...');
-        await docAppointments.loadInfo();
-        console.log('Informações da planilha carregadas com sucesso.');
-
-        const sheetAppointments = docAppointments.sheetsByTitle['Datatest'];
-        if (!sheetAppointments) {
-            console.error('Sheet "Datatest" not found.');
-            return res.status(404).json({ error: 'Planilha "Datatest" não encontrada.' });
-        }
-        console.log('Planilha "Datatest" encontrada.');
-
-        console.log('Carregando linhas da planilha...');
-        const rows = await sheetAppointments.getRows();
-        console.log(`Encontradas ${rows.length} linhas.`);
-
-        // Log para inspecionar os cabeçalhos da primeira linha, se houver
-        if (rows.length > 0) {
-            console.log('Cabeçalhos da planilha (nomes das colunas):', Object.keys(rows[0]));
-            console.log('Dados da primeira linha:', rows[0]);
-        }
-
-        const customers = rows.map(row => {
-            const customerData = {
-                type: row._rawData[0] || '',
-                date: excelDateToYYYYMMDD(row._rawData[1]),
-                pets: row._rawData[2] || '',
-                closer1: row._rawData[3] || '',
-                closer2: row._rawData[4] || '',
-                customers: row._rawData[5] || '',
-                phone: row._rawData[6] || '',
-                oldNew: row._rawData[7] || '',
-                appointmentDate: excelDateToYYYYMMDD(row._rawData[8]),
-                serviceValue: row._rawData[9] || '',
-                franchise: row._rawData[10] || '',
-                city: row._rawData[11] || '',
-                source: row._rawData[12] || '',
-                week: row._rawData[13] || '',
-                month: row._rawData[14] || '',
-                year: row._rawData[15] || '',
-                code: row._rawData[16] || '',
-                reminderDate: excelDateToYYYYMMDD(row._rawData[17]),
-            };
-            return customerData;
-        });
-        
-        console.log('Mapeamento de clientes concluído.');
-        const responseData = {
-            customers
-        };
-
-        return res.status(200).json(responseData);
-
-    } catch (error) {
-        console.error('Error fetching customer data:', error);
-        res.status(500).json({ error: 'Falha ao buscar dados dos clientes.' });
-    }
-}
+    <main class="flex-1 p-8 overflow-y-auto">
+        <div class="max-w-7xl mx-auto">
+            <div class="rounded-lg border bg-card text-card-foreground shadow-large bg-gradient-subtle">
+                <div class="flex flex-col space-y-1.5 p-6 pb-8">
+                    <h2 class="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                        Customer List
+                    </h2>
+                    <div class="mt-4 flex items-center gap-4">
+                        <input type="text" id="search-input" placeholder="Search by name, phone, or city" class="flex-1 rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                        <select id="franchise-filter" class="rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                            <option value="">All Franchises</option>
+                        </select>
+                        <select id="closer-filter" class="rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                            <option value="">All Closers</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="p-6 pt-0 overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-muted text-muted-foreground uppercase text-xs font-semibold">
+                            <tr>
+                                <th class="p-4 border-b border-border">Type</th>
+                                <th class="p-4 border-b border-border">Date</th>
+                                <th class="p-4 border-b border-border">Pets</th>
+                                <th class="p-4 border-b border-border">Closer (1)</th>
+                                <th class="p-4 border-b border-border">Closer (2)</th>
+                                <th class="p-4 border-b border-border">Customers</th>
+                                <th class="p-4 border-b border-border">Phone</th>
+                                <th class="p-4 border-b border-border">Old/New</th>
+                                <th class="p-4 border-b border-border">Date (Appointment)</th>
+                                <th class="p-4 border-b border-border">Service Value</th>
+                                <th class="p-4 border-b border-border">Franchise</th>
+                                <th class="p-4 border-b border-border">City</th>
+                                <th class="p-4 border-b border-border">Source</th>
+                                <th class="p-4 border-b border-border">Week</th>
+                                <th class="p-4 border-b border-border">Month</th>
+                                <th class="p-4 border-b border-border">Year</th>
+                                <th class="p-4 border-b border-border">Code</th>
+                                <th class="p-4 border-b border-border">Reminder Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customers-table-body" class="text-foreground text-sm">
+                            <!-- Rows will be dynamically inserted here -->
+                            <tr>
+                                <td colspan="18" class="p-4 text-center">Loading customer data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="customers.js"></script>
+</body>
+</html>
