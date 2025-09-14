@@ -8,6 +8,22 @@ function formatDateToYYYYMMDD(dateObj) {
     return `${year}/${month}/${day}`;
 }
 
+// Helper function to set text content and color based on value
+function setTextAndColor(elementId, text, value) {
+    const element = document.getElementById(elementId);
+    if (element) {
+        element.textContent = text;
+        element.className = 'text-sm font-medium';
+        if (value > 0) {
+            element.classList.add('text-green-600');
+        } else if (value < 0) {
+            element.classList.add('text-red-600');
+        } else {
+            element.classList.add('text-gray-500');
+        }
+    }
+}
+
 // Function to fetch and count today's and yesterday's appointments
 async function fetchAndCountAppointments() {
     try {
@@ -15,6 +31,7 @@ async function fetchAndCountAppointments() {
         
         if (!response.ok) {
             document.getElementById('todayAppointmentsCount').textContent = 'error';
+            setTextAndColor('appointmentDifference', 'Error loading data', -1);
             throw new Error('Erro ao carregar dados da API.');
         }
         const appointments = await response.json();
@@ -55,13 +72,13 @@ async function fetchAndCountAppointments() {
         
         // Update the counts and difference on the dashboard
         document.getElementById('todayAppointmentsCount').textContent = todayAppointments.length;
-        document.getElementById('appointmentDifference').textContent = differenceText;
+        setTextAndColor('appointmentDifference', differenceText, difference);
         console.log(`Appointments today: ${todayAppointments.length}, yesterday: ${yesterdayAppointments.length}. Difference: ${difference}`);
 
     } catch (error) {
         console.error(error);
         document.getElementById('todayAppointmentsCount').textContent = 'error';
-        document.getElementById('appointmentDifference').textContent = 'error';
+        setTextAndColor('appointmentDifference', 'Error loading data', -1);
     }
 }
 
@@ -72,7 +89,7 @@ async function fetchAndCountCustomersThisMonth() {
         
         if (!response.ok) {
             document.getElementById('customersThisMonthCount').textContent = 'error';
-            document.getElementById('customersThisMonthPercentage').textContent = '';
+            setTextAndColor('customersThisMonthPercentage', 'Error loading data', -1);
             throw new Error('Erro ao carregar dados da API.');
         }
         const appointments = await response.json();
@@ -105,28 +122,33 @@ async function fetchAndCountCustomersThisMonth() {
         
         // Calculate the percentage difference
         let percentageText;
+        let percentageValue;
+
         if (lastMonthAppointments.length === 0) {
             if (thisMonthAppointments.length > 0) {
                 percentageText = "New this month";
+                percentageValue = 1; // Positive value to set green color
             } else {
                 percentageText = "No change this month";
+                percentageValue = 0; // Neutral value to set gray color
             }
         } else {
             const percentageChange = ((thisMonthAppointments.length - lastMonthAppointments.length) / lastMonthAppointments.length) * 100;
             const sign = percentageChange >= 0 ? '+' : '';
             percentageText = `${sign}${Math.round(percentageChange)}% this month`;
+            percentageValue = percentageChange;
         }
 
-        // Update the counts on the dashboard
+        // Update the counts and percentage on the dashboard
         document.getElementById('customersThisMonthCount').textContent = thisMonthAppointments.length;
-        document.getElementById('customersThisMonthPercentage').textContent = percentageText;
+        setTextAndColor('customersThisMonthPercentage', percentageText, percentageValue);
 
         console.log(`Customers this month: ${thisMonthAppointments.length}, last month: ${lastMonthAppointments.length}. Percentage Change: ${percentageText}`);
 
     } catch (error) {
         console.error('Error in fetchAndCountCustomersThisMonth:', error);
         document.getElementById('customersThisMonthCount').textContent = 'error';
-        document.getElementById('customersThisMonthPercentage').textContent = 'error';
+        setTextAndColor('customersThisMonthPercentage', 'Error loading data', -1);
     }
 }
 
@@ -138,7 +160,7 @@ async function fetchAndCountPetsThisMonth() {
         
         if (!response.ok) {
             document.getElementById('petsThisMonthCount').textContent = 'error';
-            document.getElementById('petsThisMonthPercentage').textContent = '';
+            setTextAndColor('petsThisMonthPercentage', 'Error loading data', -1);
             throw new Error('Erro ao carregar dados da API.');
         }
         const appointments = await response.json();
@@ -169,28 +191,33 @@ async function fetchAndCountPetsThisMonth() {
 
         // Calculate the percentage difference
         let percentageText;
+        let percentageValue;
+
         if (lastMonthPetsCount === 0) {
             if (thisMonthPetsCount > 0) {
                 percentageText = "New this month";
+                percentageValue = 1;
             } else {
                 percentageText = "No change this month";
+                percentageValue = 0;
             }
         } else {
             const percentageChange = ((thisMonthPetsCount - lastMonthPetsCount) / lastMonthPetsCount) * 100;
             const sign = percentageChange >= 0 ? '+' : '';
             percentageText = `${sign}${Math.round(percentageChange)}% this month`;
+            percentageValue = percentageChange;
         }
         
         // Update the count and percentage on the dashboard
         document.getElementById('petsThisMonthCount').textContent = thisMonthPetsCount;
-        document.getElementById('petsThisMonthPercentage').textContent = percentageText;
+        setTextAndColor('petsThisMonthPercentage', percentageText, percentageValue);
 
         console.log(`Pets this month: ${thisMonthPetsCount}, last month: ${lastMonthPetsCount}. Percentage Change: ${percentageText}`);
 
     } catch (error) {
         console.error('Error in fetchAndCountPetsThisMonth:', error);
         document.getElementById('petsThisMonthCount').textContent = 'error';
-        document.getElementById('petsThisMonthPercentage').textContent = 'error';
+        setTextAndColor('petsThisMonthPercentage', 'Error loading data', -1);
     }
 }
 
