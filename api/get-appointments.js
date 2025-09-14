@@ -47,19 +47,23 @@ export default async function handler(req, res) {
             return res.status(404).json({ error: 'Aba não encontrada.' });
         }
         
-        // Acessa os dados das colunas "Date" (coluna B) e "Pets" (coluna C)
-        await sheet.loadCells('B1:C' + sheet.rowCount);
+        // Acessa os dados das colunas "Date" (coluna B), "Closer (1)" (coluna D) e "Closer (2)" (coluna E)
+        await sheet.loadCells('B1:E' + sheet.rowCount);
         const appointments = [];
         
         for (let i = 1; i < sheet.rowCount; i++) {
             const dateCell = sheet.getCell(i, 1); // Coluna B tem índice 1
-            const petsCell = sheet.getCell(i, 2); // Coluna C tem índice 2
+            const closer1Cell = sheet.getCell(i, 3); // Coluna D tem índice 3
+            const closer2Cell = sheet.getCell(i, 4); // Coluna E tem índice 4
             
             if (dateCell.value) {
                 // Converte o número de série para o formato YYYY/MM/DD
                 const formattedDate = excelDateToYYYYMMDD(dateCell.value);
-                const petsValue = petsCell.value ? Number(petsCell.value) : 0;
-                appointments.push({ date: formattedDate, pets: petsValue });
+                appointments.push({ 
+                    date: formattedDate,
+                    closer1: closer1Cell.value,
+                    closer2: closer2Cell.value
+                });
             }
         }
         
