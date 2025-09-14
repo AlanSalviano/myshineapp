@@ -185,9 +185,9 @@ async function fetchAndCountPetsThisMonth() {
             const appointmentMonth = parseInt(parts[1], 10);
 
             if (appointmentMonth === currentMonth && appointmentYear === currentYear) {
-                thisMonthPetsCount += appointment.pets;
+                thisMonthPetsCount += (appointment.pets || 0);
             } else if (appointmentMonth === previousMonth && appointmentYear === previousYear) {
-                lastMonthPetsCount += appointment.pets;
+                lastMonthPetsCount += (appointment.pets || 0);
             }
         });
 
@@ -220,6 +220,57 @@ async function fetchAndCountPetsThisMonth() {
         console.error('Error in fetchAndCountPetsThisMonth:', error);
         document.getElementById('petsThisMonthCount').textContent = 'error';
         setTextAndColor('petsThisMonthPercentage', 'Error loading data', -1);
+    }
+}
+
+// Function to find the best seller this month
+async function fetchAndDetermineBestSeller() {
+    try {
+        const response = await fetch('/api/get-appointments'); 
+        
+        if (!response.ok) {
+            document.getElementById('bestSellerName').textContent = 'error';
+            throw new Error('Erro ao carregar dados da API.');
+        }
+        const appointments = await response.json();
+        
+        const today = new Date();
+        const currentMonth = today.getMonth() + 1;
+        const currentYear = today.getFullYear();
+        
+        const thisMonthClosers = [];
+        appointments.forEach(appointment => {
+            const parts = appointment.date.split('/');
+            const appointmentYear = parseInt(parts[0], 10);
+            const appointmentMonth = parseInt(parts[1], 10);
+            
+            if (appointmentMonth === currentMonth && appointmentYear === currentYear) {
+                if (appointment.closer1) thisMonthClosers.push(appointment.closer1);
+                if (appointment.closer2) thisMonthClosers.push(appointment.closer2);
+            }
+        });
+        
+        const counts = {};
+        thisMonthClosers.forEach(closer => {
+            counts[closer] = (counts[closer] || 0) + 1;
+        });
+        
+        let bestSeller = '--';
+        let maxCount = 0;
+        
+        for (const closer in counts) {
+            if (counts[closer] > maxCount) {
+                maxCount = counts[closer];
+                bestSeller = closer;
+            }
+        }
+        
+        document.getElementById('bestSellerName').textContent = bestSeller;
+        console.log(`Best Seller this month: ${bestSeller} with ${maxCount} sales.`);
+        
+    } catch (error) {
+        console.error('Error in fetchAndDetermineBestSeller:', error);
+        document.getElementById('bestSellerName').textContent = 'error';
     }
 }
 
@@ -273,6 +324,7 @@ async function handleFormSubmission(event) {
             fetchAndCountAppointments(); // Update count after a successful registration
             fetchAndCountCustomersThisMonth(); // Update count after a successful registration
             fetchAndCountPetsThisMonth(); // Update pets count after a successful registration
+            fetchAndDetermineBestSeller(); // Update best seller after a successful registration
         }
     } catch (error) {
         console.error('Erro ao registrar agendamento:', error);
@@ -316,7 +368,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Call the counting function to populate the initial value
     fetchAndCountAppointments();
     fetchAndCountCustomersThisMonth();
-    fetchAndCountPetsThisMonth(); // New function call added
+    fetchAndCountPetsThisMonth();
+    fetchAndDetermineBestSeller(); // New function call added
     
     // Populate dropdowns and set default values
     const today = new Date();
