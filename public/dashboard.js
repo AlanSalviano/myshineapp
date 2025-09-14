@@ -65,6 +65,38 @@ async function fetchAndCountAppointments() {
     }
 }
 
+// Function to fetch and count this month's appointments
+async function fetchAndCountCustomersThisMonth() {
+    try {
+        const response = await fetch('/api/get-appointments'); 
+        
+        if (!response.ok) {
+            document.getElementById('customersThisMonthCount').textContent = 'error';
+            throw new Error('Erro ao carregar dados da API.');
+        }
+        const appointments = await response.json();
+
+        // Get current month and year
+        const today = new Date();
+        const currentMonth = today.getMonth() + 1;
+        const currentYear = today.getFullYear();
+        
+        // Filter appointments for the current month
+        const thisMonthAppointments = appointments.filter(appointment => {
+            const appointmentDate = new Date(appointment.date);
+            return appointmentDate.getMonth() + 1 === currentMonth && appointmentDate.getFullYear() === currentYear;
+        });
+        
+        // Update the count on the dashboard
+        document.getElementById('customersThisMonthCount').textContent = thisMonthAppointments.length;
+        console.log(`Customers this month: ${thisMonthAppointments.length}`);
+
+    } catch (error) {
+        console.error(error);
+        document.getElementById('customersThisMonthCount').textContent = 'error';
+    }
+}
+
 // Function to handle form submission
 async function handleFormSubmission(event) {
     event.preventDefault();
@@ -154,6 +186,7 @@ async function loadEmployees() {
 document.addEventListener('DOMContentLoaded', async () => {
     // Call the counting function to populate the initial value
     fetchAndCountAppointments();
+    fetchAndCountCustomersThisMonth(); // Added new function call
     
     // Populate dropdowns and set default values
     const today = new Date();
@@ -207,15 +240,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     customersInput.addEventListener('input', () => {
         const value = customersInput.value.trim();
         if (value.length > 0) {
-            const randomNumber = Math.floor(Math.random() * 10000);
-            const paddedNumber = randomNumber.toString().padStart(4, '0');
-            codePassDisplay.textContent = paddedNumber;
-            codePassInput.value = paddedNumber;
-        } else {
-            codePassDisplay.textContent = '--/--/----';
-            codePassInput.value = '';
-        }
-    });
-
-    loadEmployees(); // Load closer/employee data
-});
+            const randomNumber = Math.floor
