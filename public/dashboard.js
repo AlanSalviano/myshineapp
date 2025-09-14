@@ -1,6 +1,6 @@
 // public/dashboard.js
 
-// Helper function to format a date object to YYYY/MM/DD string
+// Helper function to format a datee object to YYYY/MM/DD string
 function formatDateToYYYYMMDD(dateObj) {
     const year = dateObj.getFullYear();
     const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
@@ -445,3 +445,4 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     loadEmployees(); // Load closer/employee data
 });
+
