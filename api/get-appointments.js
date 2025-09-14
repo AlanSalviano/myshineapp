@@ -47,16 +47,19 @@ export default async function handler(req, res) {
             return res.status(404).json({ error: 'Aba não encontrada.' });
         }
         
-        // Acessa os dados da coluna "Date" (coluna B)
-        await sheet.loadCells('B1:B' + sheet.rowCount);
+        // Acessa os dados das colunas "Date" (coluna B) e "Pets" (coluna C)
+        await sheet.loadCells('B1:C' + sheet.rowCount);
         const appointments = [];
         
         for (let i = 1; i < sheet.rowCount; i++) {
-            const cell = sheet.getCell(i, 1); // Coluna B tem índice 1
-            if (cell.value) {
+            const dateCell = sheet.getCell(i, 1); // Coluna B tem índice 1
+            const petsCell = sheet.getCell(i, 2); // Coluna C tem índice 2
+            
+            if (dateCell.value) {
                 // Converte o número de série para o formato YYYY/MM/DD
-                const formattedDate = excelDateToYYYYMMDD(cell.value);
-                appointments.push({ date: formattedDate });
+                const formattedDate = excelDateToYYYYMMDD(dateCell.value);
+                const petsValue = petsCell.value ? Number(petsCell.value) : 0;
+                appointments.push({ date: formattedDate, pets: petsValue });
             }
         }
         
