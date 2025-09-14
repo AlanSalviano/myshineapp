@@ -265,6 +265,16 @@ async function fetchAndDetermineBestSeller() {
             }
         }
         
+        // Format the name: first word + first letter of the second word + '.'
+        if (bestSeller !== '--') {
+            const nameParts = bestSeller.split(' ');
+            if (nameParts.length > 1) {
+                bestSeller = `${nameParts[0]} ${nameParts[1].charAt(0)}.`;
+            } else {
+                bestSeller = nameParts[0];
+            }
+        }
+        
         document.getElementById('bestSellerName').textContent = bestSeller;
         console.log(`Best Seller this month: ${bestSeller} with ${maxCount} sales.`);
         
