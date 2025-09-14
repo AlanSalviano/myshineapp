@@ -373,13 +373,40 @@ async function loadEmployees() {
     }
 }
 
+// Function to load franchise data for the 'franchise' dropdown
+async function loadFranchises() {
+    try {
+        const response = await fetch('/api/get-franchises');
+        if (!response.ok) {
+            throw new Error('Error loading Franchise data.');
+        }
+        const franchises = await response.json();
+        
+        const franchiseSelect = document.getElementById('franchise');
+        
+        if (franchises && Array.isArray(franchises)) {
+            franchises.forEach(franchise => {
+                if (franchise) {
+                    const option = document.createElement('option');
+                    option.value = franchise;
+                    option.textContent = franchise;
+                    franchiseSelect.appendChild(option);
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error populating Franchises:', error);
+    }
+}
+
+
 // Event listener to handle all initial setup and actions
 document.addEventListener('DOMContentLoaded', async () => {
     // Call the counting function to populate the initial value
     fetchAndCountAppointments();
     fetchAndCountCustomersThisMonth();
     fetchAndCountPetsThisMonth();
-    fetchAndDetermineBestSeller(); // New function call added
+    fetchAndDetermineBestSeller();
     
     // Populate dropdowns and set default values
     const today = new Date();
@@ -444,5 +471,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     loadEmployees(); // Load closer/employee data
+    loadFranchises(); // Load franchise data
 });
-
