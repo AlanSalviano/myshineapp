@@ -62,7 +62,7 @@ export default async function handler(req, res) {
 
         if (user) {
             console.log('Login successful for user:', email);
-            const redirectUrl = "agendamentos.html";
+            const redirectUrl = "appointments.html";
             return res.status(200).json({ success: true, message: 'Login successful!', redirectUrl });
         } else {
             console.log('Login failed: Invalid credentials.');
@@ -73,3 +73,4 @@ export default async function handler(req, res) {
         return res.status(500).json({ success: false, message: 'An error occurred on the server. Please try again.' });
     }
 }
+
