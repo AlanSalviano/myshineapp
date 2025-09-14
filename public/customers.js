@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const closerFilter = document.getElementById('closer-filter');
     const monthFilter = document.getElementById('month-filter');
     const yearFilter = document.getElementById('year-filter');
+    const reminderFilter = document.getElementById('reminder-filter');
 
     let allCustomersData = [];
 
@@ -66,6 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const selectedCloser = closerFilter.value.toLowerCase();
         const selectedMonth = monthFilter.value;
         const selectedYear = yearFilter.value;
+        const selectedReminder = reminderFilter.value;
 
         const filteredData = allCustomersData.filter(customer => {
             const matchesSearch = searchTerm === '' || 
@@ -85,8 +87,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             const matchesYear = selectedYear === '' || 
                                 (customer.year && customer.year.toString() === selectedYear);
+            
+            const today = new Date();
+            const reminderDate = new Date(customer.reminderDate);
+            const matchesReminder = selectedReminder === '' || (selectedReminder === 'send-reminder' && reminderDate < today);
 
-            return matchesSearch && matchesFranchise && matchesCloser && matchesMonth && matchesYear;
+            return matchesSearch && matchesFranchise && matchesCloser && matchesMonth && matchesYear && matchesReminder;
         });
 
         renderTable(filteredData);
@@ -160,6 +166,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     closerFilter.addEventListener('change', applyFilters);
     monthFilter.addEventListener('change', applyFilters);
     yearFilter.addEventListener('change', applyFilters);
+    reminderFilter.addEventListener('change', applyFilters);
 
     initDashboard();
 });
