@@ -30,37 +30,54 @@ export default async function handler(req, res) {
 
     try {
         const docAppointments = new GoogleSpreadsheet(SPREADSHEET_ID_APPOINTMENTS, serviceAccountAuth);
-
+        console.log('Tentando carregar informações da planilha...');
         await docAppointments.loadInfo();
+        console.log('Informações da planilha carregadas com sucesso.');
 
         const sheetAppointments = docAppointments.sheetsByTitle['Datatest'];
         if (!sheetAppointments) {
             console.error('Sheet "Datatest" not found.');
             return res.status(404).json({ error: 'Planilha "Datatest" não encontrada.' });
         }
+        console.log('Planilha "Datatest" encontrada.');
 
+        console.log('Carregando linhas da planilha...');
         const rows = await sheetAppointments.getRows();
-        const customers = rows.map(row => ({
-            type: row['Type'],
-            date: excelDateToYYYYMMDD(row['Date']),
-            pets: row['Pets'],
-            closer1: row['Closer (1)'],
-            closer2: row['Closer (2)'],
-            customers: row['Customers'],
-            phone: row['Phone'],
-            oldNew: row['Old/New'],
-            appointmentDate: excelDateToYYYYMMDD(row['Date (Appointment)']),
-            serviceValue: row['Service Value'],
-            franchise: row['Franchise'],
-            city: row['City'],
-            source: row['Source'],
-            week: row['Week'],
-            month: row['Month'],
-            year: row['Year'],
-            code: row['Code'],
-            reminderDate: excelDateToYYYYMMDD(row['Reminder Date']),
-        }));
+        console.log(`Encontradas ${rows.length} linhas.`);
 
+        // Log para inspecionar os cabeçalhos da primeira linha, se houver
+        if (rows.length > 0) {
+            console.log('Cabeçalhos da planilha (nomes das colunas):', Object.keys(rows[0]));
+            console.log('Dados da primeira linha:', rows[0]);
+        }
+
+        const customers = rows.map(row => {
+            const customerData = {
+                type: row['Type'],
+                date: excelDateToYYYYMMDD(row['Date']),
+                pets: row['Pets'],
+                closer1: row['Closer (1)'],
+                closer2: row['Closer (2)'],
+                customers: row['Customers'],
+                phone: row['Phone'],
+                oldNew: row['Old/New'],
+                appointmentDate: excelDateToYYYYMMDD(row['Date (Appointment)']),
+                serviceValue: row['Service Value'],
+                franchise: row['Franchise'],
+                city: row['City'],
+                source: row['Source'],
+                week: row['Week'],
+                month: row['Month'],
+                year: row['Year'],
+                code: row['Code'],
+                reminderDate: excelDateToYYYYMMDD(row['Reminder Date']),
+            };
+            // Log para inspecionar o objeto mapeado de cada linha
+            // console.log('Objeto mapeado para a linha:', customerData);
+            return customerData;
+        });
+        
+        console.log('Mapeamento de clientes concluído.');
         const responseData = {
             customers
         };
