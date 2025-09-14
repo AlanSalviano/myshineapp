@@ -123,6 +123,10 @@
                         <select id="year-filter" class="min-w-[150px] rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                             <option value="">All Years</option>
                         </select>
+                        <select id="reminder-filter" class="min-w-[150px] rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                            <option value="">Todos</option>
+                            <option value="send-reminder">Enviar Reminder</option>
+                        </select>
                     </div>
                 </div>
                 <div class="p-6 pt-0 overflow-x-auto">
@@ -145,7 +149,6 @@
                             </tr>
                         </thead>
                         <tbody id="customers-table-body" class="text-foreground text-sm">
-                            <!-- Rows will be dynamically inserted here -->
                             <tr>
                                 <td colspan="13" class="p-4 text-center">Loading customer data...</td>
                             </tr>
