@@ -130,6 +130,71 @@ async function fetchAndCountCustomersThisMonth() {
     }
 }
 
+
+// Function to fetch and count pets this month
+async function fetchAndCountPetsThisMonth() {
+    try {
+        const response = await fetch('/api/get-appointments'); 
+        
+        if (!response.ok) {
+            document.getElementById('petsThisMonthCount').textContent = 'error';
+            document.getElementById('petsThisMonthPercentage').textContent = '';
+            throw new Error('Erro ao carregar dados da API.');
+        }
+        const appointments = await response.json();
+        
+        const today = new Date();
+        const currentMonth = today.getMonth() + 1;
+        const currentYear = today.getFullYear();
+
+        const previousDate = new Date();
+        previousDate.setMonth(previousDate.getMonth() - 1);
+        const previousMonth = previousDate.getMonth() + 1;
+        const previousYear = previousDate.getFullYear();
+
+        let thisMonthPetsCount = 0;
+        let lastMonthPetsCount = 0;
+
+        appointments.forEach(appointment => {
+            const parts = appointment.date.split('/');
+            const appointmentYear = parseInt(parts[0], 10);
+            const appointmentMonth = parseInt(parts[1], 10);
+
+            if (appointmentMonth === currentMonth && appointmentYear === currentYear) {
+                thisMonthPetsCount += appointment.pets;
+            } else if (appointmentMonth === previousMonth && appointmentYear === previousYear) {
+                lastMonthPetsCount += appointment.pets;
+            }
+        });
+
+        // Calculate the percentage difference
+        let percentageText;
+        if (lastMonthPetsCount === 0) {
+            if (thisMonthPetsCount > 0) {
+                percentageText = "New this month";
+            } else {
+                percentageText = "No change this month";
+            }
+        } else {
+            const percentageChange = ((thisMonthPetsCount - lastMonthPetsCount) / lastMonthPetsCount) * 100;
+            const sign = percentageChange >= 0 ? '+' : '';
+            percentageText = `${sign}${Math.round(percentageChange)}% this month`;
+        }
+        
+        // Update the count and percentage on the dashboard
+        document.getElementById('petsThisMonthCount').textContent = thisMonthPetsCount;
+        document.getElementById('petsThisMonthPercentage').textContent = percentageText;
+
+        console.log(`Pets this month: ${thisMonthPetsCount}, last month: ${lastMonthPetsCount}. Percentage Change: ${percentageText}`);
+
+    } catch (error) {
+        console.error('Error in fetchAndCountPetsThisMonth:', error);
+        document.getElementById('petsThisMonthCount').textContent = 'error';
+        document.getElementById('petsThisMonthPercentage').textContent = 'error';
+    }
+}
+
+
 // Function to handle form submission
 async function handleFormSubmission(event) {
     event.preventDefault();
@@ -178,6 +243,7 @@ async function handleFormSubmission(event) {
             form.reset();
             fetchAndCountAppointments(); // Update count after a successful registration
             fetchAndCountCustomersThisMonth(); // Update count after a successful registration
+            fetchAndCountPetsThisMonth(); // Update pets count after a successful registration
         }
     } catch (error) {
         console.error('Erro ao registrar agendamento:', error);
@@ -221,6 +287,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Call the counting function to populate the initial value
     fetchAndCountAppointments();
     fetchAndCountCustomersThisMonth();
+    fetchAndCountPetsThisMonth(); // New function call added
     
     // Populate dropdowns and set default values
     const today = new Date();
