@@ -38,7 +38,6 @@ export default async function handler(req, res) {
             console.error('Sheet "Datatest" not found.');
             return res.status(404).json({ error: 'Planilha "Datatest" não encontrada.' });
         }
-
         const rows = await sheetAppointments.getRows();
         const customers = rows.map(row => ({
             type: row['Type'],
