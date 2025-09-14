@@ -53,30 +53,30 @@ export default async function handler(req, res) {
 
         const customers = rows.map(row => {
             const customerData = {
-                type: row['Type'],
-                date: excelDateToYYYYMMDD(row['Date']),
-                pets: row['Pets'],
-                closer1: row['Closer (1)'],
-                closer2: row['Closer (2)'],
-                customers: row['Customers'],
-                phone: row['Phone'],
-                oldNew: row['Old/New'],
-                appointmentDate: excelDateToYYYYMMDD(row['Date (Appointment)']),
-                serviceValue: row['Service Value'],
-                franchise: row['Franchise'],
-                city: row['City'],
-                source: row['Source'],
-                week: row['Week'],
-                month: row['Month'],
-                year: row['Year'],
-                code: row['Code'],
-                reminderDate: excelDateToYYYYMMDD(row['Reminder Date']),
+                type: row._rawData[0],
+                date: excelDateToYYYYMMDD(row._rawData[1]),
+                pets: row._rawData[2],
+                closer1: row._rawData[3],
+                closer2: row._rawData[4],
+                customers: row._rawData[5],
+                phone: row._rawData[6],
+                oldNew: row._rawData[7],
+                appointmentDate: excelDateToYYYYMMDD(row._rawData[8]),
+                serviceValue: row._rawData[9],
+                franchise: row._rawData[10],
+                city: row._rawData[11],
+                source: row._rawData[12],
+                week: row._rawData[13],
+                month: row._rawData[14],
+                year: row._rawData[15],
+                code: row._rawData[16],
+                reminderDate: excelDateToYYYYMMDD(row._rawData[17]),
             };
             // Log para inspecionar o objeto mapeado de cada linha
             // console.log('Objeto mapeado para a linha:', customerData);
             return customerData;
         });
-    
+        
         console.log('Mapeamento de clientes concluído.');
         const responseData = {
             customers
