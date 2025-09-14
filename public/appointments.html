@@ -1,38 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appointment Dashboard</title>
-    <link href="output.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body class="min-h-screen bg-background flex flex-col">
-
-    <header class="bg-card shadow-large border-b border-border">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-          <div class="flex items-center gap-4">
-            <div class="w-10 h-10 bg-gradient-subtle rounded-lg flex items-center justify-center shadow-soft">
-              <img 
-                src="https://i.imgur.com/XamnfOc.png" 
-                alt="Company Logo" 
-                class="max-w-full max-h-full object-contain rounded"
-              />
-            </div>
-            <h1 class="text-xl font-bold text-foreground hidden sm:block">
-              Appointment Dashboard
-            </h1>
-          </div>
-          <nav class="hidden md:flex items-center space-x-1">
-            <button class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 bg-gradient-primary text-white shadow-brand">
+<nav class="hidden md:flex items-center space-x-1">
+            <a href="appointments.html" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 bg-gradient-primary text-white shadow-brand">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar w-4 h-4"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
                 <span class="hidden lg:inline">Appointments</span>
-            </button>
-            <button class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 text-muted-foreground hover:bg-muted hover:text-foreground">
+            </a>
+            <a href="customers.html" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 text-muted-foreground hover:bg-muted hover:text-foreground">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users w-4 h-4"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 <span class="hidden lg:inline">Customers</span>
-            </button>
+            </a>
             <button class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 text-muted-foreground hover:bg-muted hover:text-foreground">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bar-chart-3 w-4 h-4"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
                 <span class="hidden lg:inline">Analytics</span>
@@ -62,14 +36,14 @@
         </div>
         <div class="md:hidden border-t border-border">
           <nav class="flex items-center justify-around py-2">
-            <button class="flex flex-col items-center gap-1 p-2 rounded-lg text-xs font-medium transition-all duration-300 text-brand-primary">
+            <a href="appointments.html" class="flex flex-col items-center gap-1 p-2 rounded-lg text-xs font-medium transition-all duration-300 text-brand-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar w-4 h-4"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
                 <span>Appointments</span>
-            </button>
-            <button class="flex flex-col items-center gap-1 p-2 rounded-lg text-xs font-medium transition-all duration-300 text-muted-foreground hover:text-foreground">
+            </a>
+            <a href="customers.html" class="flex flex-col items-center gap-1 p-2 rounded-lg text-xs font-medium transition-all duration-300 text-muted-foreground hover:text-foreground">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users w-4 h-4"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                 <span>Customers</span>
-            </button>
+            </a>
             <button class="flex flex-col items-center gap-1 p-2 rounded-lg text-xs font-medium transition-all duration-300 text-muted-foreground hover:text-foreground">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bar-chart-3 w-4 h-4"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
                 <span>Analytics</span>
@@ -374,4 +348,3 @@
     <script src="dashboard.js"></script>
 </body>
 </html>
-
