@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         goalProgress.style.width = `${percentage}%`;
         goalPercentage.textContent = `${Math.round(percentage)}%`;
-        
+
         if (percentage >= 100) {
             goalProgress.classList.remove('bg-brand-primary');
             goalProgress.classList.add('bg-green-600');
