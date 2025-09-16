@@ -293,9 +293,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Add event listeners for filters
-    if (monthFilter) monthFilter.addEventListener('change', applyFilters);
-    if (yearFilter) yearFilter.addEventListener('change', applyFilters);
-    if (goalInput) goalInput.addEventListener('input', applyFilters);
+    if (monthFilter) monthFilter.addEventListener('change', (e) => { e.preventDefault(); applyFilters(); });
+    if (yearFilter) yearFilter.addEventListener('change', (e) => { e.preventDefault(); applyFilters(); });
+    if (goalInput) goalInput.addEventListener('input', (e) => { e.preventDefault(); applyFilters(); });
 
     initDashboard();
 });
