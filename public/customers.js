@@ -1,38 +1,36 @@
-// public/customers.js
-
 document.addEventListener('DOMContentLoaded', async () => {
-    const tableBody = document.getElementById('customers-table-body');
-    const searchInput = document.getElementById('search-input');
+const tableBody = document.getElementById('customers-table-body');
+const searchInput = document.getElementById('search-input');
     const startDateFilter = document.getElementById('start-date-filter');
     const endDateFilter = document.getElementById('end-date-filter');
-    const franchiseFilter = document.getElementById('franchise-filter');
-    const closerFilter = document.getElementById('closer-filter');
-    const monthFilter = document.getElementById('month-filter');
-    const yearFilter = document.getElementById('year-filter');
-    const reminderFilter = document.getElementById('reminder-filter');
+const franchiseFilter = document.getElementById('franchise-filter');
+const closerFilter = document.getElementById('closer-filter');
+const monthFilter = document.getElementById('month-filter');
+const yearFilter = document.getElementById('year-filter');
+const reminderFilter = document.getElementById('reminder-filter');
     const totalAppointmentsCount = document.getElementById('totalAppointmentsCount');
     const totalPetsCount = document.getElementById('totalPetsCount');
 
-    let allCustomersData = [];
+let allCustomersData = [];
 
-    // Helper function to format a date string
-    function formatDate(dateStr) {
-        if (!dateStr) return '';
-        const parts = dateStr.split('/');
-        return `${parts[1]}/${parts[2]}/${parts[0]}`;
-    }
-
-    // Function to render the table rows based on filtered data
-    function renderTable(data) {
-        tableBody.innerHTML = ''; // Clear the table
-        if (data.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="13" class="p-4 text-center text-muted-foreground">Nenhum cliente encontrado.</td></tr>';
+// Helper function to format a date string
+function formatDate(dateStr) {
+if (!dateStr) return '';
+        // Assuming dateStr is in YYYY/MM/DD format
+const parts = dateStr.split('/');
+return `${parts[1]}/${parts[2]}/${parts[0]}`;
+}
+@@ -24,10 +27,21 @@ document.addEventListener('DOMContentLoaded', async () => {
+tableBody.innerHTML = ''; // Clear the table
+if (data.length === 0) {
+tableBody.innerHTML = '<tr><td colspan="13" class="p-4 text-center text-muted-foreground">Nenhum cliente encontrado.</td></tr>';
             totalAppointmentsCount.textContent = 0;
             totalPetsCount.textContent = 0;
-            return;
-        }
+return;
+}
+        
 
-        const today = new Date();
+const today = new Date();
         const totalAppointments = data.length;
         const totalPets = data.reduce((sum, customer) => {
             const pets = parseInt(customer.pets, 10);
@@ -42,156 +40,54 @@ document.addEventListener('DOMContentLoaded', async () => {
         totalAppointmentsCount.textContent = totalAppointments;
         totalPetsCount.textContent = totalPets;
         
-        data.forEach(customer => {
-            const row = document.createElement('tr');
-            row.classList.add('border-b', 'border-border', 'hover:bg-muted/50', 'transition-colors');
-            
-            const reminderDate = new Date(customer.reminderDate);
-            let reminderDisplay = customer.reminderDate;
-            let reminderClasses = 'p-4';
+data.forEach(customer => {
+const row = document.createElement('tr');
+row.classList.add('border-b', 'border-border', 'hover:bg-muted/50', 'transition-colors');
+@@ -38,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
-            if (reminderDate < today) {
-                reminderDisplay = `<span class="text-green-600 font-medium">Enviar Reminder</span>`;
+if (reminderDate < today) {
+reminderDisplay = `<span class="text-green-600 font-medium">Enviar Reminder</span>`;
+                reminderClasses = 'p-4'; // No special class for now, color is set directly in span
                 reminderClasses = 'p-4'; 
-            }
-            
-            row.innerHTML = `
-                <td class="p-4">${customer.date}</td>
-                <td class="p-4">${customer.customers}</td>
-                <td class="p-4">${customer.pets}</td>
-                <td class="p-4">${customer.closer1}</td>
-                <td class="p-4">${customer.closer2}</td>
-                <td class="p-4">${customer.phone}</td>
-                <td class="p-4">${customer.appointmentDate}</td>
-                <td class="p-4">${customer.serviceValue}</td>
-                <td class="p-4">${customer.franchise}</td>
-                <td class="p-4">${customer.month}</td>
-                <td class="p-4">${customer.year}</td>
-                <td class="p-4">${customer.code}</td>
-                <td class="${reminderClasses}">${reminderDisplay}</td>
-            `;
-            tableBody.appendChild(row);
-        });
-    }
+}
 
-    // Function to apply all filters
-    function applyFilters() {
-        const searchTerm = searchInput.value.toLowerCase();
+row.innerHTML = `
+@@ -63,13 +77,20 @@ document.addEventListener('DOMContentLoaded', async () => {
+// Function to apply all filters
+function applyFilters() {
+const searchTerm = searchInput.value.toLowerCase();
         const selectedStartDate = startDateFilter.value ? new Date(startDateFilter.value) : null;
         const selectedEndDate = endDateFilter.value ? new Date(endDateFilter.value) : null;
-        const selectedFranchise = franchiseFilter.value.toLowerCase();
-        const selectedCloser = closerFilter.value.toLowerCase();
-        const selectedMonth = monthFilter.value;
-        const selectedYear = yearFilter.value;
-        const selectedReminder = reminderFilter.value;
+const selectedFranchise = franchiseFilter.value.toLowerCase();
+const selectedCloser = closerFilter.value.toLowerCase();
+const selectedMonth = monthFilter.value;
+const selectedYear = yearFilter.value;
+const selectedReminder = reminderFilter.value;
 
-        const filteredData = allCustomersData.filter(customer => {
+const filteredData = allCustomersData.filter(customer => {
             const customerDate = new Date(customer.date.split('/').reverse().join('-'));
 
             const matchesDateRange = (!selectedStartDate || customerDate >= selectedStartDate) &&
                                      (!selectedEndDate || customerDate <= selectedEndDate);
             
-            const matchesSearch = searchTerm === '' || 
-                                  (customer.customers && customer.customers.toLowerCase().includes(searchTerm)) ||
-                                  (customer.phone && customer.phone.toLowerCase().includes(searchTerm)) ||
-                                  (customer.city && customer.city.toLowerCase().includes(searchTerm));
-            
-            const matchesFranchise = selectedFranchise === '' || 
-                                     (customer.franchise && customer.franchise.toLowerCase() === selectedFranchise);
-            
-            const matchesCloser = selectedCloser === '' || 
-                                  (customer.closer1 && customer.closer1.toLowerCase() === selectedCloser) ||
-                                  (customer.closer2 && customer.closer2.toLowerCase() === selectedCloser);
-            
-            const matchesMonth = selectedMonth === '' || 
-                                 (customer.month && customer.month.toString() === selectedMonth);
-            
-            const matchesYear = selectedYear === '' || 
-                                (customer.year && customer.year.toString() === selectedYear);
-            
-            const today = new Date();
-            const reminderDate = new Date(customer.reminderDate);
-            const matchesReminder = selectedReminder === '' || (selectedReminder === 'send-reminder' && reminderDate < today);
+const matchesSearch = searchTerm === '' || 
+(customer.customers && customer.customers.toLowerCase().includes(searchTerm)) ||
+(customer.phone && customer.phone.toLowerCase().includes(searchTerm)) ||
+@@ -92,7 +113,7 @@ document.addEventListener('DOMContentLoaded', async () => {
+const reminderDate = new Date(customer.reminderDate);
+const matchesReminder = selectedReminder === '' || (selectedReminder === 'send-reminder' && reminderDate < today);
 
+            return matchesSearch && matchesFranchise && matchesCloser && matchesMonth && matchesYear && matchesReminder;
             return matchesSearch && matchesFranchise && matchesCloser && matchesMonth && matchesYear && matchesReminder && matchesDateRange;
-        });
+});
 
-        renderTable(filteredData);
-    }
-    
-    // Function to populate filter dropdowns
-    function populateFilters(data) {
-        const franchises = new Set();
-        const closers = new Set();
-        const months = new Set();
-        const years = new Set();
-        data.forEach(item => {
-            if (item.franchise) franchises.add(item.franchise);
-            if (item.closer1) closers.add(item.closer1);
-            if (item.closer2) closers.add(item.closer2);
-            if (item.month) months.add(item.month);
-            if (item.year) years.add(item.year);
-        });
+renderTable(filteredData);
+@@ -162,6 +183,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
-        franchises.forEach(franchise => {
-            const option = document.createElement('option');
-            option.value = franchise;
-            const displayValue = franchise.length > 12 ? franchise.substring(0, 12) + '...' : franchise;
-            option.textContent = displayValue;
-            franchiseFilter.appendChild(option);
-        });
-        
-        closers.forEach(closer => {
-            const option = document.createElement('option');
-            option.value = closer;
-            const displayValue = closer.length > 12 ? closer.substring(0, 12) + '...' : closer;
-            option.textContent = displayValue;
-            closerFilter.appendChild(option);
-        });
-
-        months.forEach(month => {
-            const option = document.createElement('option');
-            option.value = month;
-            option.textContent = month;
-            monthFilter.appendChild(option);
-        });
-        
-        years.forEach(year => {
-            const option = document.createElement('option');
-            option.value = year;
-            option.textContent = year;
-            yearFilter.appendChild(option);
-        });
-    }
-
-    // Main function to fetch and initialize the dashboard
-    async function initDashboard() {
-        try {
-            const response = await fetch('/api/get-customers-data');
-            if (!response.ok) {
-                throw new Error('Failed to load customer data.');
-            }
-            const data = await response.json();
-            allCustomersData = data.customers;
-            
-            renderTable(allCustomersData);
-            populateFilters(allCustomersData);
-
-        } catch (error) {
-            console.error('Error fetching customer data:', error);
-            tableBody.innerHTML = '<tr><td colspan="13" class="p-4 text-center text-red-600">Erro ao carregar dados. Tente novamente.</td></tr>';
-        }
-    }
-
-    // Add event listeners for filters
-    searchInput.addEventListener('input', applyFilters);
+// Add event listeners for filters
+searchInput.addEventListener('input', applyFilters);
     startDateFilter.addEventListener('change', applyFilters);
     endDateFilter.addEventListener('change', applyFilters);
-    franchiseFilter.addEventListener('change', applyFilters);
-    closerFilter.addEventListener('change', applyFilters);
-    monthFilter.addEventListener('change', applyFilters);
-    yearFilter.addEventListener('change', applyFilters);
-    reminderFilter.addEventListener('change', applyFilters);
-
-    initDashboard();
-});
+franchiseFilter.addEventListener('change', applyFilters);
+closerFilter.addEventListener('change', applyFilters);
+monthFilter.addEventListener('change', applyFilters);
