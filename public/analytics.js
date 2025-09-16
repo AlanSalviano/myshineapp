@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const goalInput = document.getElementById('goal-input');
     const goalProgress = document.getElementById('goal-progress');
     const goalPercentage = document.getElementById('goal-percentage');
+    const closerPerformanceSection = document.getElementById('closer-performance-section');
+    const advancedDashboardSection = document.getElementById('advanced-dashboard-section');
 
     let allAppointmentsData = [];
     let allEmployees = [];
@@ -147,6 +149,36 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
         yearFilter.value = currentYear;
     }
+    
+    function renderAdvancedDashboard(data) {
+        const closerStats = {};
+        const totalCloserAppointments = data.reduce((sum, app) => sum + (app.totalCloser > 0 ? 1 : 0), 0);
+    
+        data.forEach(closer => {
+            const percentage = totalCloserAppointments > 0 ? (closer.totalCloser / totalCloserAppointments) * 100 : 0;
+            closerStats[closer.closer] = {
+                percentage: percentage.toFixed(2),
+                totalCloser: closer.totalCloser,
+                totalInTeam: closer.totalInTeam
+            };
+        });
+    
+        let htmlContent = '';
+        Object.keys(closerStats).forEach(closerName => {
+            const stats = closerStats[closerName];
+            htmlContent += `
+                <div class="rounded-lg border bg-card text-card-foreground shadow-large bg-gradient-subtle p-6">
+                    <h3 class="text-sm font-bold">${closerName}</h3>
+                    <div class="mt-4 flex flex-col space-y-2">
+                        <p class="text-2xl font-bold">${stats.totalCloser} Closer Appointments</p>
+                        <p class="text-sm text-muted-foreground">${stats.totalInTeam} In Team Appointments</p>
+                        <p class="text-lg font-bold text-brand-primary">${stats.percentage}% of total closer appointments</p>
+                    </div>
+                </div>
+            `;
+        });
+        advancedDashboardSection.innerHTML = htmlContent;
+    }
 
     // Main function to fetch data and initialize the dashboard
     async function initDashboard() {
@@ -170,6 +202,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             populateYearFilter();
 
             applyFilters();
+            
+            // Render advanced dashboard with initial data
+            renderAdvancedDashboard(allEmployees.map(e => ({ closer: e, totalCloser: 0, totalInTeam: 0 })));
+
         } catch (error) {
             console.error('Error fetching data:', error);
             tableBody.innerHTML = '<tr><td colspan="14" class="p-4 text-center text-red-600">Erro ao carregar dados. Tente novamente.</td></tr>';
@@ -177,8 +213,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Add event listeners for filters
-    monthFilter.addEventListener('change', applyFilters);
-    yearFilter.addEventListener('change', applyFilters);
+    monthFilter.addEventListener('change', () => {
+        applyFilters();
+        renderAdvancedDashboard(allEmployees.map(e => ({ closer: e, totalCloser: 0, totalInTeam: 0 })));
+    });
+    yearFilter.addEventListener('change', () => {
+        applyFilters();
+        renderAdvancedDashboard(allEmployees.map(e => ({ closer: e, totalCloser: 0, totalInTeam: 0 })));
+    });
     goalInput.addEventListener('input', () => {
         applyFilters();
     });
