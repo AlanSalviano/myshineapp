@@ -65,4 +65,101 @@
           <nav class="flex items-center justify-around py-2">
             <a href="appointments.html" class="flex flex-col items-center gap-1 p-2 rounded-lg text-xs font-medium transition-all duration-300 text-muted-foreground hover:text-foreground">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar w-4 h-4"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-                <span>Appointments
+                <span>Appointments</span>
+            </a>
+            <a href="customers.html" class="flex flex-col items-center gap-1 p-2 rounded-lg text-xs font-medium transition-all duration-300 text-brand-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users w-4 h-4"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <span>Customers</span>
+            </a>
+            <button class="flex flex-col items-center gap-1 p-2 rounded-lg text-xs font-medium transition-all duration-300 text-muted-foreground hover:text-foreground">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bar-chart-3 w-4 h-4"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+                <span>Analytics</span>
+            </button>
+            <button class="flex flex-col items-center gap-1 p-2 rounded-lg text-xs font-medium transition-all duration-300 text-muted-foreground hover:text-foreground">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings w-4 h-4"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.39a2 2 0 0 0 .73 2.73l.15.08a2 2 0 0 1 1 1.73v.55a2 2 0 0 1-1 1.73l-.15.08a2 2 0 0 0-.73 2.73l.22.39a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73v.18a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l-.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.73v-.55a2 2 0 0 1 1-1.73l.15-.08a2 2 0 0 0 .73-2.73l-.22-.39a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2-0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                <span>Settings</span>
+            </button>
+          </nav>
+        </div>
+      </div>
+      <div class="bg-muted border-t border-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between py-2">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center text-white font-semibold text-xs">
+                A
+              </div>
+              <div>
+                <p class="text-sm font-medium text-foreground">Admin User</p>
+                <p class="text-xs text-muted-foreground">System Administrator</p>
+              </div>
+            </div>
+            <p class="text-xs text-muted-foreground hidden sm:block">
+              Gerenciar seus clientes de forma eficiente
+            </p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 p-8 overflow-y-auto">
+        <div class="max-w-7xl mx-auto">
+            <div class="rounded-lg border bg-card text-card-foreground shadow-large bg-gradient-subtle">
+                <div class="flex flex-col space-y-1.5 p-6 pb-8">
+                    <h2 class="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                        Customer List
+                    </h2>
+                    <div class="mt-4 flex flex-wrap items-center gap-4">
+                        <input type="text" id="search-input" placeholder="Search by name, phone, or city" class="flex-1 min-w-[134px] rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                        <input type="date" id="start-date-filter" class="flex-1 min-w-[150px] rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                        <input type="date" id="end-date-filter" class="flex-1 min-w-[150px] rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                        <select id="franchise-filter" class="min-w-[150px] rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                            <option value="">All Franchises</option>
+                        </select>
+                        <select id="closer-filter" class="min-w-[150px] rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                            <option value="">All Closers</option>
+                        </select>
+                        <select id="month-filter" class="min-w-[150px] rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                            <option value="">All Months</option>
+                        </select>
+                        <select id="year-filter" class="min-w-[150px] rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                            <option value="">All Years</option>
+                        </select>
+                        <select id="reminder-filter" class="min-w-[150px] rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                            <option value="">Todos</option>
+                            <option value="send-reminder">Enviar Reminder</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="p-6 pt-0 overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-muted text-muted-foreground uppercase text-xs font-semibold">
+                            <tr>
+                                <th class="p-4 border-b border-border">Date</th>
+                                <th class="p-4 border-b border-border">Customers</th>
+                                <th class="p-4 border-b border-border">Pets</th>
+                                <th class="p-4 border-b border-border">Closer (1)</th>
+                                <th class="p-4 border-b border-border">Closer (2)</th>
+                                <th class="p-4 border-b border-border">Phone</th>
+                                <th class="p-4 border-b border-border">Date (Appointment)</th>
+                                <th class="p-4 border-b border-border">Service Value</th>
+                                <th class="p-4 border-b border-border">Franchise</th>
+                                <th class="p-4 border-b border-border">Month</th>
+                                <th class="p-4 border-b border-border">Year</th>
+                                <th class="p-4 border-b border-border">Code</th>
+                                <th class="p-4 border-b border-border">Reminder Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customers-table-body" class="text-foreground text-sm">
+                            <tr>
+                                <td colspan="13" class="p-4 text-center">Loading customer data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="customers.js"></script>
+</body>
+</html>
