@@ -136,14 +136,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         franchises.forEach(franchise => {
             const option = document.createElement('option');
             option.value = franchise;
-            option.textContent = franchise;
+            const displayValue = franchise.length > 14 ? franchise.substring(0, 14) + '...' : franchise;
+            option.textContent = displayValue;
             franchiseFilter.appendChild(option);
         });
         
         closers.forEach(closer => {
             const option = document.createElement('option');
             option.value = closer;
-            option.textContent = closer;
+            const displayValue = closer.length > 14 ? closer.substring(0, 14) + '...' : closer;
+            option.textContent = displayValue;
             closerFilter.appendChild(option);
         });
 
