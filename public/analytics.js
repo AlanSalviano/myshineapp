@@ -69,17 +69,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         const sortedEmployees = [...employees].sort();
-        let totalAppointments = 0;
+        let totalCloserAppointments = 0;
 
-        // First pass to calculate total appointments for percentage calculation
+        // First pass to calculate total closer appointments for percentage calculation
         sortedEmployees.forEach(closer => {
-            totalAppointments += closerTotals[closer].grandTotal;
+            totalCloserAppointments += closerTotals[closer].totalCloser;
         });
 
         // Second pass to render table rows
         sortedEmployees.forEach(closer => {
             const totals = closerTotals[closer];
-            const percentage = totalAppointments > 0 ? (totals.grandTotal / totalAppointments) * 100 : 0;
+            const percentage = totalCloserAppointments > 0 ? (totals.totalCloser / totalCloserAppointments) * 100 : 0;
             const row = document.createElement('tr');
             row.classList.add('border-b', 'border-border', 'hover:bg-muted/50', 'transition-colors');
             
@@ -106,6 +106,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Render the total row at the bottom
         const totalCloser = sortedEmployees.reduce((sum, closer) => sum + closerTotals[closer].totalCloser, 0);
         const totalInTeam = sortedEmployees.reduce((sum, closer) => sum + closerTotals[closer].totalInTeam, 0);
+        const totalGrandTotal = sortedEmployees.reduce((sum, closer) => sum + closerTotals[closer].grandTotal, 0);
         
         tableFooter.innerHTML = `
             <tr>
@@ -113,12 +114,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td colspan="10" class="p-4"></td>
                 <td class="p-4 text-center font-bold">${totalCloser}</td>
                 <td class="p-4 text-center font-bold">${totalInTeam}</td>
-                <td class="p-4 text-center font-bold">${totalAppointments}</td>
+                <td class="p-4 text-center font-bold">${totalGrandTotal}</td>
                 <td class="p-4 text-center font-bold">100.00%</td>
             </tr>
         `;
         
-        updateGoalProgress(totalAppointments, parseInt(goalInput.value, 10));
+        updateGoalProgress(totalCloserAppointments, parseInt(goalInput.value, 10));
     }
 
     // Function to apply filters and render the table
