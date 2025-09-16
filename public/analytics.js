@@ -191,6 +191,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.addEventListener('click', (event) => {
         const closerNameCell = event.target.closest('td[data-closer-name]');
         if (closerNameCell) {
+            event.preventDefault(); // Prevents page refresh
             const closerName = closerNameCell.dataset.closerName;
             populateFranchiseModal(closerName);
         }
