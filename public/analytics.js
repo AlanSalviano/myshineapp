@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Function to update the goal progress bar
     function updateGoalProgress(closerTotal, goal) {
+        if (!goalProgress || !goalPercentage) return;
+
         let percentage = 0;
         if (goal > 0) {
             percentage = Math.min(100, (closerTotal / goal) * 100);
@@ -36,6 +38,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Function to render the table with the calculated data
     function renderTable(data, employees) {
+        if (!tableBody || !tableFooter) return;
+
         tableBody.innerHTML = '';
         
         const closerTotals = {};
@@ -123,6 +127,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Function to render the advanced dashboard cards
     function renderAdvancedDashboard(data) {
+        if (!closerInsightsContainer) return;
+        
         const totalCloserAppointments = data.reduce((sum, closer) => sum + closer.totalCloser, 0);
         
         let htmlContent = '';
@@ -153,6 +159,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Função corrigida para popular o modal
     function populateFranchiseModal(closerName) {
+        if (!franchiseModal || !modalContent) return;
+        
         // Filtrar agendamentos onde o closer é o Closer (1) ou Closer (2)
         const closerAppointments = allAppointmentsData.filter(app => app.closer1 === closerName || app.closer2 === closerName);
         
@@ -226,6 +234,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Function to populate filter dropdowns with years
     function populateYearFilter() {
+        if (!yearFilter) return;
+
         const currentYear = new Date().getFullYear();
         const years = [currentYear - 1, currentYear, currentYear + 1];
         yearFilter.innerHTML = `<option value="">Select Year</option>`;
@@ -264,15 +274,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (error) {
             console.error('Error fetching data:', error);
             const errorMessage = `Erro ao carregar dados: ${error.message}. Verifique a sua conexão ou a configuração da API.`;
-            if(tableBody) tableBody.innerHTML = `<tr><td colspan="15" class="p-4 text-center text-red-600">${errorMessage}</td></tr>`;
-            if(closerInsightsContainer) closerInsightsContainer.innerHTML = `<p class="text-sm text-red-600 p-4">${errorMessage}</p>`;
+            if (tableBody) tableBody.innerHTML = `<tr><td colspan="15" class="p-4 text-center text-red-600">${errorMessage}</td></tr>`;
+            if (closerInsightsContainer) closerInsightsContainer.innerHTML = `<p class="text-sm text-red-600 p-4">${errorMessage}</p>`;
         }
     }
 
     // Add event listeners for filters
-    monthFilter.addEventListener('change', applyFilters);
-    yearFilter.addEventListener('change', applyFilters);
-    goalInput.addEventListener('input', applyFilters);
+    if (monthFilter) monthFilter.addEventListener('change', applyFilters);
+    if (yearFilter) yearFilter.addEventListener('change', applyFilters);
+    if (goalInput) goalInput.addEventListener('input', applyFilters);
 
     initDashboard();
 });
