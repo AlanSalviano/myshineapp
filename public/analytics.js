@@ -13,10 +13,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     let allEmployees = [];
 
     // Function to update the goal progress bar
-    function updateGoalProgress(grandTotal, goal) {
+    function updateGoalProgress(closerTotal, goal) {
         let percentage = 0;
         if (goal > 0) {
-            percentage = Math.min(100, (grandTotal / goal) * 100);
+            percentage = Math.min(100, (closerTotal / goal) * 100);
         }
         
         goalProgress.style.width = `${percentage}%`;
@@ -105,17 +105,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Render the total row at the bottom
         const totalCloser = sortedEmployees.reduce((sum, closer) => sum + closerTotals[closer].totalCloser, 0);
-        const totalInTeam = sortedEmployees.reduce((sum, closer) => sum + closerTotals[closer].totalInTeam, 0);
-        const totalGrandTotal = sortedEmployees.reduce((sum, closer) => sum + closerTotals[closer].grandTotal, 0);
         
         tableFooter.innerHTML = `
             <tr>
                 <td class="p-4 font-bold">Grand Total</td>
                 <td colspan="10" class="p-4"></td>
                 <td class="p-4 text-center font-bold">${totalCloser}</td>
-                <td class="p-4 text-center font-bold">${totalInTeam}</td>
-                <td class="p-4 text-center font-bold">${totalGrandTotal}</td>
-                <td class="p-4 text-center font-bold">100.00%</td>
+                <td class="p-4 text-center"></td>
+                <td class="p-4 text-center"></td>
+                <td class="p-4 text-center"></td>
             </tr>
         `;
         
