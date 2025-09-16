@@ -150,18 +150,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         closerInsightsContainer.innerHTML = htmlContent;
     }
-    
+
+    // Função corrigida para popular o modal
     function populateFranchiseModal(closerName) {
-        const closerAppointments = allAppointmentsData.filter(app => app.closer1 === closerName);
+        const closerAppointments = allAppointmentsData.filter(app => app.closer1 === closerName || app.closer2 === closerName);
+        
         const franchiseCounts = closerAppointments.reduce((acc, app) => {
-            if (app.type === 'Central') {
-                const franchise = app.franchise || 'Unknown';
-                acc[franchise] = (acc[franchise] || 0) + 1;
-            }
+            const franchise = app.franchise || 'Unknown';
+            acc[franchise] = (acc[franchise] || 0) + 1;
             return acc;
         }, {});
     
-        let modalInnerContent = `<h3 class="text-lg font-bold mb-4">Agendamentos de ${closerName}</h3>`;
+        let modalInnerContent = `<h3 class="text-lg font-bold mb-4">Agendamentos de ${closerName} por Franquia</h3>`;
         if (Object.keys(franchiseCounts).length > 0) {
             modalInnerContent += '<ul class="list-disc pl-5 space-y-1">';
             for (const franchise in franchiseCounts) {
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             modalInnerContent += '</ul>';
         } else {
-            modalInnerContent += '<p>Nenhum agendamento central encontrado para este closer no período selecionado.</p>';
+            modalInnerContent += '<p>Nenhum agendamento encontrado para este closer no período selecionado.</p>';
         }
     
         modalContent.innerHTML = modalInnerContent;
