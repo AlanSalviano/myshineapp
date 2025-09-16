@@ -3,6 +3,8 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const tableBody = document.getElementById('analytics-table-body');
     const tableFooter = document.getElementById('analytics-table-footer');
+    const regionsTableBody = document.getElementById('regions-table-body');
+    const regionsTableHead = document.querySelector('#performance-by-regions-section thead tr:first-child');
     const monthFilter = document.getElementById('month-filter');
     const yearFilter = document.getElementById('year-filter');
     const goalInput = document.getElementById('goal-input');
@@ -12,6 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let allAppointmentsData = [];
     let allEmployees = [];
+    let allFranchises = [];
 
     // Function to update the goal progress bar
     function updateGoalProgress(closerTotal, goal) {
@@ -22,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         goalProgress.style.width = `${percentage}%`;
         goalPercentage.textContent = `${Math.round(percentage)}%`;
-
+        
         if (percentage >= 100) {
             goalProgress.classList.remove('bg-brand-primary');
             goalProgress.classList.add('bg-green-600');
@@ -32,9 +35,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // Function to render the table with the calculated data
+    // Function to render the main table with the calculated data
     function renderTable(data, employees) {
-        tableBody.innerHTML = ''; // Clear table content
+        tableBody.innerHTML = '';
         
         if (employees.length === 0) {
             tableBody.innerHTML = '<tr><td colspan="14" class="p-4 text-center text-muted-foreground">Nenhum closer encontrado.</td></tr>';
@@ -72,12 +75,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const sortedEmployees = [...employees].sort();
         let totalCloserAppointments = 0;
 
-        // First pass to calculate total closer appointments for percentage calculation
         sortedEmployees.forEach(closer => {
             totalCloserAppointments += closerTotals[closer].totalCloser;
         });
 
-        // Second pass to render table rows
         sortedEmployees.forEach(closer => {
             const totals = closerTotals[closer];
             const percentage = totalCloserAppointments > 0 ? (totals.totalCloser / totalCloserAppointments) * 100 : 0;
@@ -104,7 +105,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             tableBody.appendChild(row);
         });
 
-        // Render the total row at the bottom
         const totalCloser = sortedEmployees.reduce((sum, closer) => sum + closerTotals[closer].totalCloser, 0);
         
         tableFooter.innerHTML = `
@@ -120,8 +120,76 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         updateGoalProgress(totalCloserAppointments, parseInt(goalInput.value, 10));
     }
+    
+    // Function to render the advanced dashboard cards
+    function renderAdvancedDashboard(data) {
+        const totalCloserAppointments = data.reduce((sum, closer) => sum + closer.totalCloser, 0);
+        
+        let htmlContent = '';
+        data.forEach(closerStats => {
+            const percentage = totalCloserAppointments > 0 ? (closerStats.totalCloser / totalCloserAppointments) * 100 : 0;
+            htmlContent += `
+                <div class="p-4 border-b border-border last:border-b-0">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm font-semibold">${closerStats.closer}</h3>
+                        <p class="text-xs font-medium text-brand-primary">${percentage.toFixed(2)}%</p>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-muted-foreground mt-1">
+                        <span>Closer: ${closerStats.totalCloser}</span>
+                        <span>In Team: ${closerStats.totalInTeam}</span>
+                    </div>
+                </div>
+            `;
+        });
 
-    // Function to apply filters and render the table
+        advancedDashboardSection.innerHTML = `
+            <div class="rounded-lg border bg-card shadow-large bg-gradient-subtle p-0">
+                <h2 class="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent p-6 pb-2">Closer Insights</h2>
+                <div class="p-6 pt-0">
+                    ${htmlContent}
+                </div>
+            </div>
+        `;
+    }
+    
+    // Function to render the regions table
+    function renderRegionsTable(data, employees, franchises) {
+        regionsTableBody.innerHTML = '';
+        const franchiseHeaders = franchises.map(f => `<th class="p-4 border-b border-border text-center">${f}</th>`).join('');
+        regionsTableHead.innerHTML = `<tr><th class="p-4 border-b border-border">Closer</th>${franchiseHeaders}</tr>`;
+    
+        if (employees.length === 0) {
+            regionsTableBody.innerHTML = '<tr><td colspan="2" class="p-4 text-center text-muted-foreground">Nenhum closer encontrado.</td></tr>';
+            return;
+        }
+    
+        const regionsData = {};
+        employees.forEach(closer => {
+            regionsData[closer] = {};
+            franchises.forEach(f => {
+                regionsData[closer][f] = 0;
+            });
+        });
+    
+        data.forEach(appointment => {
+            if (appointment.type === 'Central' && appointment.closer1 && appointment.franchise && regionsData[appointment.closer1]) {
+                regionsData[appointment.closer1][appointment.franchise]++;
+            }
+        });
+    
+        employees.forEach(closer => {
+            const row = document.createElement('tr');
+            row.classList.add('border-b', 'border-border', 'hover:bg-muted/50', 'transition-colors');
+            let cells = `<td class="p-4 font-semibold">${closer}</td>`;
+            franchises.forEach(f => {
+                cells += `<td class="p-4 text-center">${regionsData[closer][f]}</td>`;
+            });
+            row.innerHTML = cells;
+            regionsTableBody.appendChild(row);
+        });
+    }
+
+    // Function to apply all filters and render all sections
     function applyFilters() {
         const selectedMonth = monthFilter.value;
         const selectedYear = yearFilter.value;
@@ -131,7 +199,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const matchesYear = selectedYear === '' || (appointment.year && appointment.year.toString() === selectedYear);
             return matchesMonth && matchesYear;
         });
-        
+
+        // Calculate data for the tables and advanced dashboard
         const closerPerformanceData = {};
         allEmployees.forEach(closer => {
             closerPerformanceData[closer] = { totalCloser: 0, totalInTeam: 0 };
@@ -151,9 +220,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             totalCloser: closerPerformanceData[closer].totalCloser,
             totalInTeam: closerPerformanceData[closer].totalInTeam
         }));
-
+        
         renderTable(filteredData, allEmployees);
         renderAdvancedDashboard(performanceData);
+        renderRegionsTable(filteredData, allEmployees, allFranchises);
     }
 
     // Function to populate filter dropdowns with years
@@ -170,53 +240,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         yearFilter.value = currentYear;
     }
     
-    function renderAdvancedDashboard(data) {
-        const totalCloserAppointments = data.reduce((sum, closer) => sum + closer.totalCloser, 0);
-    
-        let htmlContent = '';
-        data.forEach(closerStats => {
-            const percentage = totalCloserAppointments > 0 ? (closerStats.totalCloser / totalCloserAppointments) * 100 : 0;
-            htmlContent += `
-                <div class="p-4 border-b border-border last:border-b-0">
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-sm font-semibold">${closerStats.closer}</h3>
-                        <p class="text-xs font-medium text-brand-primary">${percentage.toFixed(2)}%</p>
-                    </div>
-                    <div class="flex items-center justify-between text-xs text-muted-foreground mt-1">
-                        <span>Closer: ${closerStats.totalCloser}</span>
-                        <span>In Team: ${closerStats.totalInTeam}</span>
-                    </div>
-                </div>
-            `;
-        });
-        advancedDashboardSection.innerHTML = `
-            <div class="rounded-lg border bg-card shadow-large bg-gradient-subtle p-0">
-                <h2 class="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent p-6 pb-2">Closer Insights</h2>
-                <div class="p-6 pt-0">
-                    ${htmlContent}
-                </div>
-            </div>
-        `;
-    }
-
     // Main function to fetch data and initialize the dashboard
     async function initDashboard() {
         try {
-            // Fetch appointments data
-            const appointmentsResponse = await fetch('/api/get-customers-data');
-            if (!appointmentsResponse.ok) {
-                throw new Error('Failed to load appointments data.');
-            }
-            const appointmentsData = await appointmentsResponse.json();
-            allAppointmentsData = appointmentsData.customers;
+            const [appointmentsResponse, employeesResponse] = await Promise.all([
+                fetch('/api/get-customers-data'),
+                fetch('/api/get-dashboard-data')
+            ]);
 
-            // Fetch all employees (closers)
-            const employeesResponse = await fetch('/api/get-dashboard-data');
-            if (!employeesResponse.ok) {
-                throw new Error('Failed to load employees data.');
+            if (!appointmentsResponse.ok || !employeesResponse.ok) {
+                throw new Error('Failed to load data from one or more APIs.');
             }
+
+            const appointmentsData = await appointmentsResponse.json();
             const employeesData = await employeesResponse.json();
+
+            allAppointmentsData = appointmentsData.customers;
             allEmployees = employeesData.employees;
+            allFranchises = employeesData.franchises;
 
             populateYearFilter();
 
@@ -225,8 +266,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (error) {
             console.error('Error fetching data:', error);
             const errorMessage = 'Erro ao carregar dados. Tente novamente.';
-            tableBody.innerHTML = `<tr><td colspan="14" class="p-4 text-center text-red-600">${errorMessage}</td></tr>`;
-            advancedDashboardSection.innerHTML = `<div class="rounded-lg border bg-card text-card-foreground shadow-large bg-gradient-subtle p-6"><p class="text-sm text-red-600">${errorMessage}</p></div>`;
+            if(tableBody) tableBody.innerHTML = `<tr><td colspan="15" class="p-4 text-center text-red-600">${errorMessage}</td></tr>`;
+            if(advancedDashboardSection) advancedDashboardSection.innerHTML = `<div class="rounded-lg border bg-card text-card-foreground shadow-large bg-gradient-subtle p-6"><p class="text-sm text-red-600">${errorMessage}</p></div>`;
+            if(regionsTableBody) regionsTableBody.innerHTML = `<tr><td colspan="${allFranchises.length + 1}" class="p-4 text-center text-red-600">${errorMessage}</td></tr>`;
         }
     }
 
