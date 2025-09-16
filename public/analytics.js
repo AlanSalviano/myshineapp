@@ -187,9 +187,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     document.addEventListener('click', (event) => {
+        // Prevents page refresh on any click
+        event.preventDefault();
+
         const closerNameCell = event.target.closest('td[data-closer-name]');
         if (closerNameCell) {
-            event.preventDefault(); // Prevents page refresh
             const closerName = closerNameCell.dataset.closerName;
             populateFranchiseModal(closerName);
         }
