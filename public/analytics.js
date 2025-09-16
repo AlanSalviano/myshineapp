@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const closerInsightsContainer = document.getElementById('closer-insights-container');
     const franchiseModal = document.getElementById('franchise-modal');
     const modalContent = document.getElementById('modal-content');
+    const totalAppointmentsCount = document.getElementById('totalAppointmentsCount');
+    const totalPetsCount = document.getElementById('totalPetsCount');
 
     let allAppointmentsData = [];
     let allEmployees = [];
@@ -187,11 +189,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     document.addEventListener('click', (event) => {
-        // Prevents page refresh on any click
-        event.preventDefault();
-
         const closerNameCell = event.target.closest('td[data-closer-name]');
         if (closerNameCell) {
+            event.preventDefault();
             const closerName = closerNameCell.dataset.closerName;
             populateFranchiseModal(closerName);
         }
@@ -207,6 +207,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             const matchesYear = selectedYear === '' || (appointment.year && appointment.year.toString() === selectedYear);
             return matchesMonth && matchesYear;
         });
+
+        const totalAppointmentsInPeriod = filteredData.length;
+        const totalPetsInPeriod = filteredData.reduce((sum, appointment) => sum + (parseInt(appointment.pets, 10) || 0), 0);
+        
+        if (totalAppointmentsCount) {
+            totalAppointmentsCount.textContent = totalAppointmentsInPeriod;
+        }
+
+        if (totalPetsCount) {
+            totalPetsCount.textContent = totalPetsInPeriod;
+        }
 
         // Calculate data for the tables and advanced dashboard
         const closerPerformanceData = {};
@@ -229,9 +240,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             totalInTeam: closerPerformanceData[closer].totalInTeam
         }));
         
-        // Calculate the total number of appointments in the filtered data for the goal
-        const totalAppointmentsInPeriod = filteredData.length;
-
         renderTable(filteredData, allEmployees);
         renderAdvancedDashboard(performanceData);
         updateGoalPercentage(totalAppointmentsInPeriod, parseInt(goalInput.value, 10));
@@ -285,9 +293,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Add event listeners for filters
-    if (monthFilter) monthFilter.addEventListener('change', applyFilters);
-    if (yearFilter) yearFilter.addEventListener('change', applyFilters);
-    if (goalInput) goalInput.addEventListener('input', applyFilters);
+    if (monthFilter) monthFilter.addEventListener('change', (e) => { e.preventDefault(); applyFilters(); });
+    if (yearFilter) yearFilter.addEventListener('change', (e) => { e.preventDefault(); applyFilters(); });
+    if (goalInput) goalInput.addEventListener('input', (e) => { e.preventDefault(); applyFilters(); });
 
     initDashboard();
 });
