@@ -36,18 +36,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     function renderTable(data, employees) {
         tableBody.innerHTML = '';
         
-        const filteredEmployees = employees.filter(e => {
-            return data.some(app => app.closer1 === e || app.closer2 === e);
-        });
-
-        if (filteredEmployees.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="15" class="p-4 text-center text-muted-foreground">Nenhum closer encontrado com agendamentos.</td></tr>';
-            return;
-        }
-
         const closerTotals = {};
 
-        filteredEmployees.forEach(closer => {
+        employees.forEach(closer => {
             closerTotals[closer] = {
                 closer1: Array(5).fill(0),
                 closer2: Array(5).fill(0),
@@ -73,40 +64,46 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
-        const sortedEmployees = [...filteredEmployees].sort();
+        const sortedEmployees = [...employees].sort();
         let totalCloserAppointments = 0;
 
         sortedEmployees.forEach(closer => {
             totalCloserAppointments += closerTotals[closer].totalCloser;
         });
 
-        sortedEmployees.forEach(closer => {
-            const totals = closerTotals[closer];
-            const percentage = totalCloserAppointments > 0 ? (totals.totalCloser / totalCloserAppointments) * 100 : 0;
-            const row = document.createElement('tr');
-            row.classList.add('border-b', 'border-border', 'hover:bg-muted/50', 'transition-colors');
-            
-            row.innerHTML = `
-                <td class="p-4 font-semibold cursor-pointer" data-closer-name="${closer}">${closer}</td>
-                <td class="p-4 text-center">${totals.closer1[0]}</td>
-                <td class="p-4 text-center">${totals.closer2[0]}</td>
-                <td class="p-4 text-center">${totals.closer1[1]}</td>
-                <td class="p-4 text-center">${totals.closer2[1]}</td>
-                <td class="p-4 text-center">${totals.closer1[2]}</td>
-                <td class="p-4 text-center">${totals.closer2[2]}</td>
-                <td class="p-4 text-center">${totals.closer1[3]}</td>
-                <td class="p-4 text-center">${totals.closer2[3]}</td>
-                <td class="p-4 text-center">${totals.closer1[4]}</td>
-                <td class="p-4 text-center">${totals.closer2[4]}</td>
-                <td class="p-4 text-center font-bold">${totals.totalCloser}</td>
-                <td class="p-4 text-center font-bold">${totals.totalInTeam}</td>
-                <td class="p-4 text-center font-bold">${totals.grandTotal}</td>
-                <td class="p-4 text-center font-bold">${percentage.toFixed(2)}%</td>
-            `;
-            tableBody.appendChild(row);
-        });
+        const employeesWithAppointments = sortedEmployees.filter(closer => closerTotals[closer].totalCloser > 0 || closerTotals[closer].totalInTeam > 0);
 
-        const totalCloser = sortedEmployees.reduce((sum, closer) => sum + closerTotals[closer].totalCloser, 0);
+        if (employeesWithAppointments.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="15" class="p-4 text-center text-muted-foreground">Nenhum closer com agendamentos no período selecionado.</td></tr>';
+        } else {
+            employeesWithAppointments.forEach(closer => {
+                const totals = closerTotals[closer];
+                const percentage = totalCloserAppointments > 0 ? (totals.totalCloser / totalCloserAppointments) * 100 : 0;
+                const row = document.createElement('tr');
+                row.classList.add('border-b', 'border-border', 'hover:bg-muted/50', 'transition-colors');
+                
+                row.innerHTML = `
+                    <td class="p-4 font-semibold cursor-pointer" data-closer-name="${closer}">${closer}</td>
+                    <td class="p-4 text-center">${totals.closer1[0]}</td>
+                    <td class="p-4 text-center">${totals.closer2[0]}</td>
+                    <td class="p-4 text-center">${totals.closer1[1]}</td>
+                    <td class="p-4 text-center">${totals.closer2[1]}</td>
+                    <td class="p-4 text-center">${totals.closer1[2]}</td>
+                    <td class="p-4 text-center">${totals.closer2[2]}</td>
+                    <td class="p-4 text-center">${totals.closer1[3]}</td>
+                    <td class="p-4 text-center">${totals.closer2[3]}</td>
+                    <td class="p-4 text-center">${totals.closer1[4]}</td>
+                    <td class="p-4 text-center">${totals.closer2[4]}</td>
+                    <td class="p-4 text-center font-bold">${totals.totalCloser}</td>
+                    <td class="p-4 text-center font-bold">${totals.totalInTeam}</td>
+                    <td class="p-4 text-center font-bold">${totals.grandTotal}</td>
+                    <td class="p-4 text-center font-bold">${percentage.toFixed(2)}%</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        const totalCloser = employeesWithAppointments.reduce((sum, closer) => sum + closerTotals[closer].totalCloser, 0);
         
         tableFooter.innerHTML = `
             <tr>
@@ -129,34 +126,36 @@ document.addEventListener('DOMContentLoaded', async () => {
         let htmlContent = '';
         const sortedData = data.filter(c => c.totalCloser > 0 || c.totalInTeam > 0).sort((a, b) => b.totalCloser - a.totalCloser);
 
-        sortedData.forEach(closerStats => {
-            const percentage = totalCloserAppointments > 0 ? (closerStats.totalCloser / totalCloserAppointments) * 100 : 0;
-            htmlContent += `
-                <div class="p-4 border-b border-border last:border-b-0">
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-sm font-semibold">${closerStats.closer}</h3>
-                        <p class="text-xs font-medium text-brand-primary">${percentage.toFixed(2)}%</p>
-                    </div>
-                    <div class="flex items-center justify-between text-xs text-muted-foreground mt-1">
-                        <span>Closer: ${closerStats.totalCloser}</span>
-                        <span>In Team: ${closerStats.totalInTeam}</span>
-                    </div>
-                </div>
-            `;
-        });
-        
         if (sortedData.length > 0) {
-            closerInsightsContainer.innerHTML = htmlContent;
+            sortedData.forEach(closerStats => {
+                const percentage = totalCloserAppointments > 0 ? (closerStats.totalCloser / totalCloserAppointments) * 100 : 0;
+                htmlContent += `
+                    <div class="p-4 border-b border-border last:border-b-0">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-semibold">${closerStats.closer}</h3>
+                            <p class="text-xs font-medium text-brand-primary">${percentage.toFixed(2)}%</p>
+                        </div>
+                        <div class="flex items-center justify-between text-xs text-muted-foreground mt-1">
+                            <span>Closer: ${closerStats.totalCloser}</span>
+                            <span>In Team: ${closerStats.totalInTeam}</span>
+                        </div>
+                    </div>
+                `;
+            });
         } else {
-            closerInsightsContainer.innerHTML = '<p class="text-sm text-muted-foreground p-4">Nenhum closer com agendamentos no período selecionado.</p>';
+            htmlContent = '<p class="text-sm text-muted-foreground p-4">Nenhum closer com agendamentos no período selecionado.</p>';
         }
+
+        closerInsightsContainer.innerHTML = htmlContent;
     }
 
     function showFranchisePopup(closerName) {
         const closerAppointments = allAppointmentsData.filter(app => app.closer1 === closerName);
         const franchiseCounts = closerAppointments.reduce((acc, app) => {
-            const franchise = app.franchise || 'Unknown';
-            acc[franchise] = (acc[franchise] || 0) + 1;
+            if (app.type === 'Central') {
+                const franchise = app.franchise || 'Unknown';
+                acc[franchise] = (acc[franchise] || 0) + 1;
+            }
             return acc;
         }, {});
     
@@ -164,11 +163,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (Object.keys(franchiseCounts).length > 0) {
             popupContent += '<ul class="list-disc pl-5 space-y-1">';
             for (const franchise in franchiseCounts) {
-                popupContent += `<li>${franchise}: ${franchiseCounts[franchise]} agendamento(s)</li>`;
+                if (franchiseCounts[franchise] > 0) {
+                    popupContent += `<li>${franchise}: ${franchiseCounts[franchise]} agendamento(s)</li>`;
+                }
             }
             popupContent += '</ul>';
         } else {
-            popupContent += '<p>Nenhum agendamento encontrado para este closer.</p>';
+            popupContent += '<p>Nenhum agendamento central encontrado para este closer no período selecionado.</p>';
         }
     
         const popup = document.createElement('div');
