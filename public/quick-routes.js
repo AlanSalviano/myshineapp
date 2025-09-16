@@ -40,10 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) return [null, null, null];
             const data = await response.json();
             const place = data.places[0];
-            return [parseFloat(place.latitude), parseFloat(place.longitude), place['place name']];
+            return [parseFloat(place.latitude), parseFloat(place.longitude), place['place name'], place['state abbreviation']];
         } catch (error) {
             console.error('Error fetching zip code data:', error);
-            return [null, null, null];
+            return [null, null, null, null];
         }
     }
 
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const [lat, lon, city] = await getLatLon(zipCode);
+        const [lat, lon, city, state] = await getLatLon(zipCode);
         if (!city) {
             zipCodeResults.innerHTML = `<p class="text-red-600">Zip Code não encontrado.</p>`;
             return;
@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         zipCodeResults.innerHTML = `
             <p class="text-green-600 font-bold">Zip Code Encontrado!</p>
-            <p><strong>Cidade:</strong> ${city}</p>
+            <p><strong>Cidade:</strong> ${city}, ${state}</p>
         `;
 
         const availableTechs = techData.filter(tech => tech.cidades.includes(city));
