@@ -86,12 +86,86 @@
 
     <main class="flex-1 p-8 overflow-y-auto">
         <div class="max-w-7xl mx-auto">
-            <div class="rounded-lg border bg-card text-card-foreground shadow-large bg-gradient-subtle p-6 text-center">
-                <h2 class="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent mb-4">Analytics Dashboard</h2>
-                <p class="text-lg text-muted-foreground">Esta é a área do seu painel de análises. Adicione gráficos e dados aqui para visualizar o desempenho.</p>
+            <div class="rounded-lg border bg-card text-card-foreground shadow-large bg-gradient-subtle p-6">
+                <div class="flex flex-col space-y-1.5 pb-8">
+                    <h2 class="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                        Closer Performance
+                    </h2>
+                    <div class="mt-4 flex flex-wrap items-center gap-4">
+                        <div class="flex-1 min-w-[150px]">
+                            <label for="month-filter" class="block text-sm font-semibold text-foreground">Month</label>
+                            <select id="month-filter" class="w-full rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+                                <option value="">Select Month</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
+                        </div>
+                        <div class="flex-1 min-w-[150px]">
+                            <label for="year-filter" class="block text-sm font-semibold text-foreground">Year</label>
+                            <select id="year-filter" class="w-full rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+                                <option value="">Select Year</option>
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                                <option value="2028">2028</option>
+                                <option value="2029">2029</option>
+                                <option value="2030">2030</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6 pt-0 overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-muted text-muted-foreground uppercase text-xs font-semibold">
+                            <tr>
+                                <th class="p-4 border-b border-border">Closer</th>
+                                <th class="p-4 border-b border-border text-center" colspan="2">Week 1</th>
+                                <th class="p-4 border-b border-border text-center" colspan="2">Week 2</th>
+                                <th class="p-4 border-b border-border text-center" colspan="2">Week 3</th>
+                                <th class="p-4 border-b border-border text-center" colspan="2">Week 4</th>
+                                <th class="p-4 border-b border-border text-center" colspan="2">Week 5</th>
+                                <th class="p-4 border-b border-border text-center">Total (1)</th>
+                                <th class="p-4 border-b border-border text-center">Total (2)</th>
+                                <th class="p-4 border-b border-border text-center">Total</th>
+                            </tr>
+                            <tr class="text-center">
+                                <th class="p-2"></th>
+                                <th class="p-2 border-b border-border">C1</th>
+                                <th class="p-2 border-b border-border">C2</th>
+                                <th class="p-2 border-b border-border">C1</th>
+                                <th class="p-2 border-b border-border">C2</th>
+                                <th class="p-2 border-b border-border">C1</th>
+                                <th class="p-2 border-b border-border">C2</th>
+                                <th class="p-2 border-b border-border">C1</th>
+                                <th class="p-2 border-b border-border">C2</th>
+                                <th class="p-2 border-b border-border">C1</th>
+                                <th class="p-2 border-b border-border">C2</th>
+                                <th class="p-2"></th>
+                                <th class="p-2"></th>
+                                <th class="p-2"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="analytics-table-body" class="text-foreground text-sm">
+                            <tr>
+                                <td colspan="14" class="p-4 text-center">Loading analytics data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </main>
-    
+    <script src="analytics.js"></script>
 </body>
 </html>
