@@ -9,6 +9,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const goalProgress = document.getElementById('goal-progress');
     const goalPercentage = document.getElementById('goal-percentage');
     const closerInsightsContainer = document.getElementById('closer-insights-container');
+    const franchiseModal = document.getElementById('franchise-modal');
+    const modalContent = document.getElementById('modal-content');
 
     let allAppointmentsData = [];
     let allEmployees = [];
@@ -148,8 +150,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         closerInsightsContainer.innerHTML = htmlContent;
     }
-
-    function showFranchisePopup(closerName) {
+    
+    function populateFranchiseModal(closerName) {
         const closerAppointments = allAppointmentsData.filter(app => app.closer1 === closerName);
         const franchiseCounts = closerAppointments.reduce((acc, app) => {
             if (app.type === 'Central') {
@@ -159,37 +161,28 @@ document.addEventListener('DOMContentLoaded', async () => {
             return acc;
         }, {});
     
-        let popupContent = `<h3 class="text-lg font-bold mb-4">Agendamentos de ${closerName} por Franquia</h3>`;
+        let modalInnerContent = `<h3 class="text-lg font-bold mb-4">Agendamentos de ${closerName} por Franquia</h3>`;
         if (Object.keys(franchiseCounts).length > 0) {
-            popupContent += '<ul class="list-disc pl-5 space-y-1">';
+            modalInnerContent += '<ul class="list-disc pl-5 space-y-1">';
             for (const franchise in franchiseCounts) {
                 if (franchiseCounts[franchise] > 0) {
-                    popupContent += `<li>${franchise}: ${franchiseCounts[franchise]} agendamento(s)</li>`;
+                    modalInnerContent += `<li>${franchise}: ${franchiseCounts[franchise]} agendamento(s)</li>`;
                 }
             }
-            popupContent += '</ul>';
+            modalInnerContent += '</ul>';
         } else {
-            popupContent += '<p>Nenhum agendamento central encontrado para este closer no período selecionado.</p>';
+            modalInnerContent += '<p>Nenhum agendamento central encontrado para este closer no período selecionado.</p>';
         }
     
-        const popup = document.createElement('div');
-        popup.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50';
-        popup.innerHTML = `
-            <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full relative">
-                <button class="absolute top-2 right-2 text-gray-500 hover:text-gray-800" onclick="this.parentNode.parentNode.remove()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-                </button>
-                ${popupContent}
-            </div>
-        `;
-        document.body.appendChild(popup);
+        modalContent.innerHTML = modalInnerContent;
+        franchiseModal.classList.remove('hidden');
     }
     
     document.addEventListener('click', (event) => {
         const closerNameCell = event.target.closest('td[data-closer-name]');
         if (closerNameCell) {
             const closerName = closerNameCell.dataset.closerName;
-            showFranchisePopup(closerName);
+            populateFranchiseModal(closerName);
         }
     });
 
