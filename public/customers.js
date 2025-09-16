@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         franchises.forEach(franchise => {
             const option = document.createElement('option');
             option.value = franchise;
-            const displayValue = franchise.length > 14 ? franchise.substring(0, 14) + '...' : franchise;
+            const displayValue = franchise.length > 12 ? franchise.substring(0, 12) + '...' : franchise;
             option.textContent = displayValue;
             franchiseFilter.appendChild(option);
         });
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         closers.forEach(closer => {
             const option = document.createElement('option');
             option.value = closer;
-            const displayValue = closer.length > 14 ? closer.substring(0, 14) + '...' : closer;
+            const displayValue = closer.length > 12 ? closer.substring(0, 12) + '...' : closer;
             option.textContent = displayValue;
             closerFilter.appendChild(option);
         });
