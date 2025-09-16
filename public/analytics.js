@@ -247,7 +247,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             ]);
 
             if (!appointmentsResponse.ok || !employeesResponse.ok) {
-                throw new Error('Failed to load data from one or more APIs.');
+                const error = await appointmentsResponse.json();
+                throw new Error(error.error || 'Failed to load data from one or more APIs.');
             }
 
             const appointmentsData = await appointmentsResponse.json();
@@ -262,5 +263,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             
         } catch (error) {
             console.error('Error fetching data:', error);
-            const errorMessage = 'Erro ao carregar dados. Tente novamente.';
-            if(tableBody) tableBody.innerHTML = `<tr><td colspan="15"
+            const errorMessage = `Erro ao carregar dados: ${error.message}. Verifique a sua conexão ou a configuração da API.`;
+            if(tableBody) tableBody.innerHTML = `<tr><td colspan="15" class="p-4 text-center text-red-600">${errorMessage}</td></tr>`;
+            if(closerInsightsContainer) closerInsightsContainer.innerHTML = `<p class="text-sm text-red-600 p-4">${errorMessage}</p>`;
+        }
+    }
+
+    // Add event listeners for filters
+    monthFilter.addEventListener('change', applyFilters);
+    yearFilter.addEventListener('change', applyFilters);
+    goalInput.addEventListener('input', applyFilters);
+
+    initDashboard();
+});
