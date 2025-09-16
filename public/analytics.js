@@ -2,13 +2,36 @@
 
 document.addEventListener('DOMContentLoaded', async () => {
     const tableBody = document.getElementById('analytics-table-body');
+    const tableFooter = document.getElementById('analytics-table-footer');
     const monthFilter = document.getElementById('month-filter');
     const yearFilter = document.getElementById('year-filter');
+    const goalInput = document.getElementById('goal-input');
+    const goalProgress = document.getElementById('goal-progress');
+    const goalPercentage = document.getElementById('goal-percentage');
 
     let allAppointmentsData = [];
     let allEmployees = [];
 
-    // Helper function to render the table with the calculated data
+    // Function to update the goal progress bar
+    function updateGoalProgress(grandTotal, goal) {
+        let percentage = 0;
+        if (goal > 0) {
+            percentage = Math.min(100, (grandTotal / goal) * 100);
+        }
+        
+        goalProgress.style.width = `${percentage}%`;
+        goalPercentage.textContent = `${Math.round(percentage)}%`;
+
+        if (percentage >= 100) {
+            goalProgress.classList.remove('bg-brand-primary');
+            goalProgress.classList.add('bg-green-600');
+        } else {
+            goalProgress.classList.remove('bg-green-600');
+            goalProgress.classList.add('bg-brand-primary');
+        }
+    }
+
+    // Function to render the table with the calculated data
     function renderTable(data, employees) {
         tableBody.innerHTML = ''; // Clear table content
         
@@ -23,8 +46,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             closerTotals[closer] = {
                 closer1: Array(5).fill(0),
                 closer2: Array(5).fill(0),
-                total1: 0,
-                total2: 0,
+                totalCloser: 0,
+                totalInTeam: 0,
                 grandTotal: 0
             };
         });
@@ -34,22 +57,29 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (week >= 1 && week <= 5) {
                 if (appointment.closer1 && closerTotals[appointment.closer1]) {
                     closerTotals[appointment.closer1].closer1[week - 1]++;
-                    closerTotals[appointment.closer1].total1++;
+                    closerTotals[appointment.closer1].totalCloser++;
                     closerTotals[appointment.closer1].grandTotal++;
                 }
                 if (appointment.closer2 && closerTotals[appointment.closer2]) {
                     closerTotals[appointment.closer2].closer2[week - 1]++;
-                    closerTotals[appointment.closer2].total2++;
+                    closerTotals[appointment.closer2].totalInTeam++;
                     closerTotals[appointment.closer2].grandTotal++;
                 }
             }
         });
 
-        // Sort employees alphabetically
         const sortedEmployees = [...employees].sort();
+        let totalAppointments = 0;
 
+        // First pass to calculate total appointments for percentage calculation
+        sortedEmployees.forEach(closer => {
+            totalAppointments += closerTotals[closer].grandTotal;
+        });
+
+        // Second pass to render table rows
         sortedEmployees.forEach(closer => {
             const totals = closerTotals[closer];
+            const percentage = totalAppointments > 0 ? (totals.grandTotal / totalAppointments) * 100 : 0;
             const row = document.createElement('tr');
             row.classList.add('border-b', 'border-border', 'hover:bg-muted/50', 'transition-colors');
             
@@ -65,12 +95,30 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td class="p-4 text-center">${totals.closer2[3]}</td>
                 <td class="p-4 text-center">${totals.closer1[4]}</td>
                 <td class="p-4 text-center">${totals.closer2[4]}</td>
-                <td class="p-4 text-center font-bold">${totals.total1}</td>
-                <td class="p-4 text-center font-bold">${totals.total2}</td>
+                <td class="p-4 text-center font-bold">${totals.totalCloser}</td>
+                <td class="p-4 text-center font-bold">${totals.totalInTeam}</td>
                 <td class="p-4 text-center font-bold">${totals.grandTotal}</td>
+                <td class="p-4 text-center font-bold">${percentage.toFixed(2)}%</td>
             `;
             tableBody.appendChild(row);
         });
+
+        // Render the total row at the bottom
+        const totalCloser = sortedEmployees.reduce((sum, closer) => sum + closerTotals[closer].totalCloser, 0);
+        const totalInTeam = sortedEmployees.reduce((sum, closer) => sum + closerTotals[closer].totalInTeam, 0);
+        
+        tableFooter.innerHTML = `
+            <tr>
+                <td class="p-4 font-bold">Grand Total</td>
+                <td colspan="10" class="p-4"></td>
+                <td class="p-4 text-center font-bold">${totalCloser}</td>
+                <td class="p-4 text-center font-bold">${totalInTeam}</td>
+                <td class="p-4 text-center font-bold">${totalAppointments}</td>
+                <td class="p-4 text-center font-bold">100.00%</td>
+            </tr>
+        `;
+        
+        updateGoalProgress(totalAppointments, parseInt(goalInput.value, 10));
     }
 
     // Function to apply filters and render the table
@@ -132,6 +180,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Add event listeners for filters
     monthFilter.addEventListener('change', applyFilters);
     yearFilter.addEventListener('change', applyFilters);
+    goalInput.addEventListener('input', () => {
+        applyFilters();
+    });
 
     initDashboard();
 });
