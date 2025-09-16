@@ -3,18 +3,15 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const tableBody = document.getElementById('analytics-table-body');
     const tableFooter = document.getElementById('analytics-table-footer');
-    const regionsTableBody = document.getElementById('regions-table-body');
-    const regionsTableHead = document.querySelector('#performance-by-regions-section thead tr:first-child');
     const monthFilter = document.getElementById('month-filter');
     const yearFilter = document.getElementById('year-filter');
     const goalInput = document.getElementById('goal-input');
     const goalProgress = document.getElementById('goal-progress');
     const goalPercentage = document.getElementById('goal-percentage');
-    const advancedDashboardSection = document.getElementById('advanced-dashboard-section');
+    const closerInsightsContainer = document.getElementById('closer-insights-container');
 
     let allAppointmentsData = [];
     let allEmployees = [];
-    let allFranchises = [];
 
     // Function to update the goal progress bar
     function updateGoalProgress(closerTotal, goal) {
@@ -35,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // Function to render the main table with the calculated data
+    // Function to render the table with the calculated data
     function renderTable(data, employees) {
         tableBody.innerHTML = '';
         
@@ -147,15 +144,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
             `;
         });
-
-        advancedDashboardSection.innerHTML = `
-            <div class="rounded-lg border bg-card shadow-large bg-gradient-subtle p-0">
-                <h2 class="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent p-6 pb-2">Closer Insights</h2>
-                <div class="p-6 pt-0">
-                    ${htmlContent || '<p class="text-sm text-muted-foreground p-4">Nenhum closer com agendamentos no período selecionado.</p>'}
-                </div>
-            </div>
-        `;
+        
+        if (sortedData.length > 0) {
+            closerInsightsContainer.innerHTML = htmlContent;
+        } else {
+            closerInsightsContainer.innerHTML = '<p class="text-sm text-muted-foreground p-4">Nenhum closer com agendamentos no período selecionado.</p>';
+        }
     }
 
     function showFranchisePopup(closerName) {
@@ -166,7 +160,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return acc;
         }, {});
     
-        let popupContent = `<h3 class="text-lg font-bold mb-4">Agendamentos de ${closerName}</h3>`;
+        let popupContent = `<h3 class="text-lg font-bold mb-4">Agendamentos de ${closerName} por Franquia</h3>`;
         if (Object.keys(franchiseCounts).length > 0) {
             popupContent += '<ul class="list-disc pl-5 space-y-1">';
             for (const franchise in franchiseCounts) {
@@ -190,7 +184,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.body.appendChild(popup);
     }
     
-    document.getElementById('analytics-table-body').addEventListener('click', (event) => {
+    document.addEventListener('click', (event) => {
         const closerNameCell = event.target.closest('td[data-closer-name]');
         if (closerNameCell) {
             const closerName = closerNameCell.dataset.closerName;
@@ -274,7 +268,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('Error fetching data:', error);
             const errorMessage = 'Erro ao carregar dados. Tente novamente.';
             if(tableBody) tableBody.innerHTML = `<tr><td colspan="15" class="p-4 text-center text-red-600">${errorMessage}</td></tr>`;
-            if(advancedDashboardSection) advancedDashboardSection.innerHTML = `<div class="rounded-lg border bg-card text-card-foreground shadow-large bg-gradient-subtle p-6"><p class="text-sm text-red-600">${errorMessage}</p></div>`;
+            if(closerInsightsContainer) closerInsightsContainer.innerHTML = `<p class="text-sm text-red-600 p-4">${errorMessage}</p>`;
         }
     }
 
