@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return acc;
         }, {});
     
-        let modalInnerContent = `<h3 class="text-lg font-bold mb-4">Agendamentos de ${closerName} por Franquia</h3>`;
+        let modalInnerContent = `<h3 class="text-lg font-bold mb-4">Agendamentos de ${closerName}</h3>`;
         if (Object.keys(franchiseCounts).length > 0) {
             modalInnerContent += '<ul class="list-disc pl-5 space-y-1">';
             for (const franchise in franchiseCounts) {
