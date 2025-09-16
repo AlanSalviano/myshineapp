@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const monthFilter = document.getElementById('month-filter');
     const yearFilter = document.getElementById('year-filter');
     const goalInput = document.getElementById('goal-input');
-    const goalProgress = document.getElementById('goal-progress');
     const goalPercentage = document.getElementById('goal-percentage');
     const closerInsightsContainer = document.getElementById('closer-insights-container');
     const franchiseModal = document.getElementById('franchise-modal');
@@ -15,24 +14,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     let allAppointmentsData = [];
     let allEmployees = [];
 
-    // Function to update the goal progress bar
-    function updateGoalProgress(closerTotal, goal) {
-        if (!goalProgress || !goalPercentage) return;
-
+    // Function to update the goal percentage
+    function updateGoalPercentage(totalAppointments, goal) {
+        if (!goalPercentage) return;
+        
         let percentage = 0;
         if (goal > 0) {
-            percentage = Math.min(100, (closerTotal / goal) * 100);
+            percentage = Math.min(100, (totalAppointments / goal) * 100);
         }
         
-        goalProgress.style.width = `${percentage}%`;
         goalPercentage.textContent = `${Math.round(percentage)}%`;
         
         if (percentage >= 100) {
-            goalProgress.classList.remove('bg-brand-primary');
-            goalProgress.classList.add('bg-green-600');
+            goalPercentage.classList.remove('text-brand-primary');
+            goalPercentage.classList.add('text-green-600');
         } else {
-            goalProgress.classList.remove('bg-green-600');
-            goalProgress.classList.add('bg-brand-primary');
+            goalPercentage.classList.remove('text-green-600');
+            goalPercentage.classList.add('text-brand-primary');
         }
     }
 
@@ -122,7 +120,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             </tr>
         `;
         
-        updateGoalProgress(totalCloserAppointments, parseInt(goalInput.value, 10));
+        updateGoalPercentage(totalCloserAppointments, parseInt(goalInput.value, 10));
     }
     
     // Function to render the advanced dashboard cards
@@ -229,8 +227,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             totalInTeam: closerPerformanceData[closer].totalInTeam
         }));
         
+        // Calculate the total number of appointments in the filtered data for the goal
+        const totalAppointmentsInPeriod = filteredData.length;
+
         renderTable(filteredData, allEmployees);
         renderAdvancedDashboard(performanceData);
+        updateGoalPercentage(totalAppointmentsInPeriod, parseInt(goalInput.value, 10));
     }
 
     // Function to populate filter dropdowns with years
