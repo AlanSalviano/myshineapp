@@ -177,17 +177,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         data.forEach(closerStats => {
             const percentage = totalCloserAppointments > 0 ? (closerStats.totalCloser / totalCloserAppointments) * 100 : 0;
             htmlContent += `
-                <div class="rounded-lg border bg-card text-card-foreground shadow-large bg-gradient-subtle p-6">
-                    <h3 class="text-sm font-bold">${closerStats.closer}</h3>
-                    <div class="mt-4 flex flex-col space-y-2">
-                        <p class="text-2xl font-bold">${closerStats.totalCloser} Closer Appointments</p>
-                        <p class="text-sm text-muted-foreground">${closerStats.totalInTeam} In Team Appointments</p>
-                        <p class="text-lg font-bold text-brand-primary">${percentage.toFixed(2)}% of total closer appointments</p>
+                <div class="p-4 border-b border-border last:border-b-0">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm font-semibold">${closerStats.closer}</h3>
+                        <p class="text-xs font-medium text-brand-primary">${percentage.toFixed(2)}%</p>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-muted-foreground mt-1">
+                        <span>Closer: ${closerStats.totalCloser}</span>
+                        <span>In Team: ${closerStats.totalInTeam}</span>
                     </div>
                 </div>
             `;
         });
-        advancedDashboardSection.innerHTML = htmlContent;
+        advancedDashboardSection.innerHTML = `
+            <div class="rounded-lg border bg-card shadow-large bg-gradient-subtle p-0">
+                <h2 class="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent p-6 pb-2">Closer Insights</h2>
+                <div class="p-6 pt-0">
+                    ${htmlContent}
+                </div>
+            </div>
+        `;
     }
 
     // Main function to fetch data and initialize the dashboard
