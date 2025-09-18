@@ -1,4 +1,4 @@
-// public/quick-routes.js
+//a public/quick-routes.js
 
 document.addEventListener('DOMContentLoaded', () => {
     const techTableBody = document.getElementById('tech-table-body');
