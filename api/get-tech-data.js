@@ -10,7 +10,8 @@ export default async function handler(req, res) {
         const techDataJson = process.env.TECH_CIDADES_JSON;
         
         if (!techDataJson) {
-            return res.status(500).json({ error: 'Variável de ambiente TECH_CIDADES_JSON não encontrada.' });
+            console.error('Environment variable TECH_CIDADES_JSON is not set.');
+            return res.status(500).json({ error: 'Environment variable TECH_CIDADES_JSON not found.' });
         }
 
         const techData = JSON.parse(techDataJson);
@@ -18,7 +19,7 @@ export default async function handler(req, res) {
         return res.status(200).json(techData);
 
     } catch (error) {
-        console.error('Erro ao processar dados dos técnicos:', error);
-        res.status(500).json({ error: 'Falha ao processar dados dos técnicos.' });
+        console.error('Error processing technician data:', error);
+        res.status(500).json({ error: 'Failed to process technician data. Please check the JSON format.' });
     }
 }
