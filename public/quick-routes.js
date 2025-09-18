@@ -1,4 +1,4 @@
-//a public/quick-routes.js
+// public/quick-routes.js
 
 document.addEventListener('DOMContentLoaded', () => {
     const techTableBody = document.getElementById('tech-table-body');
@@ -73,25 +73,29 @@ document.addEventListener('DOMContentLoaded', () => {
     // UI Rendering Functions
     function renderTechTable() {
         techTableBody.innerHTML = '';
-        techData.forEach((tech, i) => {
-            const row = document.createElement('tr');
-            row.className = 'border-b border-border hover:bg-muted/50 transition-colors';
-            row.innerHTML = `
-                <td class="p-4"><input type="text" class="w-full bg-transparent border-none focus:outline-none" value="${tech.nome}" data-key="nome" data-index="${i}"></td>
-                <td class="p-4"><select class="w-full bg-transparent border-none focus:outline-none" data-key="categoria" data-index="${i}"><option value="">Selecione</option><option value="Franquia">Franquia</option><option value="Central">Central</option></select></td>
-                <td class="p-4"><input type="text" class="w-full bg-transparent border-none focus:outline-none" value="${tech.tipo_atendimento}" data-key="tipo_atendimento" data-index="${i}"></td>
-                <td class="p-4"><input type="text" class="w-full bg-transparent border-none focus:outline-none" value="${tech.zip_code}" data-key="zip_code" data-index="${i}" maxlength="5"></td>
-                <td class="p-4">
-                    <div class="flex flex-wrap gap-1">
-                        ${tech.cidades.map(city => `<span class="bg-gray-200 text-gray-800 px-2 py-1 rounded-full text-xs">${city}</span>`).join('')}
-                    </div>
-                    <input type="text" class="mt-2 w-full bg-transparent border-none focus:outline-none" placeholder="Adicionar cidade e Enter" data-key="new_city" data-index="${i}">
-                </td>
-                <td class="p-4"><button data-index="${i}" class="text-red-600 hover:text-red-800">🗑️</button></td>
-            `;
-            techTableBody.appendChild(row);
-            row.querySelector(`select[data-key="categoria"]`).value = tech.categoria;
-        });
+        if (techData && techData.length > 0) {
+            techData.forEach((tech, i) => {
+                const row = document.createElement('tr');
+                row.className = 'border-b border-border hover:bg-muted/50 transition-colors';
+                row.innerHTML = `
+                    <td class="p-4"><input type="text" class="w-full bg-transparent border-none focus:outline-none" value="${tech.nome}" data-key="nome" data-index="${i}"></td>
+                    <td class="p-4"><select class="w-full bg-transparent border-none focus:outline-none" data-key="categoria" data-index="${i}"><option value="">Selecione</option><option value="Franquia">Franquia</option><option value="Central">Central</option></select></td>
+                    <td class="p-4"><input type="text" class="w-full bg-transparent border-none focus:outline-none" value="${tech.tipo_atendimento}" data-key="tipo_atendimento" data-index="${i}"></td>
+                    <td class="p-4"><input type="text" class="w-full bg-transparent border-none focus:outline-none" value="${tech.zip_code}" data-key="zip_code" data-index="${i}" maxlength="5"></td>
+                    <td class="p-4">
+                        <div class="flex flex-wrap gap-1">
+                            ${tech.cidades.map(city => `<span class="bg-gray-200 text-gray-800 px-2 py-1 rounded-full text-xs">${city}</span>`).join('')}
+                        </div>
+                        <input type="text" class="mt-2 w-full bg-transparent border-none focus:outline-none" placeholder="Adicionar cidade e Enter" data-key="new_city" data-index="${i}">
+                    </td>
+                    <td class="p-4"><button data-index="${i}" class="text-red-600 hover:text-red-800">🗑️</button></td>
+                `;
+                techTableBody.appendChild(row);
+                row.querySelector(`select[data-key="categoria"]`).value = tech.categoria;
+            });
+        } else {
+            techTableBody.innerHTML = '<tr><td colspan="6" class="p-4 text-center">Nenhum técnico encontrado.</td></tr>';
+        }
 
         techTableBody.querySelectorAll('input').forEach(input => {
             input.addEventListener('change', (e) => {
@@ -153,13 +157,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function populateTechSelect() {
-        techSelect.innerHTML = techData.length > 0 ? '' : '<option value="">Nenhum técnico cadastrado</option>';
-        techData.forEach(tech => {
-            const option = document.createElement('option');
-            option.value = tech.nome;
-            option.textContent = tech.nome;
-            techSelect.appendChild(option);
-        });
+        techSelect.innerHTML = '';
+        if (techData && techData.length > 0) {
+            techData.forEach(tech => {
+                const option = document.createElement('option');
+                option.value = tech.nome;
+                option.textContent = tech.nome;
+                techSelect.appendChild(option);
+            });
+        } else {
+            techSelect.innerHTML = '<option value="">Nenhum técnico cadastrado</option>';
+        }
     }
     
     // Main logic
@@ -182,6 +190,10 @@ document.addEventListener('DOMContentLoaded', () => {
             <p><strong>Cidade:</strong> ${city}, ${state}</p>
         `;
 
+        if (!techData) {
+            zipCodeResults.innerHTML += `<p class="text-red-600">Não foi possível carregar os dados dos técnicos.</p>`;
+            return;
+        }
         const availableTechs = techData.filter(tech => tech.cidades.includes(city));
         const techNames = availableTechs.map(tech => tech.nome).join(', ');
         zipCodeResults.innerHTML += `<p><strong>Técnicos disponíveis:</strong> ${techNames || 'Nenhum'}</p>`;
@@ -307,20 +319,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize
     async function init() {
         const savedData = loadTechData();
-        if (savedData) {
+        if (savedData && savedData.length > 0) {
             techData = savedData;
         } else {
             try {
                 const response = await fetch('/api/get-tech-data');
                 if (response.ok) {
                     const apiData = await response.json();
-                    techData = apiData;
-                    saveTechData(); // Save the fetched data for future sessions
+                    if (Array.isArray(apiData)) {
+                        techData = apiData;
+                        saveTechData(); // Save the fetched data for future sessions
+                    } else {
+                        console.error('API response is not an array:', apiData);
+                        techData = [];
+                    }
                 } else {
-                    console.error('Failed to fetch initial tech data from API.');
+                    console.error('Failed to fetch initial tech data from API. Status:', response.status);
+                    techData = [];
                 }
             } catch (error) {
                 console.error('Error fetching initial tech data:', error);
+                techData = [];
             }
         }
         clientData = [{ nome: "", zip_code: "" }];
@@ -341,6 +360,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Event Listeners
     verifyZipBtn.addEventListener('click', handleVerifyZipCode);
     addTechRowBtn.addEventListener('click', () => {
+        if (!techData) {
+            techData = [];
+        }
         techData.push({ nome: "", categoria: "", tipo_atendimento: "", zip_code: "", cidades: [] });
         renderTechTable();
         populateTechSelect();
