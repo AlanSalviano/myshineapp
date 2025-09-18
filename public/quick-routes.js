@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let map;
     let directionsService;
     let directionsRenderer;
-
+    
     // Helper functions
     function saveTechData() {
         localStorage.setItem('tech_data', JSON.stringify(techData));
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function loadTechData() {
         const savedData = localStorage.getItem('tech_data');
-        return savedData ? JSON.parse(savedData) : [];
+        return savedData ? JSON.parse(savedData) : null;
     }
     
     async function getLatLon(zipCode) {
@@ -305,11 +305,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Initialize
-    function init() {
-        techData = loadTechData();
-        if (techData.length === 0) {
-            techData.push({ nome: "", categoria: "", tipo_atendimento: "", zip_code: "", cidades: [] });
-            saveTechData();
+    async function init() {
+        const savedData = loadTechData();
+        if (savedData) {
+            techData = savedData;
+        } else {
+            try {
+                const response = await fetch('/api/get-tech-data');
+                if (response.ok) {
+                    const apiData = await response.json();
+                    techData = apiData;
+                    saveTechData(); // Save the fetched data for future sessions
+                } else {
+                    console.error('Failed to fetch initial tech data from API.');
+                }
+            } catch (error) {
+                console.error('Error fetching initial tech data:', error);
+            }
         }
         clientData = [{ nome: "", zip_code: "" }];
         renderTechTable();
