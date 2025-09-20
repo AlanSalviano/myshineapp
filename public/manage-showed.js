@@ -24,15 +24,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td class="p-4">${appointment.appointmentDate}</td>
                 <td class="p-4">${appointment.customers}</td>
                 <td class="p-4 code-cell">${appointment.code}</td>
-                <td class="p-4"><input type="text" value="${appointment.Technician || ''}" style="width: 100px;" class="bg-transparent border border-border rounded-md px-2"></td>
+                <td class="p-4"><input type="text" value="${appointment.technician || ''}" style="width: 100px;" class="bg-transparent border border-border rounded-md px-2"></td>
                 <td class="p-4">
                     <select style="width: 60px;" class="bg-transparent border border-border rounded-md px-2">
                         <option value="">Pets...</option>
                         ${petOptions.map(num => `<option value="${num}">${num}</option>`).join('')}
                     </select>
                 </td>
-                <td class="p-4"><input type="text" value="${appointment['Service Showed'] || ''}" style="width: 100px;" class="bg-transparent border border-border rounded-md px-2"></td>
-                <td class="p-4"><input type="text" value="${appointment.Tips || ''}" style="width: 80px;" class="bg-transparent border border-border rounded-md px-2" placeholder="$0.00"></td>
+                <td class="p-4"><input type="text" value="${appointment.serviceShowed || ''}" style="width: 100px;" class="bg-transparent border border-border rounded-md px-2"></td>
+                <td class="p-4"><input type="text" value="${appointment.tips || ''}" style="width: 80px;" class="bg-transparent border border-border rounded-md px-2" placeholder="$0.00"></td>
                 <td class="p-4">
                     <select style="width: 120px;" class="bg-transparent border border-border rounded-md px-2">
                         <option value="">Select...</option>
@@ -46,29 +46,31 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </select>
                 </td>
                 <td class="p-4">
-                    <button class="save-btn" data-index="${index}">Save</button>
+                    <button class="save-btn inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 bg-brand-primary text-white hover:shadow-brand" data-index="${index}">Save</button>
                 </td>
             `;
 
+            // Preenche os valores iniciais dos dropdowns, se existirem
             const petSelect = row.querySelector('select:nth-of-type(1)');
-            if (appointment['Pet Showed']) {
-                petSelect.value = appointment['Pet Showed'];
+            if (appointment.petShowed) {
+                petSelect.value = appointment.petShowed;
             }
             
             const paymentSelect = row.querySelector('select:nth-of-type(2)');
-            if (appointment['Payment Method']) {
-                paymentSelect.value = appointment['Payment Method'];
+            if (appointment.paymentMethod) {
+                paymentSelect.value = appointment.paymentMethod;
             }
             
             const verificationSelect = row.querySelector('select:nth-of-type(3)');
-            if (appointment.Verification) {
-                verificationSelect.value = appointment.Verification;
+            if (appointment.verification) {
+                verificationSelect.value = appointment.verification;
             }
 
             tableBody.appendChild(row);
         });
     }
 
+    // Função principal para buscar os dados e renderizar a página
     async function initPage() {
         try {
             const response = await fetch('/api/get-customers-data');
@@ -79,12 +81,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             const appointmentsData = data.customers;
             
             renderTable(appointmentsData);
+
         } catch (error) {
             console.error('Error fetching data:', error);
             tableBody.innerHTML = '<tr><td colspan="10" class="p-4 text-center text-red-600">Erro ao carregar dados. Tente novamente.</td></tr>';
         }
     }
 
+    // Event listener para a ação de salvar
     tableBody.addEventListener('click', async (event) => {
         if (event.target.classList.contains('save-btn')) {
             const row = event.target.closest('tr');
@@ -114,6 +118,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const result = await response.json();
                 if (result.success) {
                     alert('Dados atualizados com sucesso!');
+                    initPage(); // Recarrega a tabela para mostrar os dados atualizados
                 } else {
                     alert(`Erro ao salvar: ${result.message}`);
                 }
