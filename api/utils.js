@@ -1,3 +1,5 @@
+// api/utils.js
+
 export function excelDateToYYYYMMDD(excelSerialDate) {
     if (typeof excelSerialDate !== 'number') {
         return excelSerialDate;
@@ -10,7 +12,6 @@ export function excelDateToYYYYMMDD(excelSerialDate) {
     return `${year}/${month}/${day}`;
 }
 
-// Lista de valores dinâmicos para dropdowns
 export const dynamicLists = {
     pets: Array.from({ length: 15 }, (_, i) => i + 1),
     weeks: Array.from({ length: 5 }, (_, i) => i + 1),
