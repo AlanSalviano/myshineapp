@@ -35,9 +35,11 @@ export default async function handler(req, res) {
         const rows = await sheetAppointments.getRows();
         console.log(`Encontradas ${rows.length} linhas.`);
 
-        if (rows.length > 0) {
-            console.log('Dados da primeira linha:', rows[0]._rawData);
+        if (rows.length === 0) {
+            return res.status(200).json({ customers: [] });
         }
+        
+        console.log('Dados da primeira linha (para verificação):', rows[0]);
 
         const customers = rows.map(row => {
             const customerData = {
