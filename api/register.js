@@ -1,6 +1,7 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
 import dotenv from 'dotenv';
+import { SHEET_NAME_USERS } from './configs/sheets-config.js';
 
 dotenv.config();
 
@@ -17,7 +18,6 @@ export default async function handler(req, res) {
         return res.status(405).json({ message: 'Método não permitido' });
     }
 
-    // ALTERAÇÃO: recebendo 'role', 'user', 'email' e 'password'
     const { role, user, email, password } = req.body;
 
     if (!role || !user || !email || !password) {
@@ -26,20 +26,18 @@ export default async function handler(req, res) {
 
     try {
         await doc.loadInfo();
-        const sheet = doc.sheetsByTitle['Usuários'];
+        const sheet = doc.sheetsByTitle[SHEET_NAME_USERS];
         if (!sheet) {
-            return res.status(500).json({ success: false, message: 'Planilha "Usuários" não encontrada.' });
+            return res.status(500).json({ success: false, message: `Planilha "${SHEET_NAME_USERS}" não encontrada.` });
         }
 
         const rows = await sheet.getRows();
-        // ALTERAÇÃO: verificando se o e-mail ou o user já existem
         const userExists = rows.some(row => row.email === email || row.user === user);
 
         if (userExists) {
             return res.status(409).json({ success: false, message: 'Este e-mail ou user já está registrado.' });
         }
 
-        // ALTERAÇÃO: salvando 'role', 'user', 'email' e 'password'
         await sheet.addRow({ role, user, email, password });
 
         return res.status(201).json({ success: true, message: 'Conta criada com sucesso! Agora você pode fazer login.' });
