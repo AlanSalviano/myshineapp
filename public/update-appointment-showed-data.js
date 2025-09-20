@@ -34,15 +34,12 @@ export default async function handler(req, res) {
         }
 
         const rows = await sheet.getRows();
-        const rowToUpdate = rows.find(row => row.code === code);
+        const rowToUpdate = rows.find(row => row.Code === code);
 
         if (!rowToUpdate) {
             return res.status(404).json({ success: false, message: 'Agendamento não encontrado.' });
         }
         
-        // Assumindo que as colunas a serem atualizadas já existem ou serão criadas.
-        // O mapeamento de colunas da planilha para as variáveis do objeto é crucial aqui.
-        // Os nomes das colunas são os cabeçalhos da sua planilha.
         rowToUpdate['Technician'] = technician;
         rowToUpdate['Pet Showed'] = petShowed;
         rowToUpdate['Service Showed'] = serviceShowed;
