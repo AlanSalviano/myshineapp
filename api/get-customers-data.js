@@ -38,8 +38,6 @@ export default async function handler(req, res) {
         if (rows.length === 0) {
             return res.status(200).json({ customers: [] });
         }
-        
-        console.log('Dados da primeira linha (para verificação):', rows[0]);
 
         const customers = rows.map(row => {
             const customerData = {
@@ -70,7 +68,7 @@ export default async function handler(req, res) {
             };
             return customerData;
         });
-        
+
         console.log('Mapeamento de clientes concluído.');
         const responseData = {
             customers
