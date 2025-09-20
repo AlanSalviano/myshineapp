@@ -1,6 +1,7 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
 import dotenv from 'dotenv';
+import { excelDateToYYYYMMDD } from './utils.js';
 
 dotenv.config();
 
@@ -11,19 +12,6 @@ const serviceAccountAuth = new JWT({
 });
 
 const SPREADSHEET_ID_APPOINTMENTS = '1nwC53lk48RfU0hOk9605G7ZCfe67tw4o-RBNS9XNfWA';
-
-function excelDateToYYYYMMDD(excelSerialDate) {
-    if (typeof excelSerialDate !== 'number') {
-        // Se já for uma string de data, retorna sem alterar
-        return excelSerialDate;
-    }
-    const date = new Date(Date.UTC(1900, 0, 1));
-    date.setDate(date.getDate() + excelSerialDate - 2); 
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}/${month}/${day}`;
-}
 
 export default async function handler(req, res) {
     res.setHeader('Content-Type', 'application/json');
@@ -46,7 +34,6 @@ export default async function handler(req, res) {
         const rows = await sheetAppointments.getRows();
         console.log(`Encontradas ${rows.length} linhas.`);
 
-        // Log para inspecionar os cabeçalhos da primeira linha, se houver
         if (rows.length > 0) {
             console.log('Cabeçalhos da planilha (nomes das colunas):', Object.keys(rows[0]));
             console.log('Dados da primeira linha:', rows[0]);
@@ -75,7 +62,7 @@ export default async function handler(req, res) {
             };
             return customerData;
         });
-        
+
         console.log('Mapeamento de clientes concluído.');
         const responseData = {
             customers
