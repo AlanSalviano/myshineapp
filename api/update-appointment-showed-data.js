@@ -46,7 +46,6 @@ export default async function handler(req, res) {
 
         const rowToUpdate = rows[rowIndex];
         
-        // Log para mostrar o estado da linha antes da atualização
         console.log('Dados da linha antes da atualização:', rowToUpdate);
 
         rowToUpdate.Technician = technician;
@@ -56,7 +55,6 @@ export default async function handler(req, res) {
         rowToUpdate['Payment Method'] = paymentMethod;
         rowToUpdate.Verification = verification;
         
-        // Log para mostrar o estado da linha depois da atualização
         console.log('Dados da linha depois da atualização (antes de salvar):', rowToUpdate);
         
         await rowToUpdate.save();
