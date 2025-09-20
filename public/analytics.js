@@ -12,7 +12,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const modalContent = document.getElementById('modal-content');
     const totalAppointmentsCount = document.getElementById('totalAppointmentsCount');
     const totalPetsCount = document.getElementById('totalPetsCount');
+    const closerChartCanvas = document.getElementById('closerChart');
 
+    let closerChartInstance;
     let allAppointmentsData = [];
     let allEmployees = [];
 
@@ -48,6 +50,55 @@ document.addEventListener('DOMContentLoaded', async () => {
             goalPercentage.classList.remove('text-green-600');
             goalPercentage.classList.add('text-brand-primary');
         }
+    }
+
+    // Function to render the line chart
+    function renderLineChart(chartData) {
+        if (closerChartInstance) {
+            closerChartInstance.destroy();
+        }
+
+        const closerLabels = Object.keys(chartData);
+        const datasets = closerLabels.map(closer => {
+            return {
+                label: closer,
+                data: chartData[closer],
+                borderColor: '#' + Math.floor(Math.random()*16777215).toString(16),
+                tension: 0.1,
+                fill: false
+            };
+        });
+
+        const data = {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
+            datasets: datasets
+        };
+
+        const config = {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Week'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Total Appointments'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        };
+
+        closerChartInstance = new Chart(closerChartCanvas, config);
     }
 
     // Function to render the table with the calculated data
@@ -135,8 +186,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td class="p-4 text-center"></td>
             </tr>
         `;
-        
-        // A chamada redundante foi removida daqui.
     }
     
     // Function to render the advanced dashboard cards
@@ -185,7 +234,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return acc;
         }, {});
     
-        let modalInnerContent = `<h3 class="lg:text-xl md:text-md text-sm font-bold mb-4">Agendamentos de ${closerName} por Franquia</h3>`;
+        let modalInnerContent = `<h3 class="text-lg font-bold mb-4">Agendamentos de ${closerName} por Franquia</h3>`;
         if (Object.keys(franchiseCounts).length > 0) {
             modalInnerContent += '<ul class="list-disc pl-5 space-y-1">';
             for (const franchise in franchiseCounts) {
@@ -234,62 +283,86 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Calculate data for the tables and advanced dashboard
-        const closerPerformanceData = {};
+        const closerTotals = {};
         allEmployees.forEach(closer => {
-            closerPerformanceData[closer] = { totalCloser: 0, totalInTeam: 0 };
+            closerTotals[closer] = {
+                weeks: Array(5).fill(0), // Total appointments per week
+                totalCloser: 0,
+                totalInTeam: 0,
+                grandTotal: 0
+            };
         });
 
         filteredData.forEach(appointment => {
-            if (appointment.closer1 && closerPerformanceData[appointment.closer1]) {
-                closerPerformanceData[appointment.closer1].totalCloser++;
-            }
-            if (appointment.closer2 && closerPerformanceData[appointment.closer2]) {
-                closerPerformanceData[appointment.closer2].totalInTeam++;
+            const week = parseInt(appointment.week, 10);
+            if (week >= 1 && week <= 5) {
+                if (appointment.closer1 && closerTotals[appointment.closer1]) {
+                    closerTotals[appointment.closer1].weeks[week - 1]++;
+                    closerTotals[appointment.closer1].totalCloser++;
+                    closerTotals[appointment.closer1].grandTotal++;
+                }
+                if (appointment.closer2 && closerTotals[appointment.closer2]) {
+                    closerTotals[appointment.closer2].weeks[week - 1]++;
+                    closerTotals[appointment.closer2].totalInTeam++;
+                    closerTotals[appointment.closer2].grandTotal++;
+                }
             }
         });
-
-        const performanceData = Object.keys(closerPerformanceData).map(closer => ({
+        
+        const performanceData = Object.keys(closerTotals).map(closer => ({
             closer,
-            totalCloser: closerPerformanceData[closer].totalCloser,
-            totalInTeam: closerPerformanceData[closer].totalInTeam
+            totalCloser: closerTotals[closer].totalCloser,
+            totalInTeam: closerTotals[closer].totalInTeam
         }));
         
         renderTable(filteredData, allEmployees);
         renderAdvancedDashboard(performanceData);
-        // A função de atualização da meta agora é chamada aqui, no local correto.
         updateGoalPercentage(totalPetsInPeriod, parseInt(goalInput.value, 10));
+
+        // Preparando os dados para o gráfico de linhas
+        const chartData = {};
+        allEmployees.forEach(closer => {
+            chartData[closer] = closerTotals[closer].weeks;
+        });
+        renderLineChart(chartData);
     }
 
     // Function to populate filter dropdowns with years
-    async function populateFilters() {
-        const [listsResponse, dashboardResponse] = await Promise.all([
-            fetch('/api/get-lists'),
-            fetch('/api/get-dashboard-data')
-        ]);
+    function populateYearFilter() {
+        if (!yearFilter) return;
 
-        const lists = await listsResponse.json();
-        const dashboardData = await dashboardResponse.json();
-        
-        allEmployees = dashboardData.employees;
-
-        populateDropdowns(monthFilter, lists.months);
-        populateDropdowns(yearFilter, lists.years);
+        const currentYear = new Date().getFullYear();
+        const years = [currentYear - 1, currentYear, currentYear + 1];
+        yearFilter.innerHTML = `<option value="">Select Year</option>`;
+        years.forEach(year => {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            yearFilter.appendChild(option);
+        });
+        yearFilter.value = currentYear;
     }
-
+    
     // Main function to fetch data and initialize the dashboard
     async function initDashboard() {
         try {
-            const appointmentsResponse = await fetch('/api/get-customers-data');
+            const [appointmentsResponse, employeesResponse] = await Promise.all([
+                fetch('/api/get-customers-data'),
+                fetch('/api/get-dashboard-data')
+            ]);
 
-            if (!appointmentsResponse.ok) {
+            if (!appointmentsResponse.ok || !employeesResponse.ok) {
                 const error = await appointmentsResponse.json();
-                throw new Error(error.error || 'Failed to load customer data.');
+                throw new Error(error.error || 'Failed to load data from one or more APIs.');
             }
 
             const appointmentsData = await appointmentsResponse.json();
-            allAppointmentsData = appointmentsData.customers;
+            const employeesData = await employeesResponse.json();
 
-            await populateFilters();
+            allAppointmentsData = appointmentsData.customers;
+            allEmployees = employeesData.employees;
+
+            populateYearFilter();
 
             applyFilters();
             
