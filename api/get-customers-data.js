@@ -41,30 +41,31 @@ export default async function handler(req, res) {
 
         const customers = rows.map(row => {
             const customerData = {
-                type: row.Type || '',
-                date: excelDateToYYYYMMDD(row.Date),
-                pets: row.Pets || '',
-                closer1: row['Closer (1)'] || '',
-                closer2: row['Closer (2)'] || '',
-                customers: row.Customers || '',
-                phone: row.Phone || '',
-                oldNew: row['Old/New'] || '',
-                appointmentDate: excelDateToYYYYMMDD(row['Date (Appointment)']),
-                serviceValue: row['Service Value'] || '',
-                franchise: row.Franchise || '',
-                city: row.City || '',
-                source: row.Source || '',
-                week: row.Week || '',
-                month: row.Month || '',
-                year: row.Year || '',
-                code: row.Code || '',
-                reminderDate: excelDateToYYYYMMDD(row['Reminder Date']),
-                technician: row.Technician || '',
-                petShowed: row['Pet Showed'] || '',
-                serviceShowed: row['Service Showed'] || '',
-                tips: row.Tips || '',
-                paymentMethod: row['Payment Method'] || '',
-                verification: row.Verification || ''
+                type: row._rawData[0] || '',
+                date: excelDateToYYYYMMDD(row._rawData[1]),
+                pets: row._rawData[2] || '',
+                closer1: row._rawData[3] || '',
+                closer2: row._rawData[4] || '',
+                customers: row._rawData[5] || '',
+                phone: row._rawData[6] || '',
+                oldNew: row._rawData[7] || '',
+                appointmentDate: excelDateToYYYYMMDD(row._rawData[8]),
+                serviceValue: row._rawData[9] || '',
+                franchise: row._rawData[10] || '',
+                city: row._rawData[11] || '',
+                source: row._rawData[12] || '',
+                week: row._rawData[13] || '',
+                month: row._rawData[14] || '',
+                year: row._rawData[15] || '',
+                code: row._rawData[16] || '',
+                reminderDate: excelDateToYYYYMMDD(row._rawData[17]),
+                // Mapeamento corrigido para os novos campos
+                technician: row._rawData[18] || '', // Coluna S (índice 18)
+                petShowed: row._rawData[19] || '', // Coluna T (índice 19)
+                serviceShowed: row._rawData[20] || '', // Coluna U (índice 20)
+                tips: row._rawData[21] || '', // Coluna V (índice 21)
+                paymentMethod: row._rawData[22] || '', // Coluna W (índice 22)
+                verification: row._rawData[24] || '' // Coluna Y (índice 24)
             };
             return customerData;
         });
