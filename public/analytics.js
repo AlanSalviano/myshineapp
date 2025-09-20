@@ -31,12 +31,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Function to update the goal percentage
-    function updateGoalPercentage(totalAppointments, goal) {
+    function updateGoalPercentage(totalPets, goal) {
         if (!goalPercentage) return;
         
         let percentage = 0;
         if (goal > 0) {
-            percentage = Math.min(100, (totalAppointments / goal) * 100);
+            percentage = Math.min(100, (totalPets / goal) * 100);
         }
         
         goalPercentage.textContent = `${Math.round(percentage)}%`;
@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         renderTable(filteredData, allEmployees);
         renderAdvancedDashboard(performanceData);
-        updateGoalPercentage(totalAppointmentsInPeriod, parseInt(goalInput.value, 10));
+        updateGoalPercentage(totalPetsInPeriod, parseInt(goalInput.value, 10));
     }
 
     // Function to populate filter dropdowns with years
