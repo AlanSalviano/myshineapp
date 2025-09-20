@@ -319,10 +319,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderAdvancedDashboard(performanceData);
         updateGoalPercentage(totalPetsInPeriod, parseInt(goalInput.value, 10));
 
-        // Preparando os dados para o gráfico de linhas
+        // Preparando os dados para o gráfico de linhas, mostrando apenas closers com total > 0
         const chartData = {};
-        allEmployees.forEach(closer => {
-            chartData[closer] = closerTotals[closer].weeks;
+        Object.keys(closerTotals).forEach(closer => {
+            if (closerTotals[closer].grandTotal > 0) {
+                chartData[closer] = closerTotals[closer].weeks;
+            }
         });
         renderLineChart(chartData);
     }
