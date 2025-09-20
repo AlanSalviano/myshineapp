@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     try {
         const { code, technician, petShowed, serviceShowed, tips, paymentMethod, verification } = req.body;
         
-        console.log('Dados recebidos do frontend:', { code, technician, petShowed, serviceShowed, tips, paymentMethod, verification });
+        console.log('Dados recebidos do frontend para atualização:', { code, technician, petShowed, serviceShowed, tips, paymentMethod, verification });
 
         if (!code) {
             console.error('Validation Error: O código de agendamento está ausente.');
@@ -39,10 +39,16 @@ export default async function handler(req, res) {
 
         const rows = await sheet.getRows();
         const codeToFind = code.trim();
-        const rowToUpdate = rows.find(row => row.Code.trim() === codeToFind);
+        
+        console.log('Procurando por linha com código:', codeToFind);
 
-        console.log('Código procurado:', codeToFind);
-        console.log('Linha encontrada:', rowToUpdate);
+        const rowToUpdate = rows.find(row => {
+            // Log para cada linha para depurar
+            console.log(`Verificando linha: Code = "${row.Code}"`);
+
+            // Garantir que row.Code existe e é uma string antes de chamar trim()
+            return row.Code && typeof row.Code === 'string' && row.Code.trim() === codeToFind;
+        });
 
         if (!rowToUpdate) {
             console.error(`Row not found: Nenhuma linha encontrada com o código "${codeToFind}".`);
