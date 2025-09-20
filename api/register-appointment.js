@@ -1,6 +1,7 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
 import dotenv from 'dotenv';
+import { SHEET_NAME_APPOINTMENTS } from './configs/sheets-config.js';
 
 dotenv.config();
 
@@ -26,9 +27,9 @@ export default async function handler(req, res) {
         }
 
         await doc.loadInfo();
-        const sheet = doc.sheetsByTitle['Datatest'];
+        const sheet = doc.sheetsByTitle[SHEET_NAME_APPOINTMENTS];
         if (!sheet) {
-            return res.status(500).json({ success: false, message: 'Planilha "Datatest" não encontrada.' });
+            return res.status(500).json({ success: false, message: `Planilha "${SHEET_NAME_APPOINTMENTS}" não encontrada.` });
         }
 
         const newRow = {
