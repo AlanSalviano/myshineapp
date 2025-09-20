@@ -1,6 +1,7 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
 import dotenv from 'dotenv';
+import { SHEET_NAME_ROLES } from './configs/sheets-config.js';
 
 dotenv.config();
 
@@ -17,10 +18,10 @@ const doc = new GoogleSpreadsheet(process.env.SHEET_ID, serviceAccountAuth);
 export default async function handler(req, res) {
     try {
         await doc.loadInfo();
-        const sheet = doc.sheetsByTitle['Roles'];
+        const sheet = doc.sheetsByTitle[SHEET_NAME_ROLES];
         if (!sheet) {
             // Retorna um erro se a aba 'Roles' não for encontrada
-            return res.status(500).json({ success: false, message: 'Planilha "Roles" não encontrada.' });
+            return res.status(500).json({ success: false, message: `Planilha "${SHEET_NAME_ROLES}" não encontrada.` });
         }
         
         // Carrega as células da coluna A, ignorando o cabeçalho
