@@ -19,9 +19,12 @@ export default async function handler(req, res) {
     }
 
     try {
-        const { code, technician, petShowed, serviceShowed, tips, paymentMethod, paymentId, verification } = req.body;
+        const { code, technician, petShowed, serviceShowed, tips, paymentMethod, verification } = req.body;
+        
+        console.log('Dados recebidos do frontend:', { code, technician, petShowed, serviceShowed, tips, paymentMethod, verification });
 
         if (!code) {
+            console.error('Validation Error: O código de agendamento está ausente.');
             return res.status(400).json({ success: false, message: 'O código de agendamento é obrigatório.' });
         }
 
@@ -30,14 +33,19 @@ export default async function handler(req, res) {
         const sheet = doc.sheetsByTitle[SHEET_NAME_APPOINTMENTS];
 
         if (!sheet) {
+            console.error(`Spreadsheet Error: Planilha "${SHEET_NAME_APPOINTMENTS}" não encontrada.`);
             return res.status(500).json({ success: false, message: `Planilha "${SHEET_NAME_APPOINTMENTS}" não encontrada.` });
         }
 
         const rows = await sheet.getRows();
-        const codeToFind = code.trim(); // Remove espaços em branco
+        const codeToFind = code.trim();
         const rowToUpdate = rows.find(row => row.Code.trim() === codeToFind);
 
+        console.log('Código procurado:', codeToFind);
+        console.log('Linha encontrada:', rowToUpdate);
+
         if (!rowToUpdate) {
+            console.error(`Row not found: Nenhuma linha encontrada com o código "${codeToFind}".`);
             return res.status(404).json({ success: false, message: 'Agendamento não encontrado.' });
         }
         
@@ -46,11 +54,11 @@ export default async function handler(req, res) {
         rowToUpdate['Service Showed'] = serviceShowed;
         rowToUpdate['Tips'] = tips;
         rowToUpdate['Payment Method'] = paymentMethod;
-        rowToUpdate['Payment ID'] = paymentId;
         rowToUpdate['Verification'] = verification;
         
         await rowToUpdate.save();
 
+        console.log('Dados atualizados com sucesso para o código:', codeToFind);
         return res.status(200).json({ success: true, message: 'Dados atualizados com sucesso!' });
     } catch (error) {
         console.error('Erro ao atualizar agendamento:', error);
