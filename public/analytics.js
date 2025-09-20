@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             </tr>
         `;
         
-        updateGoalPercentage(totalCloserAppointments, parseInt(goalInput.value, 10));
+        // A chamada redundante foi removida daqui.
     }
     
     // Function to render the advanced dashboard cards
@@ -256,6 +256,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         renderTable(filteredData, allEmployees);
         renderAdvancedDashboard(performanceData);
+        // A função de atualização da meta agora é chamada aqui, no local correto.
         updateGoalPercentage(totalPetsInPeriod, parseInt(goalInput.value, 10));
     }
 
