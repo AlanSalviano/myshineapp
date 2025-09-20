@@ -1,6 +1,6 @@
 // public/quick-routes.js
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const techTableBody = document.getElementById('tech-table-body');
     const clientTableBody = document.getElementById('client-table-body');
     const zipCodeInput = document.getElementById('zip-code-input');
@@ -13,16 +13,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const optimizeItineraryBtn = document.getElementById('optimize-itinerary-btn');
     const itineraryList = document.getElementById('itinerary-list');
     const mapContainer = document.getElementById('map');
-    
-    // Replace with your actual Google Maps API Key
-    const GOOGLE_MAPS_API_KEY = "YOUR_API_KEY_HERE";
+
+    // Fetch Google Maps API Key from a secure endpoint
+    let GOOGLE_MAPS_API_KEY = "YOUR_API_KEY_HERE";
+    try {
+        const response = await fetch('/api/get-google-maps-api-key');
+        if (response.ok) {
+            const data = await response.json();
+            GOOGLE_MAPS_API_KEY = data.apiKey;
+        } else {
+            console.error('Failed to fetch Google Maps API key.');
+        }
+    } catch (error) {
+        console.error('Error fetching Google Maps API key:', error);
+    }
 
     let techData = [];
     let clientData = [];
     let map;
     let directionsService;
     let directionsRenderer;
-    
+
     // Helper functions
     function saveTechData() {
         localStorage.setItem('tech_data', JSON.stringify(techData));
@@ -32,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const savedData = localStorage.getItem('tech_data');
         return savedData ? JSON.parse(savedData) : null;
     }
-    
+
     async function getLatLon(zipCode) {
         if (!zipCode) return [null, null, null];
         try {
@@ -65,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return null;
         }
     }
-    
+
     function calculateDistance(lat1, lon1, lat2, lon2) {
         return Math.sqrt(Math.pow(lat1 - lat2, 2) + Math.pow(lon1 - lon2, 2));
     }
@@ -114,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
-        
+
         techTableBody.querySelectorAll('button').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const index = e.target.dataset.index;
@@ -125,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-    
+
     function renderClientTable() {
         clientTableBody.innerHTML = '';
         clientData.forEach((client, i) => {
@@ -169,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
             techSelect.innerHTML = '<option value="">Nenhum técnico cadastrado</option>';
         }
     }
-    
+
     // Main logic
     async function handleVerifyZipCode() {
         const zipCode = zipCodeInput.value.trim();
@@ -220,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
-    
+
     async function handleOptimizeItinerary() {
         const selectedTechName = techSelect.value;
         if (!selectedTechName) {
@@ -250,11 +261,11 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentLon = (await getLatLon(currentOrigin))[1];
         let unvisitedClients = [...clientsWithCoords];
         const optimizedItinerary = [];
-        
+
         while (unvisitedClients.length > 0) {
             let closestClient = null;
             let minDistance = Infinity;
-            
+
             for (const client of unvisitedClients) {
                 const distance = calculateDistance(currentLat, currentLon, client.lat, client.lon);
                 if (distance < minDistance) {
@@ -286,29 +297,29 @@ document.addEventListener('DOMContentLoaded', () => {
         directionsService.route(request, (response, status) => {
             if (status === 'OK') {
                 directionsRenderer.setDirections(response);
-                
+
                 let totalDistance = 0;
                 let totalDuration = 0;
-                
+
                 const route = response.routes[0];
                 itineraryList.innerHTML = 'A melhor sequência de atendimento é:';
 
                 const optimizedOrder = response.routes[0].waypoint_order;
                 const sortedClients = optimizedOrder.map(index => optimizedItinerary[index]);
-                
+
                 let currentPoint = selectedTech.zip_code;
-                
+
                 sortedClients.forEach((client, i) => {
                     const leg = route.legs[i];
                     totalDistance += leg.distance.value;
                     totalDuration += leg.duration.value;
-                    
+
                     itineraryList.innerHTML += `
                         <p><strong>${i + 1}. ${client.nome}</strong> (Zip Code: ${client.zip_code})</p>
                         <p class="ml-4 text-sm">Tempo: ${leg.duration.text} | Distância: ${leg.distance.text}</p>
                     `;
                 });
-                
+
                 itineraryList.innerHTML += `<div class="mt-4 font-bold">Total: ${Math.round(totalDuration / 60)} min / ${(totalDistance / 1000).toFixed(2)} km</div>`;
             } else {
                 window.alert('Directions request failed due to ' + status);
