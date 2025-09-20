@@ -10,7 +10,7 @@ const serviceAccountAuth = new JWT({
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
 });
 
-const doc = new GoogleSpreadsheet('1nwC53lk48RfU0hOk9605G7ZCfe67tw4o-RBNS9XNfWA', serviceAccountAuth);
+const doc = new GoogleSpreadsheet(process.env.SHEET_ID_APPOINTMENTS, serviceAccountAuth);
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -18,13 +18,18 @@ export default async function handler(req, res) {
     }
 
     try {
+        const { type, data, pets, closer1, closer2, customers, phone, oldNew, appointmentDate, serviceValue, franchise, city, source, week, month, year, code, reminderDate } = req.body;
+
+        // Validação de dados de entrada
+        if (!type || !data || !customers || !phone || !appointmentDate || !serviceValue || !franchise || !city || !source) {
+            return res.status(400).json({ success: false, message: 'Todos os campos obrigatórios precisam ser preenchidos.' });
+        }
+
         await doc.loadInfo();
         const sheet = doc.sheetsByTitle['Datatest'];
         if (!sheet) {
             return res.status(500).json({ success: false, message: 'Planilha "Datatest" não encontrada.' });
         }
-
-        const { type, data, pets, closer1, closer2, customers, phone, oldNew, appointmentDate, serviceValue, franchise, city, source, week, month, year, code, reminderDate } = req.body;
 
         const newRow = {
             'Type': type,
