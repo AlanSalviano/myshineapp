@@ -80,6 +80,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false // Esta linha esconde a legenda
+                    }
+                },
                 scales: {
                     x: {
                         title: {
