@@ -19,14 +19,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Function to update the goal percentage
     function updateGoalPercentage(totalAppointments, goal) {
         if (!goalPercentage) return;
-        
+
         let percentage = 0;
         if (goal > 0) {
             percentage = Math.min(100, (totalAppointments / goal) * 100);
         }
-        
+
         goalPercentage.textContent = `${Math.round(percentage)}%`;
-        
+
         if (percentage >= 100) {
             goalPercentage.classList.remove('text-brand-primary');
             goalPercentage.classList.add('text-green-600');
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!tableBody || !tableFooter) return;
 
         tableBody.innerHTML = '';
-        
+
         const closerTotals = {};
 
         employees.forEach(closer => {
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const percentage = totalCloserAppointments > 0 ? (totals.totalCloser / totalCloserAppointments) * 100 : 0;
                 const row = document.createElement('tr');
                 row.classList.add('border-b', 'border-border', 'hover:bg-muted/50', 'transition-colors');
-                
+
                 row.innerHTML = `
                     <td class="p-4 font-semibold cursor-pointer" data-closer-name="${closer}">${closer}</td>
                     <td class="p-4 text-center">${totals.closer1[0]}</td>
@@ -108,9 +108,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 tableBody.appendChild(row);
             });
         }
-        
+
         const totalCloser = employeesWithAppointments.reduce((sum, closer) => sum + closerTotals[closer].totalCloser, 0);
-        
+
         tableFooter.innerHTML = `
             <tr>
                 <td class="p-4 font-bold">Grand Total</td>
@@ -121,16 +121,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td class="p-4 text-center"></td>
             </tr>
         `;
-        
+
         updateGoalPercentage(totalCloserAppointments, parseInt(goalInput.value, 10));
     }
-    
+
     // Function to render the advanced dashboard cards
     function renderAdvancedDashboard(data) {
         if (!closerInsightsContainer) return;
-        
+
         const totalCloserAppointments = data.reduce((sum, closer) => sum + closer.totalCloser, 0);
-        
+
         let htmlContent = '';
         const sortedData = data.filter(c => c.totalCloser > 0 || c.totalInTeam > 0).sort((a, b) => b.totalCloser - a.totalCloser);
 
@@ -160,18 +160,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Função corrigida para popular o modal
     function populateFranchiseModal(closerName) {
         if (!franchiseModal || !modalContent) return;
-        
+
         // Filtrar agendamentos onde o closer é o Closer (1) ou Closer (2)
         const closerAppointments = allAppointmentsData.filter(app => app.closer1 === closerName || app.closer2 === closerName);
-        
+
         // Contar a frequência de cada franquia para os agendamentos encontrados
         const franchiseCounts = closerAppointments.reduce((acc, app) => {
             const franchise = app.franchise || 'Unknown';
             acc[franchise] = (acc[franchise] || 0) + 1;
             return acc;
         }, {});
-    
-        let modalInnerContent = `<h3 class="text-lg font-bold mb-4">Agendamentos de ${closerName} por Franquia</h3>`;
+
+        let modalInnerContent = `<h3 class="lg:text-xl md:text-md text-sm font-bold mb-4">Agendamentos de ${closerName} por Franquia</h3>`;
         if (Object.keys(franchiseCounts).length > 0) {
             modalInnerContent += '<ul class="list-disc pl-5 space-y-1">';
             for (const franchise in franchiseCounts) {
@@ -183,11 +183,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
             modalInnerContent += '<p>Nenhum agendamento encontrado para este closer no período selecionado.</p>';
         }
-    
+
         modalContent.innerHTML = modalInnerContent;
         franchiseModal.classList.remove('hidden');
     }
-    
+
     document.addEventListener('click', (event) => {
         const closerNameCell = event.target.closest('td[data-closer-name]');
         if (closerNameCell) {
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const totalAppointmentsInPeriod = filteredData.length;
         const totalPetsInPeriod = filteredData.reduce((sum, appointment) => sum + (parseInt(appointment.pets, 10) || 0), 0);
-        
+
         if (totalAppointmentsCount) {
             totalAppointmentsCount.textContent = totalAppointmentsInPeriod;
         }
@@ -239,51 +239,45 @@ document.addEventListener('DOMContentLoaded', async () => {
             totalCloser: closerPerformanceData[closer].totalCloser,
             totalInTeam: closerPerformanceData[closer].totalInTeam
         }));
-        
+
         renderTable(filteredData, allEmployees);
         renderAdvancedDashboard(performanceData);
         updateGoalPercentage(totalAppointmentsInPeriod, parseInt(goalInput.value, 10));
     }
 
     // Function to populate filter dropdowns with years
-    function populateYearFilter() {
-        if (!yearFilter) return;
+    async function populateFilters() {
+        const [listsResponse, dashboardResponse] = await Promise.all([
+            fetch('/api/get-lists'),
+            fetch('/api/get-dashboard-data')
+        ]);
 
-        const currentYear = new Date().getFullYear();
-        const years = [currentYear - 1, currentYear, currentYear + 1];
-        yearFilter.innerHTML = `<option value="">Select Year</option>`;
-        years.forEach(year => {
-            const option = document.createElement('option');
-            option.value = year;
-            option.textContent = year;
-            yearFilter.appendChild(option);
-        });
-        yearFilter.value = currentYear;
+        const lists = await listsResponse.json();
+        const dashboardData = await dashboardResponse.json();
+
+        allEmployees = dashboardData.employees;
+
+        populateDropdowns(monthFilter, lists.months);
+        populateDropdowns(yearFilter, lists.years);
     }
-    
+
     // Main function to fetch data and initialize the dashboard
     async function initDashboard() {
         try {
-            const [appointmentsResponse, employeesResponse] = await Promise.all([
-                fetch('/api/get-customers-data'),
-                fetch('/api/get-dashboard-data')
-            ]);
+            const appointmentsResponse = await fetch('/api/get-customers-data');
 
-            if (!appointmentsResponse.ok || !employeesResponse.ok) {
+            if (!appointmentsResponse.ok) {
                 const error = await appointmentsResponse.json();
-                throw new Error(error.error || 'Failed to load data from one or more APIs.');
+                throw new Error(error.error || 'Failed to load customer data.');
             }
 
             const appointmentsData = await appointmentsResponse.json();
-            const employeesData = await employeesResponse.json();
-
             allAppointmentsData = appointmentsData.customers;
-            allEmployees = employeesData.employees;
 
-            populateYearFilter();
+            await populateFilters();
 
             applyFilters();
-            
+
         } catch (error) {
             console.error('Error fetching data:', error);
             const errorMessage = `Erro ao carregar dados: ${error.message}. Verifique a sua conexão ou a configuração da API.`;
