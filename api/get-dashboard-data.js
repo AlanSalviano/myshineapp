@@ -1,6 +1,7 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
 import dotenv from 'dotenv';
+import { excelDateToYYYYMMDD } from './utils.js';
 
 dotenv.config();
 
@@ -12,15 +13,6 @@ const serviceAccountAuth = new JWT({
 
 const SPREADSHEET_ID_APPOINTMENTS = '1nwC53lk48RfU0hOk9605G7ZCfe67tw4o-RBNS9XNfWA';
 const SPREADSHEET_ID_DATA = '1kEIg8Le1nq9etQrTu162RIMSJYaCoioLLpFVg6yKBgg';
-
-function excelDateToYYYYMMDD(excelSerialDate) {
-    const date = new Date(Date.UTC(1900, 0, 1));
-    date.setDate(date.getDate() + excelSerialDate - 2); 
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}/${month}/${day}`;
-}
 
 export default async function handler(req, res) {
     res.setHeader('Content-Type', 'application/json');
