@@ -1,9 +1,15 @@
 // api/utils.js
 
 export function excelDateToYYYYMMDD(excelSerialDate) {
-    if (typeof excelSerialDate !== 'number') {
+    if (!excelSerialDate || (typeof excelSerialDate !== 'number' && typeof excelSerialDate !== 'string')) {
+        return '';
+    }
+    
+    // Se for uma string já formatada, retorna ela mesma
+    if (typeof excelSerialDate === 'string' && excelSerialDate.includes('-')) {
         return excelSerialDate;
     }
+    
     const date = new Date(Date.UTC(1900, 0, 1));
     date.setDate(date.getDate() + excelSerialDate - 2); 
     const year = date.getFullYear();
