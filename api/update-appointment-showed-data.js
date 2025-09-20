@@ -43,10 +43,7 @@ export default async function handler(req, res) {
         console.log('Procurando por linha com código:', codeToFind);
 
         const rowToUpdate = rows.find(row => {
-            // Log para cada linha para depurar
-            console.log(`Verificando linha: Code = "${row.Code}"`);
-
-            // Garantir que row.Code existe e é uma string antes de chamar trim()
+            // Verifica se a coluna 'Code' existe e é uma string antes de tentar trim()
             return row.Code && typeof row.Code === 'string' && row.Code.trim() === codeToFind;
         });
 
