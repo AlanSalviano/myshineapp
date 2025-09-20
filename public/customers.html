@@ -132,47 +132,47 @@
                     <h2 class="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
                         Customer List
                     </h2>
-                    <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                        <input type="text" id="search-input" placeholder="Search by name, phone, or city" class="rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-                        <input type="date" id="start-date-filter" class="rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-                        <input type="date" id="end-date-filter" class="rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-                        <select id="franchise-filter" class="rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                    <div class="mt-4 flex flex-wrap items-center gap-4">
+                        <input type="text" id="search-input" placeholder="Search by name, phone, or city" class="flex-1 rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                        <input type="date" id="start-date-filter" class="flex-1 rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                        <input type="date" id="end-date-filter" class="flex-1 rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                        <select id="franchise-filter" class="flex-1 rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                             <option value="">All Franchises</option>
                         </select>
-                        <select id="closer-filter" class="rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                        <select id="closer-filter" class="flex-1 rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                             <option value="">All Closers</option>
                         </select>
-                        <select id="month-filter" class="rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                        <select id="month-filter" class="flex-1 rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                             <option value="">All Months</option>
                         </select>
-                        <select id="year-filter" class="rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                        <select id="year-filter" class="flex-1 rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                             <option value="">All Years</option>
                         </select>
-                        <select id="reminder-filter" class="rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                        <select id="reminder-filter" class="flex-1 rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                             <option value="">Todos</option>
                             <option value="send-reminder">Pend.</option>
                         </select>
                     </div>
                 </div>
                 <div class="p-6 pt-0 overflow-x-auto">
-                    <table class="w-full text-left table-auto">
+                    <table class="min-w-full text-left">
                         <thead class="bg-muted text-muted-foreground uppercase text-xs font-semibold whitespace-nowrap">
                             <tr>
-                                <th class="p-4 border-b border-border w-20">Date</th>
-                                <th class="p-4 border-b border-border w-24">Customers</th>
-                                <th class="p-4 border-b border-border w-16">Pets</th>
-                                <th class="p-4 border-b border-border w-24">Closer (1)</th>
-                                <th class="p-4 border-b border-border w-24">Closer (2)</th>
-                                <th class="p-4 border-b border-border w-24">Phone</th>
-                                <th class="p-4 border-b border-border w-20">Date (Appointment)</th>
-                                <th class="p-4 border-b border-border w-24">Service Value</th>
-                                <th class="p-4 border-b border-border w-24">Franchise</th>
-                                <th class="p-4 border-b border-border w-16">Month</th>
-                                <th class="p-4 border-b border-border w-20">Code</th>
-                                <th class="p-4 border-b border-border w-20">Reminder Date</th>
+                                <th class="p-4 border-b border-border">Date</th>
+                                <th class="p-4 border-b border-border">Customers</th>
+                                <th class="p-4 border-b border-border">Pets</th>
+                                <th class="p-4 border-b border-border">Closer (1)</th>
+                                <th class="p-4 border-b border-border">Closer (2)</th>
+                                <th class="p-4 border-b border-border">Phone</th>
+                                <th class="p-4 border-b border-border">Date (Appointment)</th>
+                                <th class="p-4 border-b border-border">Service Value</th>
+                                <th class="p-4 border-b border-border">Franchise</th>
+                                <th class="p-4 border-b border-border">Month</th>
+                                <th class="p-4 border-b border-border">Code</th>
+                                <th class="p-4 border-b border-border">Reminder Date</th>
                             </tr>
                         </thead>
-                        <tbody id="customers-table-body" class="text-foreground text-sm">
+                        <tbody id="customers-table-body" class="text-foreground text-xs">
                             <tr>
                                 <td colspan="12" class="p-4 text-center">Loading customer data...</td>
                             </tr>
