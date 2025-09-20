@@ -35,37 +35,53 @@ export default async function handler(req, res) {
         const rows = await sheetAppointments.getRows();
         console.log(`Encontradas ${rows.length} linhas.`);
 
-        if (rows.length > 0) {
-            console.log('Dados da primeira linha:', rows[0]._rawData);
+        if (rows.length === 0) {
+            return res.status(200).json({ customers: [] });
         }
+        
+        console.log('Dados da primeira linha:', rows[0]._rawData);
+
+        // Mapeamento dinâmico dos nomes das colunas para os índices do array _rawData
+        const headerRow = sheetAppointments.headerValues;
+        const headersToIndex = {};
+        headerRow.forEach((header, index) => {
+            headersToIndex[header] = index;
+        });
 
         const customers = rows.map(row => {
+            const getCellValue = (header) => {
+                const index = headersToIndex[header];
+                if (index !== undefined && row._rawData.length > index) {
+                    return row._rawData[index];
+                }
+                return '';
+            };
+
             const customerData = {
-                type: row._rawData[0] || '',
-                date: excelDateToYYYYMMDD(row._rawData[1]),
-                pets: row._rawData[2] || '',
-                closer1: row._rawData[3] || '',
-                closer2: row._rawData[4] || '',
-                customers: row._rawData[5] || '',
-                phone: row._rawData[6] || '',
-                oldNew: row._rawData[7] || '',
-                appointmentDate: excelDateToYYYYMMDD(row._rawData[8]),
-                serviceValue: row._rawData[9] || '',
-                franchise: row._rawData[10] || '',
-                city: row._rawData[11] || '',
-                source: row._rawData[12] || '',
-                week: row._rawData[13] || '',
-                month: row._rawData[14] || '',
-                year: row._rawData[15] || '',
-                code: row._rawData[16] || '',
-                reminderDate: excelDateToYYYYMMDD(row._rawData[17]),
-                // Mapeamento corrigido para os novos campos
-                technician: row._rawData[18] || '', // Coluna S (índice 18)
-                petShowed: row._rawData[19] || '', // Coluna T (índice 19)
-                serviceShowed: row._rawData[20] || '', // Coluna U (índice 20)
-                tips: row._rawData[21] || '', // Coluna V (índice 21)
-                paymentMethod: row._rawData[22] || '', // Coluna W (índice 22)
-                verification: row._rawData[24] || '' // Coluna Y (índice 24)
+                type: getCellValue('Type'),
+                date: excelDateToYYYYMMDD(getCellValue('Date')),
+                pets: getCellValue('Pets'),
+                closer1: getCellValue('Closer (1)'),
+                closer2: getCellValue('Closer (2)'),
+                customers: getCellValue('Customers'),
+                phone: getCellValue('Phone'),
+                oldNew: getCellValue('Old/New'),
+                appointmentDate: excelDateToYYYYMMDD(getCellValue('Date (Appointment)')),
+                serviceValue: getCellValue('Service Value'),
+                franchise: getCellValue('Franchise'),
+                city: getCellValue('City'),
+                source: getCellValue('Source'),
+                week: getCellValue('Week'),
+                month: getCellValue('Month'),
+                year: getCellValue('Year'),
+                code: getCellValue('Code'),
+                reminderDate: excelDateToYYYYMMDD(getCellValue('Reminder Date')),
+                technician: getCellValue('Technician'),
+                petShowed: getCellValue('Pet Showed'),
+                serviceShowed: getCellValue('Service Showed'),
+                tips: getCellValue('Tips'),
+                paymentMethod: getCellValue('Payment Method'),
+                verification: getCellValue('Verification')
             };
             return customerData;
         });
