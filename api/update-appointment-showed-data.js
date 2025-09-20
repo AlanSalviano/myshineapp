@@ -46,12 +46,18 @@ export default async function handler(req, res) {
 
         const rowToUpdate = rows[rowIndex];
         
-        rowToUpdate['Technician'] = technician;
+        // Log para mostrar o estado da linha antes da atualização
+        console.log('Dados da linha antes da atualização:', rowToUpdate);
+
+        rowToUpdate.Technician = technician;
         rowToUpdate['Pet Showed'] = petShowed;
         rowToUpdate['Service Showed'] = serviceShowed;
-        rowToUpdate['Tips'] = tips;
+        rowToUpdate.Tips = tips;
         rowToUpdate['Payment Method'] = paymentMethod;
-        rowToUpdate['Verification'] = verification;
+        rowToUpdate.Verification = verification;
+        
+        // Log para mostrar o estado da linha depois da atualização
+        console.log('Dados da linha depois da atualização (antes de salvar):', rowToUpdate);
         
         await rowToUpdate.save();
 
