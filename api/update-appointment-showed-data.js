@@ -52,7 +52,7 @@ export default async function handler(req, res) {
         rowToUpdate['Pet Showed'] = petShowed;
         rowToUpdate['Service Showed'] = serviceShowed;
         rowToUpdate.Tips = tips;
-        rowToUpdate['Payment Method'] = paymentMethod;
+        rowToUpdate.Method = paymentMethod; // Correção: Mapeado para Method
         rowToUpdate.Verification = verification;
         
         console.log('Dados da linha depois da atualização (antes de salvar):', rowToUpdate);
