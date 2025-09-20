@@ -63,7 +63,7 @@ export default async function handler(req, res) {
                 petShowed: row['Pet Showed'] || '',
                 serviceShowed: row['Service Showed'] || '',
                 tips: row.Tips || '',
-                paymentMethod: row.Method || '', // Correção: Mapeado para Method
+                paymentMethod: row.Method || '',
                 verification: row.Verification || ''
             };
             return customerData;
