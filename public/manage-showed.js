@@ -46,11 +46,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </select>
                 </td>
                 <td class="p-4">
-                    <button class="save-btn inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 bg-brand-primary text-white hover:shadow-brand">Save</button>
+                    <button class="save-btn" data-index="${index}">Save</button>
                 </td>
             `;
 
-            // Preenche os valores iniciais dos dropdowns, se existirem
             const petSelect = row.querySelector('select:nth-of-type(1)');
             if (appointment['Pet Showed']) {
                 petSelect.value = appointment['Pet Showed'];
@@ -70,7 +69,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Função principal para buscar os dados e renderizar a página
     async function initPage() {
         try {
             const response = await fetch('/api/get-customers-data');
@@ -81,24 +79,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             const appointmentsData = data.customers;
             
             renderTable(appointmentsData);
-
         } catch (error) {
             console.error('Error fetching data:', error);
             tableBody.innerHTML = '<tr><td colspan="10" class="p-4 text-center text-red-600">Erro ao carregar dados. Tente novamente.</td></tr>';
         }
     }
 
-    // Event listener para a ação de salvar
     tableBody.addEventListener('click', async (event) => {
         if (event.target.classList.contains('save-btn')) {
             const row = event.target.closest('tr');
+            const rowIndex = event.target.dataset.index;
             
-            const code = row.querySelector('.code-cell').textContent.trim();
             const inputs = row.querySelectorAll('input');
             const selects = row.querySelectorAll('select');
 
             const rowData = {
-                code: code,
+                rowIndex: parseInt(rowIndex, 10),
                 technician: inputs[0].value,
                 petShowed: selects[0].value,
                 serviceShowed: inputs[1].value,
@@ -118,7 +114,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const result = await response.json();
                 if (result.success) {
                     alert('Dados atualizados com sucesso!');
-                    initPage(); // Recarrega a tabela para mostrar os dados atualizados
                 } else {
                     alert(`Erro ao salvar: ${result.message}`);
                 }
