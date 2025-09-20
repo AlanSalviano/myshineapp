@@ -15,6 +15,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let allCustomersData = [];
 
+    // Function to populate dropdowns
+    function populateDropdowns(selectElement, items) {
+        if (items && Array.isArray(items)) {
+            items.forEach(item => {
+                if (item) {
+                    const option = document.createElement('option');
+                    option.value = item;
+                    option.textContent = item;
+                    selectElement.appendChild(option);
+                }
+            });
+        }
+    }
+
     // Helper function to format a date string
     function formatDate(dateStr) {
         if (!dateStr) return '';
@@ -133,35 +147,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (item.year) years.add(item.year);
         });
 
-        franchises.forEach(franchise => {
-            const option = document.createElement('option');
-            option.value = franchise;
-            const displayValue = franchise.length > 12 ? franchise.substring(0, 12) + '...' : franchise;
-            option.textContent = displayValue;
-            franchiseFilter.appendChild(option);
-        });
-        
-        closers.forEach(closer => {
-            const option = document.createElement('option');
-            option.value = closer;
-            const displayValue = closer.length > 12 ? closer.substring(0, 12) + '...' : closer;
-            option.textContent = displayValue;
-            closerFilter.appendChild(option);
-        });
-
-        months.forEach(month => {
-            const option = document.createElement('option');
-            option.value = month;
-            option.textContent = month;
-            monthFilter.appendChild(option);
-        });
-        
-        years.forEach(year => {
-            const option = document.createElement('option');
-            option.value = year;
-            option.textContent = year;
-            yearFilter.appendChild(option);
-        });
+        populateDropdowns(franchiseFilter, [...franchises].sort());
+        populateDropdowns(closerFilter, [...closers].sort());
+        populateDropdowns(monthFilter, [...months].sort((a,b) => a-b));
+        populateDropdowns(yearFilter, [...years].sort((a,b) => a-b));
     }
 
     // Main function to fetch and initialize the dashboard
