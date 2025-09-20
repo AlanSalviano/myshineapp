@@ -52,12 +52,12 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell w-4 h-4"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
               <span class="absolute -top-1 -right-1 w-2 h-2 bg-brand-primary rounded-full"></span>
             </button>
-            <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-11 px-6 py-3 border-2 border-brand-primary text-brand-primary bg-transparent hover:bg-brand-primary hover:text-white hover:shadow-brand">
+            <a href="quick-routes.html" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-11 px-6 py-3 border-2 border-brand-primary text-brand-primary bg-transparent hover:bg-brand-primary hover:text-white hover:shadow-brand">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus w-4 h-4"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
               <span class="hidden sm:inline">Quick Routes</span>
-            </button>
+            </a>
             <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-11 w-11 relative hover:bg-accent hover:text-accent-foreground md:hidden">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu w-4 h-4"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+              <svg xmlns="http://www.w3.org/2003/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu w-4 h-4"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
             </button>
           </div>
         </div>
@@ -132,7 +132,7 @@
                     <h2 class="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
                         Customer List
                     </h2>
-                    <div class="mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+                    <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         <input type="text" id="search-input" placeholder="Search by name, phone, or city" class="rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                         <input type="date" id="start-date-filter" class="rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                         <input type="date" id="end-date-filter" class="rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
@@ -155,21 +155,21 @@
                     </div>
                 </div>
                 <div class="p-6 pt-0 overflow-x-auto">
-                    <table class="w-full text-left">
+                    <table class="w-full text-left table-auto">
                         <thead class="bg-muted text-muted-foreground uppercase text-xs font-semibold whitespace-nowrap">
                             <tr>
-                                <th class="p-4 border-b border-border">Date</th>
-                                <th class="p-4 border-b border-border">Customers</th>
-                                <th class="p-4 border-b border-border">Pets</th>
-                                <th class="p-4 border-b border-border">Closer (1)</th>
-                                <th class="p-4 border-b border-border">Closer (2)</th>
-                                <th class="p-4 border-b border-border">Phone</th>
-                                <th class="p-4 border-b border-border">Date (Appointment)</th>
-                                <th class="p-4 border-b border-border">Service Value</th>
-                                <th class="p-4 border-b border-border">Franchise</th>
-                                <th class="p-4 border-b border-border">Month</th>
-                                <th class="p-4 border-b border-border">Code</th>
-                                <th class="p-4 border-b border-border">Reminder Date</th>
+                                <th class="p-4 border-b border-border w-20">Date</th>
+                                <th class="p-4 border-b border-border w-24">Customers</th>
+                                <th class="p-4 border-b border-border w-16">Pets</th>
+                                <th class="p-4 border-b border-border w-24">Closer (1)</th>
+                                <th class="p-4 border-b border-border w-24">Closer (2)</th>
+                                <th class="p-4 border-b border-border w-24">Phone</th>
+                                <th class="p-4 border-b border-border w-20">Date (Appointment)</th>
+                                <th class="p-4 border-b border-border w-24">Service Value</th>
+                                <th class="p-4 border-b border-border w-24">Franchise</th>
+                                <th class="p-4 border-b border-border w-16">Month</th>
+                                <th class="p-4 border-b border-border w-20">Code</th>
+                                <th class="p-4 border-b border-border w-20">Reminder Date</th>
                             </tr>
                         </thead>
                         <tbody id="customers-table-body" class="text-foreground text-sm">
