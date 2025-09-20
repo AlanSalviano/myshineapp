@@ -7,6 +7,7 @@
     <link href="output.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/lucide-static@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 </head>
 <body class="min-h-screen bg-background flex flex-col">
 
@@ -196,6 +197,17 @@
                         <tfoot id="analytics-table-footer" class="bg-muted text-foreground uppercase text-xs font-semibold whitespace-nowrap">
                             </tfoot>
                     </table>
+                </div>
+            </div>
+            
+            <div id="chart-section" class="rounded-lg border bg-card text-card-foreground shadow-large bg-gradient-subtle mt-8">
+                <div class="flex flex-col space-y-1.5 p-6 pb-8">
+                    <h2 class="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                        Closer Weekly Performance
+                    </h2>
+                </div>
+                <div class="p-6 pt-0">
+                    <canvas id="closerChart"></canvas>
                 </div>
             </div>
         </div>
