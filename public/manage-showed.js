@@ -55,12 +55,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (appointment.petShowed) {
                 petSelect.value = appointment.petShowed;
             }
-            
+
             const paymentSelect = row.querySelector('select:nth-of-type(2)');
             if (appointment.paymentMethod) {
                 paymentSelect.value = appointment.paymentMethod;
             }
-            
+
             const verificationSelect = row.querySelector('select:nth-of-type(3)');
             if (appointment.verification) {
                 verificationSelect.value = appointment.verification;
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             const data = await response.json();
             const appointmentsData = data.customers;
-            
+
             renderTable(appointmentsData);
 
         } catch (error) {
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (event.target.classList.contains('save-btn')) {
             const row = event.target.closest('tr');
             const rowIndex = event.target.dataset.index;
-            
+
             const inputs = row.querySelectorAll('input');
             const selects = row.querySelectorAll('select');
 
