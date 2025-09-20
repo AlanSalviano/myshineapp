@@ -42,22 +42,41 @@ function populateDropdowns(selectElement, items) {
 // Main function to fetch and update all dashboard data
 async function fetchAndRenderDashboardData() {
     try {
-        const response = await fetch('/api/get-dashboard-data');
-        if (!response.ok) {
+        const [dataResponse, listsResponse] = await Promise.all([
+            fetch('/api/get-dashboard-data'),
+            fetch('/api/get-lists')
+        ]);
+
+        if (!dataResponse.ok) {
             throw new Error('Erro ao carregar dados do painel.');
         }
-        const data = await response.json();
+        if (!listsResponse.ok) {
+             throw new Error('Erro ao carregar dados das listas dinâmicas.');
+        }
+
+        const data = await dataResponse.json();
+        const lists = await listsResponse.json();
+
         const { appointments, employees, franchises } = data;
 
-        // Populate Closers dropdowns
+        // Populate dropdowns dynamically
         const closer1Select = document.getElementById('closer1');
         const closer2Select = document.getElementById('closer2');
+        const franchiseSelect = document.getElementById('franchise');
+        const petsSelect = document.getElementById('pets');
+        const sourceSelect = document.getElementById('source');
+        const weekSelect = document.getElementById('week');
+        const monthSelect = document.getElementById('month');
+        const yearSelect = document.getElementById('year');
+
         populateDropdowns(closer1Select, employees);
         populateDropdowns(closer2Select, employees);
-
-        // Populate Franchise dropdown
-        const franchiseSelect = document.getElementById('franchise');
         populateDropdowns(franchiseSelect, franchises);
+        populateDropdowns(petsSelect, lists.pets);
+        populateDropdowns(sourceSelect, lists.sources);
+        populateDropdowns(weekSelect, lists.weeks);
+        populateDropdowns(monthSelect, lists.months);
+        populateDropdowns(yearSelect, lists.years);
 
         // Calculate and update metrics
         const today = formatDateToYYYYMMDD(new Date());
@@ -121,8 +140,8 @@ async function fetchAndRenderDashboardData() {
 
         let thisMonthPetsCount = 0;
         let lastMonthPetsCount = 0;
-        thisMonthAppointments.forEach(appointment => thisMonthPetsCount += (appointment.pets || 0));
-        lastMonthAppointments.forEach(appointment => lastMonthPetsCount += (appointment.pets || 0));
+        thisMonthAppointments.forEach(appointment => thisMonthPetsCount += (parseInt(appointment.pets) || 0));
+        lastMonthAppointments.forEach(appointment => lastMonthPetsCount += (parseInt(appointment.pets) || 0));
 
         let petsPercentageText;
         let petsPercentageValue;
@@ -142,7 +161,7 @@ async function fetchAndRenderDashboardData() {
         }
         document.getElementById('petsThisMonthCount').textContent = thisMonthPetsCount;
         setTextAndColor('petsThisMonthPercentage', petsPercentageText, petsPercentageValue);
-        
+
         const thisMonthClosers = [];
         thisMonthAppointments.forEach(appointment => {
             if (appointment.closer1) thisMonthClosers.push(appointment.closer1);
@@ -172,6 +191,12 @@ async function fetchAndRenderDashboardData() {
         }
         document.getElementById('bestSellerName').textContent = bestSeller;
 
+        // Set default form values
+        const currentDate = new Date().toISOString().slice(0, 10);
+        document.getElementById('data').value = currentDate;
+        document.getElementById('month').value = currentMonth;
+        document.getElementById('year').value = currentYear;
+
     } catch (error) {
         console.error('Erro ao buscar dados do painel:', error);
         // Fallback para exibir erros
@@ -188,7 +213,7 @@ async function fetchAndRenderDashboardData() {
 // Function to handle form submission
 async function handleFormSubmission(event) {
     event.preventDefault();
-    
+
     const form = event.target;
     const formData = new FormData(form);
     const data = {};
@@ -226,7 +251,7 @@ async function handleFormSubmission(event) {
             },
             body: JSON.stringify(formattedData),
         });
-        
+
         const result = await response.json();
 
         if (result.success) {
@@ -242,16 +267,8 @@ async function handleFormSubmission(event) {
 document.addEventListener('DOMContentLoaded', async () => {
     // Initial data fetch and render
     fetchAndRenderDashboardData();
-    
+
     // Set default form values
-    const today = new Date();
-    const currentMonth = today.getMonth() + 1;
-    const currentYear = today.getFullYear();
-    const currentDate = today.toISOString().slice(0, 10);
-    
-    const monthSelect = document.getElementById('month');
-    const yearSelect = document.getElementById('year');
-    const dateInput = document.getElementById('data');
     const customersInput = document.getElementById('customers');
     const codePassDisplay = document.getElementById('codePassDisplay');
     const appointmentDateInput = document.getElementById('appointmentDate');
@@ -269,13 +286,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     reminderDateInput.name = 'reminderDate';
     document.getElementById('scheduleForm').appendChild(reminderDateInput);
 
-    if (monthSelect) monthSelect.value = currentMonth.toString();
-    if (yearSelect) yearSelect.value = currentYear.toString();
-    if (dateInput) dateInput.value = currentDate;
-    
     // Add event listeners
     document.getElementById('scheduleForm').addEventListener('submit', handleFormSubmission);
-    
+
     appointmentDateInput.addEventListener('input', (event) => {
         const appointmentDateValue = event.target.value;
         if (appointmentDateValue) {
