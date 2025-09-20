@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             let reminderClasses = 'p-4';
 
             if (reminderDate < today) {
-                reminderDisplay = `<span class="text-green-600 font-medium">Enviar Reminder</span>`;
+                reminderDisplay = `<span class="text-green-600 font-medium">Enviar</span>`;
                 reminderClasses = 'p-4'; 
             }
             
