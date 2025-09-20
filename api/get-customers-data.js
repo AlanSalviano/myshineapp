@@ -1,7 +1,7 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
 import dotenv from 'dotenv';
-import { excelDateToYYYYMMDD } from '../utils.js';
+import { excelDateToYYYYMMDD } from './utils.js';
 import { SHEET_NAME_APPOINTMENTS } from './configs/sheets-config.js';
 
 dotenv.config();
@@ -26,10 +26,10 @@ export default async function handler(req, res) {
 
         const sheetAppointments = docAppointments.sheetsByTitle[SHEET_NAME_APPOINTMENTS];
         if (!sheetAppointments) {
-            console.error('Sheet "Datatest" not found.');
+            console.error(`Sheet "${SHEET_NAME_APPOINTMENTS}" not found.`);
             return res.status(404).json({ error: `Planilha "${SHEET_NAME_APPOINTMENTS}" não encontrada.` });
         }
-        console.log('Planilha "Datatest" encontrada.');
+        console.log(`Planilha "${SHEET_NAME_APPOINTMENTS}" encontrada.`);
 
         console.log('Carregando linhas da planilha...');
         const rows = await sheetAppointments.getRows();
