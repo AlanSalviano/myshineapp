@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function renderTable(data) {
         tableBody.innerHTML = '';
         if (data.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="11" class="p-4 text-center text-muted-foreground">Nenhum agendamento encontrado.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="10" class="p-4 text-center text-muted-foreground">Nenhum agendamento encontrado.</td></tr>';
             return;
         }
 
@@ -31,15 +31,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                         ${petOptions.map(num => `<option value="${num}">${num}</option>`).join('')}
                     </select>
                 </td>
-                <td class="p-4"><input type="text" value="${appointment.serviceShowed || ''}" style="width: 100px;" class="bg-transparent border border-border rounded-md px-2"></td>
-                <td class="p-4"><input type="text" value="${appointment.tips || ''}" style="width: 80px;" class="bg-transparent border border-border rounded-md px-2" placeholder="$0.00"></td>
+                <td class="p-4"><input type="text" value="${appointment['Service Showed'] || ''}" style="width: 100px;" class="bg-transparent border border-border rounded-md px-2"></td>
+                <td class="p-4"><input type="text" value="${appointment.Tips || ''}" style="width: 80px;" class="bg-transparent border border-border rounded-md px-2" placeholder="$0.00"></td>
                 <td class="p-4">
                     <select style="width: 120px;" class="bg-transparent border border-border rounded-md px-2">
                         <option value="">Select...</option>
                         ${paymentOptions.map(option => `<option value="${option}">${option}</option>`).join('')}
                     </select>
                 </td>
-                <td class="p-4"><input type="text" value="${appointment.paymentId || ''}" style="width: 100px;" class="bg-transparent border border-border rounded-md px-2"></td>
                 <td class="p-4">
                     <select style="width: 100px;" class="bg-transparent border border-border rounded-md px-2">
                         <option value="">Select...</option>
@@ -85,7 +84,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         } catch (error) {
             console.error('Error fetching data:', error);
-            tableBody.innerHTML = '<tr><td colspan="11" class="p-4 text-center text-red-600">Erro ao carregar dados. Tente novamente.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="10" class="p-4 text-center text-red-600">Erro ao carregar dados. Tente novamente.</td></tr>';
         }
     }
 
@@ -94,7 +93,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (event.target.classList.contains('save-btn')) {
             const row = event.target.closest('tr');
             
-            const code = row.querySelector('.code-cell').textContent;
+            const code = row.querySelector('.code-cell').textContent.trim();
             const inputs = row.querySelectorAll('input');
             const selects = row.querySelectorAll('select');
 
@@ -105,7 +104,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 serviceShowed: inputs[1].value,
                 tips: inputs[2].value,
                 paymentMethod: selects[1].value,
-                paymentId: inputs[3].value,
                 verification: selects[2].value,
             };
 
