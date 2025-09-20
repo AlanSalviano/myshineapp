@@ -24,9 +24,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td class="p-4">${appointment.appointmentDate}</td>
                 <td class="p-4">${appointment.customers}</td>
                 <td class="p-4 code-cell">${appointment.code}</td>
-                <td class="p-4"><input type="text" style="width: 100px;" class="bg-transparent border border-border rounded-md px-2"></td>
+                <td class="p-4"><input type="text" value="${appointment.Technician || ''}" style="width: 100px;" class="bg-transparent border border-border rounded-md px-2"></td>
                 <td class="p-4">
                     <select style="width: 60px;" class="bg-transparent border border-border rounded-md px-2">
+                        <option value="">Pets...</option>
                         ${petOptions.map(num => `<option value="${num}">${num}</option>`).join('')}
                     </select>
                 </td>
@@ -52,22 +53,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // Preenche os valores iniciais dos dropdowns, se existirem
             const petSelect = row.querySelector('select:nth-of-type(1)');
-            if (appointment.pets) {
-                petSelect.value = appointment.pets;
+            if (appointment['Pet Showed']) {
+                petSelect.value = appointment['Pet Showed'];
             }
-
+            
             const paymentSelect = row.querySelector('select:nth-of-type(2)');
-            if (appointment.paymentMethod) {
-                paymentSelect.value = appointment.paymentMethod;
+            if (appointment['Payment Method']) {
+                paymentSelect.value = appointment['Payment Method'];
             }
             
             const verificationSelect = row.querySelector('select:nth-of-type(3)');
-            if (appointment.verification) {
-                verificationSelect.value = appointment.verification;
+            if (appointment.Verification) {
+                verificationSelect.value = appointment.Verification;
             }
 
-            row.querySelector('input:nth-of-type(1)').value = appointment.technician || '';
-            
             tableBody.appendChild(row);
         });
     }
