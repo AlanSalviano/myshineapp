@@ -12,8 +12,8 @@ const serviceAccountAuth = new JWT({
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
 });
 
-const SPREADSHEET_ID_APPOINTMENTS = '1nwC53lk48RfU0hOk9605G7ZCfe67tw4o-RBNS9XNfWA';
-const SPREADSHEET_ID_DATA = '1kEIg8Le1nq9etQrTu162RIMSJYaCoioLLpFVg6yKBgg';
+const SPREADSHEET_ID_APPOINTMENTS = process.env.SHEET_ID_APPOINTMENTS;
+const SPREADSHEET_ID_DATA = process.env.SHEET_ID_DATA;
 
 export default async function handler(req, res) {
     res.setHeader('Content-Type', 'application/json');
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
 
     try {
         const docAppointments = new GoogleSpreadsheet(SPREADSHEET_ID_APPOINTMENTS, serviceAccountAuth);
-        const docData = new GoogleSpreadsheet(SPREADSPREADSHEET_ID_DATA, serviceAccountAuth);
+        const docData = new GoogleSpreadsheet(SPREADSHEET_ID_DATA, serviceAccountAuth);
 
         await Promise.all([docAppointments.loadInfo(), docData.loadInfo()]);
 
