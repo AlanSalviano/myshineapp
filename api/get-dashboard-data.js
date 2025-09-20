@@ -1,7 +1,8 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
 import dotenv from 'dotenv';
-import { excelDateToYYYYMMDD } from './utils.js';
+import { excelDateToYYYYMMDD } from '../utils.js';
+import { SHEET_NAME_APPOINTMENTS } from './configs/sheets-config.js';
 
 dotenv.config();
 
@@ -20,11 +21,11 @@ export default async function handler(req, res) {
 
     try {
         const docAppointments = new GoogleSpreadsheet(SPREADSHEET_ID_APPOINTMENTS, serviceAccountAuth);
-        const docData = new GoogleSpreadsheet(SPREADSHEET_ID_DATA, serviceAccountAuth);
+        const docData = new GoogleSpreadsheet(SPREADSPREADSHEET_ID_DATA, serviceAccountAuth);
 
         await Promise.all([docAppointments.loadInfo(), docData.loadInfo()]);
 
-        const sheetAppointments = docAppointments.sheetsByTitle['Datatest'];
+        const sheetAppointments = docAppointments.sheetsByTitle[SHEET_NAME_APPOINTMENTS];
         const sheetEmployees = docData.sheetsByTitle['Employees'];
         const sheetFranchises = docData.sheetsByTitle['Regions'];
 
