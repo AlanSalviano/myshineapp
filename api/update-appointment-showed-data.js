@@ -34,7 +34,8 @@ export default async function handler(req, res) {
         }
 
         const rows = await sheet.getRows();
-        const rowToUpdate = rows.find(row => row.code === code);
+        const codeToFind = code.trim(); // Remove espaços em branco
+        const rowToUpdate = rows.find(row => row.Code.trim() === codeToFind);
 
         if (!rowToUpdate) {
             return res.status(404).json({ success: false, message: 'Agendamento não encontrado.' });
