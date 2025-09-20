@@ -35,53 +35,36 @@ export default async function handler(req, res) {
         const rows = await sheetAppointments.getRows();
         console.log(`Encontradas ${rows.length} linhas.`);
 
-        if (rows.length === 0) {
-            return res.status(200).json({ customers: [] });
+        if (rows.length > 0) {
+            console.log('Dados da primeira linha:', rows[0]._rawData);
         }
-        
-        console.log('Dados da primeira linha:', rows[0]._rawData);
-
-        // Mapeamento dinâmico dos nomes das colunas para os índices do array _rawData
-        const headerRow = sheetAppointments.headerValues;
-        const headersToIndex = {};
-        headerRow.forEach((header, index) => {
-            headersToIndex[header] = index;
-        });
 
         const customers = rows.map(row => {
-            const getCellValue = (header) => {
-                const index = headersToIndex[header];
-                if (index !== undefined && row._rawData.length > index) {
-                    return row._rawData[index];
-                }
-                return '';
-            };
-
             const customerData = {
-                type: getCellValue('Type'),
-                date: excelDateToYYYYMMDD(getCellValue('Date')),
-                pets: getCellValue('Pets'),
-                closer1: getCellValue('Closer (1)'),
-                closer2: getCellValue('Closer (2)'),
-                customers: getCellValue('Customers'),
-                phone: getCellValue('Phone'),
-                oldNew: getCellValue('Old/New'),
-                appointmentDate: excelDateToYYYYMMDD(getCellValue('Date (Appointment)')),
-                serviceValue: getCellValue('Service Value'),
-                franchise: getCellValue('Franchise'),
-                city: getCellValue('City'),
-                source: getCellValue('Source'),
-                week: getCellValue('Week'),
-                month: getCellValue('Month'),
-                year: getCellValue('Year'),
-                code: getCellValue('Code'),
-                reminderDate: excelDateToYYYYMMDD(getCellValue('Reminder Date')),
-                technician: getCellValue('Technician'),
-                petShowed: getCellValue('Pet Showed'),
-                serviceShowed: getCellValue('Service Showed'),
-                tips: getCellValue('Tips'),
-                paymentMethod: getCellValue('Payment Method'),
-                verification: getCellValue('Verification')
+                type: row.Type || '',
+                date: excelDateToYYYYMMDD(row.Date),
+                pets: row.Pets || '',
+                closer1: row['Closer (1)'] || '',
+                closer2: row['Closer (2)'] || '',
+                customers: row.Customers || '',
+                phone: row.Phone || '',
+                oldNew: row['Old/New'] || '',
+                appointmentDate: excelDateToYYYYMMDD(row['Date (Appointment)']),
+                serviceValue: row['Service Value'] || '',
+                franchise: row.Franchise || '',
+                city: row.City || '',
+                source: row.Source || '',
+                week: row.Week || '',
+                month: row.Month || '',
+                year: row.Year || '',
+                code: row.Code || '',
+                reminderDate: excelDateToYYYYMMDD(row['Reminder Date']),
+                technician: row.Technician || '',
+                petShowed: row['Pet Showed'] || '',
+                serviceShowed: row['Service Showed'] || '',
+                tips: row.Tips || '',
+                paymentMethod: row.Method || '', // Correção: Mapeado para Method
+                verification: row.Verification || ''
             };
             return customerData;
         });
