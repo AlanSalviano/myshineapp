@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function renderTable(data) {
         tableBody.innerHTML = ''; // Clear the table
         if (data.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="13" class="p-4 text-center text-muted-foreground">Nenhum cliente encontrado.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="12" class="p-4 text-center text-muted-foreground">Nenhum cliente encontrado.</td></tr>';
             totalAppointmentsCount.textContent = 0;
             totalPetsCount.textContent = 0;
             return;
@@ -80,7 +80,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td class="p-4">${customer.serviceValue}</td>
                 <td class="p-4">${customer.franchise}</td>
                 <td class="p-4">${customer.month}</td>
-                <td class="p-4">${customer.year}</td>
                 <td class="p-4">${customer.code}</td>
                 <td class="${reminderClasses}">${reminderDisplay}</td>
             `;
@@ -168,7 +167,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         } catch (error) {
             console.error('Error fetching customer data:', error);
-            tableBody.innerHTML = '<tr><td colspan="13" class="p-4 text-center text-red-600">Erro ao carregar dados. Tente novamente.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="12" class="p-4 text-center text-red-600">Erro ao carregar dados. Tente novamente.</td></tr>';
         }
     }
 
