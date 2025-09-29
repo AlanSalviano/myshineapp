@@ -1,4 +1,4 @@
-// public/manage-showed.js
+// alansalviano/myshineapp/myshineapp-db2432304fc990c3e93b2326d7faa293e6a13b38/public/manage-showed.js
 
 document.addEventListener('DOMContentLoaded', async () => {
     const tableBody = document.getElementById('showed-table-body');
@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Opções para os dropdowns
     const petOptions = Array.from({ length: 10 }, (_, i) => i + 1);
+    const percentageOptions = ["20%", "25%"];
     const paymentOptions = ["Check", "American Express", "Apple Pay", "Discover", "Master Card", "Visa", "Zelle", "Cash", "Invoice"];
     const verificationOptions = ["Showed", "Canceled"];
 
@@ -52,6 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         let totalCustomers = data.length;
 
         if (data.length === 0) {
+            // Colspan ajustado para 10 (9 colunas de dados + 1 de Ações)
             tableBody.innerHTML = '<tr><td colspan="10" class="p-4 text-center text-muted-foreground">Nenhum agendamento encontrado.</td></tr>';
         } else {
             data.forEach((appointment) => {
@@ -69,7 +71,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 row.innerHTML = `
                     <td class="p-4">${appointment.date}</td>
                     <td class="p-4">${appointment.customers}</td>
-                    <td class="p-4 code-cell">${appointment.code}</td>
                     <td class="p-4"><input type="text" value="${appointment.technician || ''}" style="width: 100px;" class="bg-transparent border border-border rounded-md px-2"></td>
                     <td class="p-4">
                         <select style="width: 60px;" class="bg-transparent border border-border rounded-md px-2">
@@ -79,6 +80,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </td>
                     <td class="p-4"><input type="text" value="${appointment.serviceShowed || ''}" style="width: 100px;" class="bg-transparent border border-border rounded-md px-2"></td>
                     <td class="p-4"><input type="text" value="${appointment.tips || ''}" style="width: 80px;" class="bg-transparent border border-border rounded-md px-2" placeholder="$0.00"></td>
+                    <td class="p-4">
+                        <select style="width: 80px;" class="bg-transparent border border-border rounded-md px-2">
+                            <option value="">%</option>
+                            ${percentageOptions.map(option => `<option value="${option}" ${appointment.percentage === option ? 'selected' : ''}>${option}</option>`).join('')}
+                        </select>
+                    </td>
                     <td class="p-4">
                         <select style="width: 120px;" class="bg-transparent border border-border rounded-md px-2">
                             <option value="">Select...</option>
@@ -175,14 +182,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             const inputs = row.querySelectorAll('input');
             const selects = row.querySelectorAll('select');
 
+            // Índices dos elementos na linha da tabela:
+            // inputs: [0] technician, [1] serviceShowed, [2] tips
+            // selects: [0] petShowed, [1] percentage, [2] paymentMethod, [3] verification
+
             const rowData = {
                 rowIndex: parseInt(sheetRowNumber, 10),
                 technician: inputs[0].value,
                 petShowed: selects[0].value,
                 serviceShowed: inputs[1].value,
                 tips: inputs[2].value,
-                paymentMethod: selects[1].value,
-                verification: selects[2].value,
+                percentage: selects[1].value, // NOVO CAMPO
+                paymentMethod: selects[2].value,
+                verification: selects[3].value,
             };
 
             try {
