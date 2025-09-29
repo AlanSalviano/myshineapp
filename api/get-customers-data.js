@@ -1,3 +1,4 @@
+// alansalviano/myshineapp/myshineapp-db2432304fc990c3e93b2326d7faa293e6a13b38/api/get-customers-data.js
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
 import dotenv from 'dotenv';
@@ -73,12 +74,13 @@ export default async function handler(req, res) {
                 week: getCellValue('Week'),
                 month: getCellValue('Month'),
                 year: getCellValue('Year'),
-                code: getCellValue('Code'),
+                code: getCellValue('Code'), // MANTER O CÓDIGO
                 reminderDate: excelDateToYYYYMMDD(getCellValue('Reminder Date')),
                 technician: getCellValue('Technician'),
                 petShowed: getCellValue('Pet Showed'),
                 serviceShowed: getCellValue('Service Showed'),
                 tips: getCellValue('Tips'),
+                percentage: getCellValue('Percentage'), // ADICIONAR PERCENTAGE
                 paymentMethod: getCellValue('Method'),
                 verification: getCellValue('Verification'),
                 sheetRowNumber: row.rowNumber
