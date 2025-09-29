@@ -190,9 +190,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 rowIndex: parseInt(sheetRowNumber, 10),
                 technician: inputs[0].value,
                 petShowed: selects[0].value,
-                serviceShowed: inputs[1].value,
+                serviceShowed: inputs[1].value, 
                 tips: inputs[2].value,
-                percentage: selects[1].value, // NOVO CAMPO
+                percentage: selects[1].value, 
                 paymentMethod: selects[2].value,
                 verification: selects[3].value,
             };
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
                 const result = await response.json();
                 if (result.success) {
-                    alert('Dados atualizados com sucesso!');
+                    alert('Dados e cálculo de "To Pay" atualizados com sucesso!');
                     initPage(); // Recarrega a tabela para mostrar os dados atualizados
                 } else {
                     alert(`Erro ao salvar: ${result.message}`);
