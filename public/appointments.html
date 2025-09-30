@@ -241,4 +241,77 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin w-4 h-4"><path d="M12 2a8 8 0 0 1 8 8c0 5.46-7 12-8 12s-8-6.54-8-12a8 8 0 0 1 8-8z"/><circle cx="12" cy="10" r="3"/></svg>
                                         City
                                     </label>
-                                    <input type="text" id="city" name="city" required class="mt-1 block w-full h-12 rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus
+                                    <input type="text" id="city" name="city" required class="mt-1 block w-full h-12 rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" placeholder="City name">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                <div class="space-y-2">
+                                    <label for="source" class="block text-sm font-semibold text-foreground">Source</label>
+                                    <select id="source" name="source" required class="mt-1 block w-full h-12 rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                        <option value="">Select source</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-2">
+                                    <label for="week" class="block text-sm font-semibold text-foreground">Week</label>
+                                    <select id="week" name="week" class="mt-1 block w-full h-12 rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                        <option value="">Select week</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-2">
+                                    <label for="month" class="block text-sm font-semibold text-foreground">Month</label>
+                                    <select id="month" name="month" required class="mt-1 block w-full h-12 rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                        <option value="">Select month</option>
+                                    </select>
+                                </div>
+                                <div class="space-y-2">
+                                    <label for="year" class="block text-sm font-semibold text-foreground">Year</label>
+                                    <select id="year" name="year" required class="mt-1 block w-full h-12 rounded-xl border-2 border-border hover:border-brand-primary transition-colors bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                        <option value="">Select year</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-1 rounded-lg border bg-card text-card-foreground shadow-large bg-gradient-subtle h-fit sticky top-8">
+                    <div class="flex flex-col space-y-1.5 p-6 pb-6 text-center">
+                        <h3 class="text-xl font-bold text-foreground">Appointment Details</h3>
+                    </div>
+                    <div class="p-6 pt-0 space-y-8">
+                        <div class="text-center space-y-4">
+                            <div class="flex items-center justify-center gap-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hash w-4 h-4"><line x1="4" x2="20" y1="9" y2="9"/><line x1="4" x2="20" y1="15" y2="15"/><line x1="10" x2="14" y1="3" y2="21"/></svg>
+                                Confirmation Code
+                            </div>
+                            <div class="relative">
+                                <div id="codePassDisplay" class="h-20 bg-gradient-secondary rounded-2xl flex items-center justify-center shadow-medium border-2 border-brand-secondary/20 text-3xl font-bold text-foreground tracking-wider font-mono">
+                                    --/--/----
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center space-y-4">
+                            <div class="flex items-center justify-center gap-2 text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell w-4 h-4"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                                Reminder Date
+                            </div>
+                            <div class="relative">
+                                <div id="reminderDateDisplay" class="h-20 bg-gradient-secondary rounded-2xl flex items-center justify-center shadow-medium border-2 border-brand-secondary/20 text-3xl font-bold text-foreground tracking-wider font-mono">
+                                    --/--/----
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-4">
+                            <button type="submit" form="scheduleForm" class="w-full flex justify-center inline-flex items-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold ring-offset-background transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-14 rounded-xl px-8 text-base font-bold bg-gradient-primary text-white hover:shadow-brand hover:-translate-y-0.5 transform transition-all duration-300">
+                                Register Appointment
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="dashboard.js"></script>
+</body>
+</html>
