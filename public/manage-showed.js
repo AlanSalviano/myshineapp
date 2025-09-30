@@ -240,18 +240,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             const inputs = row.querySelectorAll('input');
             const selects = row.querySelectorAll('select');
             
-            // Mapeamento dos elementos de entrada e seleção atualizado:
+            // Mapeamento dos elementos de entrada e seleção:
             // inputs: [0] appointmentDate (Date), [1] serviceShowed (Text), [2] tips (Text)
             // selects: [0] technician (Dropdown), [1] petShowed (Dropdown), [2] percentage (Dropdown), [3] paymentMethod (Dropdown), [4] verification (Dropdown)
 
             const rowData = {
                 rowIndex: parseInt(sheetRowNumber, 10),
                 appointmentDate: inputs[0].value, 
-                // customers é ignorado no envio, pois não é editável, mas deve ser mantido no backend se a planilha exigir
-                technician: selects[0].value, // Technician é o primeiro select
+                // customers: inputs[1].value (Customers is non-editable, so we don't send it or rely on its index)
+                technician: selects[0].value, 
                 petShowed: selects[1].value,
-                serviceShowed: inputs[1].value, // Service Showed é o segundo input
-                tips: inputs[2].value, // Tips é o terceiro input
+                serviceShowed: inputs[1].value, 
+                tips: inputs[2].value, 
                 percentage: selects[2].value, 
                 paymentMethod: selects[3].value,
                 verification: selects[4].value,
