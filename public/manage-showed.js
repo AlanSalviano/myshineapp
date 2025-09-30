@@ -1,4 +1,4 @@
-// public/manage-showed.js
+// alansalviano/myshineapp/myshineapp-db2432304fc990c3e93b2326d7faa293e6a13b38/public/manage-showed.js
 
 document.addEventListener('DOMContentLoaded', async () => {
     const tableBody = document.getElementById('showed-table-body');
@@ -60,8 +60,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         let totalCustomers = data.length;
 
         if (data.length === 0) {
-            // Colspan ajustado para 10 (9 colunas de dados + 1 de Ações)
-            tableBody.innerHTML = '<tr><td colspan="10" class="p-4 text-center text-muted-foreground">Nenhum agendamento encontrado.</td></tr>';
+            // Colspan ajustado para 11
+            tableBody.innerHTML = '<tr><td colspan="11" class="p-4 text-center text-muted-foreground">Nenhum agendamento encontrado.</td></tr>';
         } else {
             data.forEach((appointment) => {
                 const row = document.createElement('tr');
@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 row.innerHTML = `
                     <td class="p-4"><input type="date" value="${formatDateForInput(appointment.appointmentDate)}" style="width: 130px;" class="bg-transparent border border-border rounded-md px-2 date-input"></td>
                     <td class="p-4">${appointment.customers}</td>
+                    <td class="p-4 code-cell">${appointment.code}</td>
                     <td class="p-4"><input type="text" value="${appointment.technician || ''}" style="width: 100px;" class="bg-transparent border border-border rounded-md px-2"></td>
                     <td class="p-4">
                         <select style="width: 60px;" class="bg-transparent border border-border rounded-md px-2">
@@ -177,7 +178,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderTableAndCards(allAppointmentsData);
         } catch (error) {
             console.error('Error fetching data:', error);
-            tableBody.innerHTML = '<tr><td colspan="10" class="p-4 text-center text-red-600">Erro ao carregar dados. Tente novamente.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="11" class="p-4 text-center text-red-600">Erro ao carregar dados. Tente novamente.</td></tr>';
         }
     }
 
@@ -190,7 +191,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const inputs = row.querySelectorAll('input');
             const selects = row.querySelectorAll('select');
 
-            // Mapeamento dos elementos de entrada e seleção atualizado:
+            // Mapeamento dos elementos de entrada e seleção:
             // inputs: [0] appointmentDate, [1] technician, [2] serviceShowed, [3] tips
             // selects: [0] petShowed, [1] percentage, [2] paymentMethod, [3] verification
 
