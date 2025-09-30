@@ -64,16 +64,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Colspan ajustado para 11
             tableBody.innerHTML = '<tr><td colspan="11" class="p-4 text-center text-muted-foreground">Nenhum agendamento encontrado.</td></tr>';
         } else {
-            // Cria as opções do dropdown de Customers (usando a lista de Employees)
-            const customerDropdownOptions = allEmployees.map(name => {
-                // Trunca o nome do cliente para o valor a ser exibido no dropdown (max 18 chars)
+            // O cliente atual (appointment.customers) é usado para selecionar o valor correto no dropdown.
+            const employeeOptionsMap = allEmployees.map(name => {
                 const displayCustomers = name.length > 18 
                     ? name.substring(0, 15) + '...'
                     : name;
-                // O valor real da opção é o nome completo, o texto exibido é o truncado
-                return `<option value="${name}" ${appointment.customers === name ? 'selected' : ''}>${displayCustomers}</option>`;
-            }).join('');
-            
+                return { value: name, display: displayCustomers };
+            });
+
             data.forEach((appointment) => {
                 const row = document.createElement('tr');
                 row.classList.add('border-b', 'border-border', 'hover:bg-muted/50', 'transition-colors');
@@ -86,22 +84,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 totalServiceValue += serviceValue;
                 totalTipsValue += tipsValue;
 
-                // O cliente atual (appointment.customers) é usado para selecionar o valor correto no dropdown.
                 const currentCustomerValue = appointment.customers || '';
 
-                // O elemento de Customer agora é um <select>
                 const customerDropdown = `
                     <select style="width: 130px;" class="bg-transparent border border-border rounded-md px-2">
                         <option value="">Select...</option>
-                        ${allEmployees.map(name => {
-                            const displayCustomers = name.length > 18 
-                                ? name.substring(0, 15) + '...'
-                                : name;
-                            return `<option value="${name}" ${currentCustomerValue === name ? 'selected' : ''}>${displayCustomers}</option>`;
-                        }).join('')}
+                        ${employeeOptionsMap.map(option => `
+                            <option value="${option.value}" ${currentCustomerValue === option.value ? 'selected' : ''}>
+                                ${option.display}
+                            </option>
+                        `).join('')}
                     </select>
                 `;
-
+                
                 row.innerHTML = `
                     <td class="p-4"><input type="date" value="${formatDateForInput(appointment.appointmentDate)}" style="width: 130px;" class="bg-transparent border border-border rounded-md px-2 date-input"></td>
                     <td class="p-4">${customerDropdown}</td>
@@ -191,23 +186,30 @@ document.addEventListener('DOMContentLoaded', async () => {
                 fetch('/api/get-dashboard-data') // Traz a lista de employees/customers
             ]);
 
+            // 1. Check main data fetch and safely extract error info if status is bad
             if (!customersResponse.ok) {
-                throw new Error('Failed to load appointment data.');
+                let errorDetails = 'Falha ao carregar dados de agendamentos.';
+                try {
+                    const errorJson = await customersResponse.json();
+                    errorDetails = errorJson.error || errorDetails;
+                } catch (e) {
+                    errorDetails = `Falha ao carregar dados de agendamentos. Status: ${customersResponse.status}.`;
+                }
+                throw new Error(errorDetails);
             }
             
             const customersData = await customersResponse.json();
             allAppointmentsData = customersData.customers;
             
-            // Tenta carregar a lista de funcionários/clientes
-            if (dashboardResponse.ok) {
+            // 2. Safely process dashboard data for employees
+            if (dashboardResponse.ok) { 
                 const dashboardData = await dashboardResponse.json();
                 // Assumindo que dashboardData.employees contém a lista de nomes A2:A da aba Employees
                 allEmployees = dashboardData.employees || []; 
             } else {
-                console.warn('Failed to load dashboard data (employees/franchises). Proceeding without employee list.');
+                console.warn(`Failed to load dashboard data. Status: ${dashboardResponse.status}. Proceeding without employee list.`);
                 allEmployees = [];
             }
-
 
             // Popula o dropdown de técnicos para o filtro
             const technicians = new Set();
@@ -219,7 +221,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderTableAndCards(allAppointmentsData);
         } catch (error) {
             console.error('Error fetching data:', error);
-            tableBody.innerHTML = '<tr><td colspan="11" class="p-4 text-center text-red-600">Erro ao carregar dados. Tente novamente.</td></tr>';
+            const errorMessage = `Erro ao carregar dados. Detalhes: ${error.message}. Tente novamente.`;
+            tableBody.innerHTML = `<tr><td colspan="11" class="p-4 text-center text-red-600">${errorMessage}</td></tr>`;
         }
     }
 
@@ -231,15 +234,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const inputs = row.querySelectorAll('input');
             const selects = row.querySelectorAll('select');
-
-            // Mapeamento dos elementos de entrada e seleção atualizado:
+            
+            // Mapeamento dos elementos de entrada e seleção:
             // inputs: [0] appointmentDate, [1] technician, [2] serviceShowed, [3] tips
             // selects: [0] customers, [1] petShowed, [2] percentage, [3] paymentMethod, [4] verification
 
             const rowData = {
                 rowIndex: parseInt(sheetRowNumber, 10),
                 appointmentDate: inputs[0].value, 
-                customers: selects[0].value, // NOVO: Campo Customers é o primeiro select
+                customers: selects[0].value, // Customers é o primeiro select
                 technician: inputs[1].value,
                 petShowed: selects[1].value,
                 serviceShowed: inputs[2].value, 
