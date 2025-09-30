@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const verificationFilter = document.getElementById('verification-filter');
 
     let allAppointmentsData = [];
-    let allEmployees = []; // Array para armazenar os nomes dos funcionários/customers
+    let allEmployees = []; // Array para armazenar os nomes dos funcionários/technicians
 
     // Opções para os dropdowns
     const petOptions = Array.from({ length: 10 }, (_, i) => i + 1);
@@ -64,12 +64,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Colspan ajustado para 11
             tableBody.innerHTML = '<tr><td colspan="11" class="p-4 text-center text-muted-foreground">Nenhum agendamento encontrado.</td></tr>';
         } else {
-            // O cliente atual (appointment.customers) é usado para selecionar o valor correto no dropdown.
-            const employeeOptionsMap = allEmployees.map(name => {
-                const displayCustomers = name.length > 18 
+            // Cria o mapeamento das opções de Technician (Employee)
+            const technicianOptionsMap = allEmployees.map(name => {
+                const displayTechnician = name.length > 18 
                     ? name.substring(0, 15) + '...'
                     : name;
-                return { value: name, display: displayCustomers };
+                return { value: name, display: displayTechnician };
             });
 
             data.forEach((appointment) => {
@@ -84,24 +84,29 @@ document.addEventListener('DOMContentLoaded', async () => {
                 totalServiceValue += serviceValue;
                 totalTipsValue += tipsValue;
 
-                const currentCustomerValue = appointment.customers || '';
-
-                const customerDropdown = `
+                // Lógica para truncar o nome do cliente a 18 caracteres
+                const customerName = appointment.customers || '';
+                const truncatedCustomers = customerName.length > 18 
+                    ? customerName.substring(0, 15) + '...'
+                    : customerName;
+                    
+                // O elemento de Technician agora é um <select>
+                const technicianDropdown = `
                     <select style="width: 130px;" class="bg-transparent border border-border rounded-md px-2">
-                        <option value="">Select...</option>
-                        ${employeeOptionsMap.map(option => `
-                            <option value="${option.value}" ${currentCustomerValue === option.value ? 'selected' : ''}>
+                        <option value="">Select Technician</option>
+                        ${technicianOptionsMap.map(option => `
+                            <option value="${option.value}" ${appointment.technician === option.value ? 'selected' : ''}>
                                 ${option.display}
                             </option>
                         `).join('')}
                     </select>
                 `;
-                
+
                 row.innerHTML = `
                     <td class="p-4"><input type="date" value="${formatDateForInput(appointment.appointmentDate)}" style="width: 130px;" class="bg-transparent border border-border rounded-md px-2 date-input"></td>
-                    <td class="p-4">${customerDropdown}</td>
+                    <td class="p-4">${truncatedCustomers}</td>
                     <td class="p-4 code-cell">${appointment.code}</td>
-                    <td class="p-4"><input type="text" value="${appointment.technician || ''}" style="width: 100px;" class="bg-transparent border border-border rounded-md px-2"></td>
+                    <td class="p-4">${technicianDropdown}</td>
                     <td class="p-4">
                         <select style="width: 60px;" class="bg-transparent border border-border rounded-md px-2">
                             <option value="">Pets...</option>
@@ -183,7 +188,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const [customersResponse, dashboardResponse] = await Promise.all([
                 fetch('/api/get-customers-data', { cache: 'no-store' }),
-                fetch('/api/get-dashboard-data') // Traz a lista de employees/customers
+                fetch('/api/get-dashboard-data') // Traz a lista de employees/technicians
             ]);
 
             // 1. Check main data fetch and safely extract error info if status is bad
@@ -235,18 +240,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             const inputs = row.querySelectorAll('input');
             const selects = row.querySelectorAll('select');
             
-            // Mapeamento dos elementos de entrada e seleção:
-            // inputs: [0] appointmentDate, [1] technician, [2] serviceShowed, [3] tips
-            // selects: [0] customers, [1] petShowed, [2] percentage, [3] paymentMethod, [4] verification
+            // Mapeamento dos elementos de entrada e seleção atualizado:
+            // inputs: [0] appointmentDate (Date), [1] serviceShowed (Text), [2] tips (Text)
+            // selects: [0] technician (Dropdown), [1] petShowed (Dropdown), [2] percentage (Dropdown), [3] paymentMethod (Dropdown), [4] verification (Dropdown)
 
             const rowData = {
                 rowIndex: parseInt(sheetRowNumber, 10),
                 appointmentDate: inputs[0].value, 
-                customers: selects[0].value, // Customers é o primeiro select
-                technician: inputs[1].value,
+                // customers é ignorado no envio, pois não é editável, mas deve ser mantido no backend se a planilha exigir
+                technician: selects[0].value, // Technician é o primeiro select
                 petShowed: selects[1].value,
-                serviceShowed: inputs[2].value, 
-                tips: inputs[3].value,
+                serviceShowed: inputs[1].value, // Service Showed é o segundo input
+                tips: inputs[2].value, // Tips é o terceiro input
                 percentage: selects[2].value, 
                 paymentMethod: selects[3].value,
                 verification: selects[4].value,
