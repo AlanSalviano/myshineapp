@@ -1,4 +1,4 @@
-// alansalviano/myshineapp/myshineapp-db2432304fc990c3e93b2326d7faa293e6a13b38/public/manage-showed.js
+// public/manage-showed.js
 
 document.addEventListener('DOMContentLoaded', async () => {
     const tableBody = document.getElementById('showed-table-body');
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 totalTipsValue += tipsValue;
 
                 row.innerHTML = `
-                    <td class="p-4">${appointment.date}</td>
+                    <td class="p-4">${appointment.appointmentDate}</td>
                     <td class="p-4">${appointment.customers}</td>
                     <td class="p-4"><input type="text" value="${appointment.technician || ''}" style="width: 100px;" class="bg-transparent border border-border rounded-md px-2"></td>
                     <td class="p-4">
@@ -124,7 +124,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const selectedVerification = verificationFilter.value.toLowerCase();
 
         const filteredData = allAppointmentsData.filter(appointment => {
-            const appointmentDate = new Date(appointment.date.split('/').reverse().join('-'));
+            // Usa a data do agendamento para filtros de data
+            const appointmentDate = new Date(appointment.appointmentDate.split('/').reverse().join('-'));
 
             const matchesCustomers = searchTermCustomers === '' || 
                                      (appointment.customers && appointment.customers.toLowerCase().includes(searchTermCustomers));
@@ -182,7 +183,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const inputs = row.querySelectorAll('input');
             const selects = row.querySelectorAll('select');
 
-            // Índices dos elementos na linha da tabela:
+            // Mapeamento dos elementos de entrada e seleção:
             // inputs: [0] technician, [1] serviceShowed, [2] tips
             // selects: [0] petShowed, [1] percentage, [2] paymentMethod, [3] verification
 
