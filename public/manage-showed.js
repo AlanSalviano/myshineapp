@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const verificationFilter = document.getElementById('verification-filter');
 
     let allAppointmentsData = [];
-    let allEmployees = []; // Array para armazenar os nomes dos funcionários/technicians
+    let allTechnician = []; // Array para armazenar os nomes dos funcionários/technicians
 
     // Opções para os dropdowns
     const petOptions = Array.from({ length: 10 }, (_, i) => i + 1);
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             tableBody.innerHTML = '<tr><td colspan="11" class="p-4 text-center text-muted-foreground">Nenhum agendamento encontrado.</td></tr>';
         } else {
             // Cria o mapeamento das opções de Technician (Employee)
-            const technicianOptionsMap = allEmployees.map(name => {
+            const technicianOptionsMap = all.map(name => {
                 const displayTechnician = name.length > 18 
                     ? name.substring(0, 15) + '...'
                     : name;
@@ -210,10 +210,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (dashboardResponse.ok) { 
                 const dashboardData = await dashboardResponse.json();
                 // Assumindo que dashboardData.employees contém a lista de nomes A2:A da aba Employees
-                allEmployees = dashboardData.employees || []; 
+                allTechnician = dashboardData.technician || []; 
             } else {
                 console.warn(`Failed to load dashboard data. Status: ${dashboardResponse.status}. Proceeding without employee list.`);
-                allEmployees = [];
+                allTechnicians = [];
             }
 
             // Popula o dropdown de técnicos para o filtro
