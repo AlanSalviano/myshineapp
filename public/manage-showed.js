@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const verificationFilter = document.getElementById('verification-filter');
 
     let allAppointmentsData = [];
-    let allEmployees = []; // Array para armazenar os nomes dos funcionários/technicians
-
+    let allTechnicians = []; // Renomeado para Technicians
+    
     // Opções para os dropdowns
     const petOptions = Array.from({ length: 10 }, (_, i) => i + 1);
     const percentageOptions = ["20%", "25%"];
@@ -64,8 +64,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Colspan ajustado para 11
             tableBody.innerHTML = '<tr><td colspan="11" class="p-4 text-center text-muted-foreground">Nenhum agendamento encontrado.</td></tr>';
         } else {
-            // Cria o mapeamento das opções de Technician (Employee)
-            const technicianOptionsMap = allEmployees.map(name => {
+            // Cria o mapeamento das opções de Technician
+            const technicianOptionsMap = allTechnicians.map(name => {
                 const displayTechnician = name.length > 18 
                     ? name.substring(0, 15) + '...'
                     : name;
@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const [customersResponse, dashboardResponse] = await Promise.all([
                 fetch('/api/get-customers-data', { cache: 'no-store' }),
-                fetch('/api/get-dashboard-data') // Traz a lista de employees/technicians
+                fetch('/api/get-dashboard-data') // Traz as listas de employees e technicians
             ]);
 
             // 1. Check main data fetch and safely extract error info if status is bad
@@ -206,14 +206,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             const customersData = await customersResponse.json();
             allAppointmentsData = customersData.customers;
             
-            // 2. Safely process dashboard data for employees
+            // 2. Safely process dashboard data for technicians list
             if (dashboardResponse.ok) { 
                 const dashboardData = await dashboardResponse.json();
-                // Assumindo que dashboardData.employees contém a lista de nomes A2:A da aba Employees
-                allEmployees = dashboardData.employees || []; 
+                // FIX: Agora usa o array 'technicians' do backend
+                allTechnicians = dashboardData.technicians || []; 
             } else {
-                console.warn(`Failed to load dashboard data. Status: ${dashboardResponse.status}. Proceeding without employee list.`);
-                allEmployees = [];
+                console.warn(`Failed to load dashboard data. Status: ${dashboardResponse.status}. Proceeding without technician list.`);
+                allTechnicians = [];
             }
 
             // Popula o dropdown de técnicos para o filtro
@@ -247,8 +247,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const rowData = {
                 rowIndex: parseInt(sheetRowNumber, 10),
                 appointmentDate: inputs[0].value, 
-                // customers: inputs[1].value (Customers is non-editable, so we don't send it or rely on its index)
-                technician: selects[0].value, 
+                // customers é ignorado
+                technician: selects[0].value, // Technician é o primeiro select
                 petShowed: selects[1].value,
                 serviceShowed: inputs[1].value, 
                 tips: inputs[2].value, 
