@@ -27,16 +27,22 @@ function parseToNumeric(value) {
     return isNaN(parsed) ? 0 : parsed;
 }
 
+// Função auxiliar para converter YYYY-MM-DD (de input HTML) para YYYY/MM/DD (para consistência na planilha)
+function formatToSheetDate(isoDate) {
+    if (!isoDate) return '';
+    return isoDate.replace(/-/g, '/');
+}
+
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ message: 'Método não permitido.' });
     }
 
     try {
-        const { rowIndex, technician, petShowed, serviceShowed, tips, percentage, paymentMethod, verification } = req.body;
+        const { rowIndex, technician, petShowed, serviceShowed, tips, percentage, paymentMethod, verification, appointmentDate } = req.body;
         
         console.log('--- Início do Processo de Atualização (Versão Final) ---');
-        console.log('Dados recebidos do frontend para atualização:', { rowIndex, technician, petShowed, serviceShowed, tips, percentage, paymentMethod, verification });
+        console.log('Dados recebidos do frontend para atualização:', { rowIndex, technician, petShowed, serviceShowed, tips, percentage, paymentMethod, verification, appointmentDate });
 
         if (rowIndex === undefined || rowIndex < 0) {
             console.error('Validation Error: O índice da linha é inválido. Valor recebido:', rowIndex);
@@ -45,9 +51,8 @@ export default async function handler(req, res) {
         
         // 1. Calculate 'To Pay'
         const serviceValue = parseToNumeric(serviceShowed);
-        // Converte "20%" ou "25%" para o decimal 0.20 ou 0.25.
         const percentageValue = parseToNumeric(percentage) / 100;
-        const tipsValue = parseToNumeric(tips); // Parse o valor de tips
+        const tipsValue = parseToNumeric(tips);
 
         let commissionValue = 0;
         if (serviceValue > 0 && percentageValue > 0) {
@@ -66,10 +71,8 @@ export default async function handler(req, res) {
             return res.status(500).json({ success: false, message: `Planilha "${SHEET_NAME_APPOINTMENTS}" não encontrada.` });
         }
         
-        // Carrega os cabeçalhos da linha para garantir o acesso correto aos nomes das colunas
         await sheet.loadHeaderRow();
 
-        // Carrega todas as células da linha específica para garantir a atualização correta.
         await sheet.loadCells(`A${rowIndex}:Z${rowIndex}`);
         
         // Mapeamento dos nomes de cabeçalho para os índices de coluna.
@@ -85,12 +88,11 @@ export default async function handler(req, res) {
                  console.warn(`Header not found: ${header}. This field will not be updated.`);
                  return null;
              }
-             // sheet.getCell usa 0-based index para linhas e colunas.
-             // rowIndex é 1-based (rowNumber), então usamos rowIndex - 1 para a linha.
              return sheet.getCell(rowIndex - 1, colIndex);
         }
 
         // Obtém e atualiza as células.
+        const appointmentDateCell = getCell('Date (Appointment)');
         const technicianCell = getCell('Technician');
         const petShowedCell = getCell('Pet Showed');
         const serviceShowedCell = getCell('Service Showed');
@@ -100,6 +102,7 @@ export default async function handler(req, res) {
         const methodCell = getCell('Method');
         const verificationCell = getCell('Verification');
 
+        if (appointmentDateCell) appointmentDateCell.value = formatToSheetDate(appointmentDate);
         if (technicianCell) technicianCell.value = technician;
         if (petShowedCell) petShowedCell.value = petShowed;
         if (serviceShowedCell) serviceShowedCell.value = serviceShowed;
@@ -109,7 +112,6 @@ export default async function handler(req, res) {
         if (verificationCell) verificationCell.value = verification;
         
         // Salva o resultado do cálculo na coluna 'To Pay'
-        // toFixed(2) é usado para formatar para duas casas decimais
         if (toPayCell) toPayCell.value = toPayValue.toFixed(2);
 
 
