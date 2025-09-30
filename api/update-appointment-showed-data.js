@@ -1,4 +1,5 @@
 // alansalviano/myshineapp/myshineapp-db2432304fc990c3e93b2326d7faa293e6a13b38/api/update-appointment-showed-data.js
+
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
 import dotenv from 'dotenv';
@@ -21,7 +22,9 @@ function parseToNumeric(value) {
     }
     // Remove R$, %, pontos (separador de milhar), e substitui a vírgula por ponto (separador decimal)
     const cleanedValue = value.replace(/R\$/, '').replace(/%/g, '').replace(/\./g, '').replace(/,/g, '.').trim();
-    return parseFloat(cleanedValue);
+    const parsed = parseFloat(cleanedValue);
+    // Retorna 0 se for NaN, caso contrário retorna o valor
+    return isNaN(parsed) ? 0 : parsed;
 }
 
 export default async function handler(req, res) {
@@ -42,13 +45,17 @@ export default async function handler(req, res) {
         
         // 1. Calculate 'To Pay'
         const serviceValue = parseToNumeric(serviceShowed);
-        // Converte "20%" ou "25%" para o decimal 0.20 ou 0.25
-        const percentageValue = parseToNumeric(percentage) / 100; 
-        
-        let toPayValue = 0;
-        if (!isNaN(serviceValue) && serviceValue > 0 && !isNaN(percentageValue) && percentageValue > 0) {
-            toPayValue = serviceValue * percentageValue;
+        // Converte "20%" ou "25%" para o decimal 0.20 ou 0.25.
+        const percentageValue = parseToNumeric(percentage) / 100;
+        const tipsValue = parseToNumeric(tips); // Parse o valor de tips
+
+        let commissionValue = 0;
+        if (serviceValue > 0 && percentageValue > 0) {
+            commissionValue = serviceValue * percentageValue;
         }
+        
+        // NOVO CÁLCULO: To Pay = Comissão (Service * Percentage) + Tips
+        let toPayValue = commissionValue + tipsValue;
 
         const doc = new GoogleSpreadsheet(SPREADSHEET_ID_APPOINTMENTS, serviceAccountAuth);
         await doc.loadInfo();
@@ -102,6 +109,7 @@ export default async function handler(req, res) {
         if (verificationCell) verificationCell.value = verification;
         
         // Salva o resultado do cálculo na coluna 'To Pay'
+        // toFixed(2) é usado para formatar para duas casas decimais
         if (toPayCell) toPayCell.value = toPayValue.toFixed(2);
 
 
