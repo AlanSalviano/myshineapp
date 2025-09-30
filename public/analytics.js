@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         let percentage = 0;
         if (goal > 0) {
+            // A variável totalAppointments agora representa Total Pets, conforme a chamada na função applyFilters
             percentage = Math.min(100, (totalAppointments / goal) * 100);
         }
         
@@ -136,7 +137,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             </tr>
         `;
         
-        updateGoalPercentage(totalCloserAppointments, parseInt(goalInput.value, 10));
+        // Mantido apenas para a lógica dos cards se necessário, mas o principal está no applyFilters
+        // updateGoalPercentage(totalCloserAppointments, parseInt(goalInput.value, 10));
     }
     
     // Function to render the advanced dashboard cards
@@ -256,7 +258,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         renderTable(filteredData, allEmployees);
         renderAdvancedDashboard(performanceData);
-        updateGoalPercentage(totalAppointmentsInPeriod, parseInt(goalInput.value, 10));
+        // MODIFICAÇÃO AQUI: Passa totalPetsInPeriod para o cálculo da meta.
+        updateGoalPercentage(totalPetsInPeriod, parseInt(goalInput.value, 10)); 
     }
 
     // Function to populate filter dropdowns with years
