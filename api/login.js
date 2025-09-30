@@ -1,3 +1,5 @@
+// alansalviano/myshineapp/myshineapp-db2432304fc990c3e93b2326d7faa293e6a13b38/api/login.js
+
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
 import dotenv from 'dotenv';
@@ -15,13 +17,43 @@ const doc = new GoogleSpreadsheet(process.env.SHEET_ID, serviceAccountAuth);
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
-        return res.status(405).json({ message: 'Method not allowed' });
+        return res.status(405).json({ message: 'Method Not Allowed' });
     }
 
     const { role, email, password } = req.body;
 
     console.log('Received data:', { role, email, password });
 
+    // --- Handle Access Code Login Scenario (e.g., from finance-credentials.html) ---
+    // If role and email are absent, it attempts a code-based login against F_CODE.
+    if (!role && !email && password) {
+        const fCodeEnv = process.env.F_CODE;
+        
+        if (!fCodeEnv) {
+            console.error('Environment variable F_CODE is not set.');
+            return res.status(500).json({ success: false, message: 'Server configuration error: F_CODE not set.' });
+        }
+
+        // Assume F_CODE format is "REDIRECT_URL,ACCESS_CODE"
+        const [redirectUrl, accessCode] = fCodeEnv.split(',');
+
+        if (!accessCode || !redirectUrl) {
+            console.error('Environment variable F_CODE is improperly formatted.');
+            return res.status(500).json({ success: false, message: 'Server configuration error: F_CODE improperly formatted.' });
+        }
+
+        if (password.trim() === accessCode.trim()) {
+            console.log('Access code login successful.');
+            return res.status(200).json({ success: true, message: 'Access Granted!', redirectUrl });
+        } else {
+            console.log('Access code login failed: Invalid password.');
+            return res.status(401).json({ success: false, message: 'Invalid access code.' });
+        }
+    }
+    // --- End Access Code Handler ---
+
+
+    // --- Standard User Login Logic (Requires Role, Email, and Password) ---
     if (!role || !email || !password) {
         console.error('Validation Error: Role, email, or password is missing.');
         return res.status(400).json({ success: false, message: 'Role, email and password are required.' });
