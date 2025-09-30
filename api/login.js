@@ -1,11 +1,11 @@
-// alansalviano/myshineapp/myshineapp-db2432304fc990c3e93b2326d7faa293e6a13b38/api/login.js
+// alansalviano/myshineapp/myshineapp-18a461598f3c9c98d96afa273b479d93020ab378/api/login.js
 
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
-import dotenv from 'dotenv';
+// REMOVIDO: import dotenv from 'dotenv';
 import { SHEET_NAME_USERS } from './configs/sheets-config.js';
 
-dotenv.config();
+// REMOVIDO: dotenv.config();
 
 const serviceAccountAuth = new JWT({
     email: process.env.CLIENT_EMAIL,
@@ -27,7 +27,8 @@ export default async function handler(req, res) {
     // --- Handle Access Code Login Scenario (e.g., from finance-credentials.html) ---
     // If role and email are absent, it attempts a code-based login against F_CODE.
     if (!role && !email && password) {
-        const fCodeEnv = process.env.F_CODE;
+        // Agora, process.env.F_CODE deve ser lido diretamente do ambiente de runtime.
+        const fCodeEnv = process.env.F_CODE; 
         
         if (!fCodeEnv) {
             console.error('Environment variable F_CODE is not set.');
