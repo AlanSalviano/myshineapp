@@ -21,6 +21,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const percentageOptions = ["20%", "25%"];
     const paymentOptions = ["Check", "American Express", "Apple Pay", "Discover", "Master Card", "Visa", "Zelle", "Cash", "Invoice"];
     const verificationOptions = ["Showed", "Canceled"];
+    
+    // Helper para formatar YYYY/MM/DD (do backend) para YYYY-MM-DD (para input HTML type=date)
+    function formatDateForInput(dateStr) {
+        if (!dateStr) return '';
+        // Se o formato for YYYY/MM/DD, substitui '/' por '-'
+        return dateStr.replace(/\//g, '-'); 
+    }
 
     // Função auxiliar para popular dropdowns
     function populateDropdown(selectElement, items) {
@@ -69,7 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 totalTipsValue += tipsValue;
 
                 row.innerHTML = `
-                    <td class="p-4">${appointment.appointmentDate}</td>
+                    <td class="p-4"><input type="date" value="${formatDateForInput(appointment.appointmentDate)}" style="width: 130px;" class="bg-transparent border border-border rounded-md px-2 date-input"></td>
                     <td class="p-4">${appointment.customers}</td>
                     <td class="p-4"><input type="text" value="${appointment.technician || ''}" style="width: 100px;" class="bg-transparent border border-border rounded-md px-2"></td>
                     <td class="p-4">
@@ -183,16 +190,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             const inputs = row.querySelectorAll('input');
             const selects = row.querySelectorAll('select');
 
-            // Mapeamento dos elementos de entrada e seleção:
-            // inputs: [0] technician, [1] serviceShowed, [2] tips
+            // Mapeamento dos elementos de entrada e seleção atualizado:
+            // inputs: [0] appointmentDate, [1] technician, [2] serviceShowed, [3] tips
             // selects: [0] petShowed, [1] percentage, [2] paymentMethod, [3] verification
 
             const rowData = {
                 rowIndex: parseInt(sheetRowNumber, 10),
-                technician: inputs[0].value,
+                appointmentDate: inputs[0].value, 
+                technician: inputs[1].value,
                 petShowed: selects[0].value,
-                serviceShowed: inputs[1].value, 
-                tips: inputs[2].value,
+                serviceShowed: inputs[2].value, 
+                tips: inputs[3].value,
                 percentage: selects[1].value, 
                 paymentMethod: selects[2].value,
                 verification: selects[3].value,
