@@ -1,4 +1,4 @@
-// alansalviano/myshineapp/myshineapp-db2432304fc990c3e93b2326d7faa293e6a13b38/public/manage-showed.js
+// public/manage-showed.js
 
 document.addEventListener('DOMContentLoaded', async () => {
     const tableBody = document.getElementById('showed-table-body');
@@ -75,9 +75,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 totalServiceValue += serviceValue;
                 totalTipsValue += tipsValue;
 
+                // Lógica para truncar o nome do cliente a 25 caracteres
+                const customerName = appointment.customers || '';
+                const truncatedCustomers = customerName.length > 25 
+                    ? customerName.substring(0, 22) + '...'
+                    : customerName;
+
                 row.innerHTML = `
                     <td class="p-4"><input type="date" value="${formatDateForInput(appointment.appointmentDate)}" style="width: 130px;" class="bg-transparent border border-border rounded-md px-2 date-input"></td>
-                    <td class="p-4">${appointment.customers}</td>
+                    <td class="p-4">${truncatedCustomers}</td>
                     <td class="p-4 code-cell">${appointment.code}</td>
                     <td class="p-4"><input type="text" value="${appointment.technician || ''}" style="width: 100px;" class="bg-transparent border border-border rounded-md px-2"></td>
                     <td class="p-4">
