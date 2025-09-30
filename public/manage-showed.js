@@ -75,10 +75,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 totalServiceValue += serviceValue;
                 totalTipsValue += tipsValue;
 
-                // Lógica para truncar o nome do cliente a 25 caracteres
+                // Lógica para truncar o nome do cliente a 18 caracteres
                 const customerName = appointment.customers || '';
-                const truncatedCustomers = customerName.length > 25 
-                    ? customerName.substring(0, 22) + '...'
+                const truncatedCustomers = customerName.length > 18 
+                    ? customerName.substring(0, 15) + '...'
                     : customerName;
 
                 row.innerHTML = `
