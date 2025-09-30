@@ -1,4 +1,4 @@
-// alansalviano/myshineapp/myshineapp-db2432304fc990c3e93b2326d7faa293e6a13b38/api/get-dashboard-data.js
+// alansalviano/myshineapp/myshineapp-3c231631ee8b9a88345f9ab58661b08728579037/api/get-dashboard-data.js
 
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
@@ -37,7 +37,7 @@ export default async function handler(req, res) {
             return res.status(404).json({ error: 'Uma ou mais planilhas não foram encontradas.' });
         }
 
-        // Fetch Appointments
+        // Fetch Appointments (no change)
         await sheetAppointments.loadCells('B1:E' + sheetAppointments.rowCount);
         const appointments = [];
         for (let i = 1; i < sheetAppointments.rowCount; i++) {
@@ -57,7 +57,7 @@ export default async function handler(req, res) {
             }
         }
 
-        // Fetch Employees (Used for Closer 1 & 2 in Dashboard)
+        // Fetch Employees (Used for Closer 1 & 2 in Appointment Dashboard)
         await sheetEmployees.loadCells('A1:A' + sheetEmployees.rowCount);
         const employees = [];
         for (let i = 1; i < sheetEmployees.rowCount; i++) {
@@ -67,7 +67,7 @@ export default async function handler(req, res) {
             }
         }
 
-        // Fetch Technicians (Used for Manage Showed Technician dropdown)
+        // Fetch Technicians (Used for Technician dropdown in Manage Showed)
         await sheetTechnicians.loadCells('A1:A' + sheetTechnicians.rowCount);
         const technicians = [];
         for (let i = 1; i < sheetTechnicians.rowCount; i++) {
@@ -77,7 +77,7 @@ export default async function handler(req, res) {
             }
         }
 
-        // Fetch Franchises
+        // Fetch Franchises (no change)
         await sheetFranchises.loadCells('A1:A' + sheetFranchises.rowCount);
         const franchises = [];
         for (let i = 1; i < sheetFranchises.rowCount; i++) {
@@ -89,8 +89,8 @@ export default async function handler(req, res) {
 
         const responseData = {
             appointments,
-            employees, // Mantém 'employees' para o Appointment Dashboard (Closer 1/2)
-            technicians, // Novo campo para o Manage Showed (Technician)
+            employees, // CLOSER LIST
+            technicians, // TECHNICIAN LIST
             franchises
         };
 
