@@ -4,7 +4,7 @@ import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { JWT } from 'google-auth-library';
 import dotenv from 'dotenv';
 import { excelDateToYYYYMMDD } from './utils.js';
-import { SHEET_NAME_APPOINTMENTS, SHEET_NAME_FRANCHISES, SHEET_NAME_TECHNICIANS } from './configs/sheets-config.js';
+import { SHEET_NAME_APPOINTMENTS, SHEET_NAME_EMPLOYEES, SHEET_NAME_FRANCHISES, SHEET_NAME_TECHNICIANS } from './configs/sheets-config.js';
 
 dotenv.config();
 
@@ -28,10 +28,11 @@ export default async function handler(req, res) {
         await Promise.all([docAppointments.loadInfo(), docData.loadInfo()]);
 
         const sheetAppointments = docAppointments.sheetsByTitle[SHEET_NAME_APPOINTMENTS];
+        const sheetEmployees = docData.sheetsByTitle[SHEET_NAME_EMPLOYEES];
         const sheetTechnicians = docData.sheetsByTitle[SHEET_NAME_TECHNICIANS];
         const sheetFranchises = docData.sheetsByTitle[SHEET_NAME_FRANCHISES];
 
-        if (!sheetAppointments || !sheetTechnicians || !sheetFranchises) {
+        if (!sheetAppointments || !sheetEmployees || !sheetTechnicians || !sheetFranchises) {
             console.error('One or more sheets were not found.');
             return res.status(404).json({ error: 'Uma ou mais planilhas não foram encontradas.' });
         }
@@ -56,13 +57,23 @@ export default async function handler(req, res) {
             }
         }
 
-        // Fetch Technicians (Anteriormente Employees)
+        // Fetch Employees (Used for Closer 1 & 2 in Dashboard)
+        await sheetEmployees.loadCells('A1:A' + sheetEmployees.rowCount);
+        const employees = [];
+        for (let i = 1; i < sheetEmployees.rowCount; i++) {
+            const cell = sheetEmployees.getCell(i, 0);
+            if (cell.value) {
+                employees.push(cell.value);
+            }
+        }
+
+        // Fetch Technicians (Used for Manage Showed Technician dropdown)
         await sheetTechnicians.loadCells('A1:A' + sheetTechnicians.rowCount);
-        const employees = []; 
+        const technicians = [];
         for (let i = 1; i < sheetTechnicians.rowCount; i++) {
             const cell = sheetTechnicians.getCell(i, 0);
             if (cell.value) {
-                employees.push(cell.value);
+                technicians.push(cell.value);
             }
         }
 
@@ -78,7 +89,8 @@ export default async function handler(req, res) {
 
         const responseData = {
             appointments,
-            employees,
+            employees, // Mantém 'employees' para o Appointment Dashboard (Closer 1/2)
+            technicians, // Novo campo para o Manage Showed (Technician)
             franchises
         };
 
